@@ -5,7 +5,10 @@ Which means that it's impossible to have other containers attempt to communicate
 without going through the host system's network.
 To bypass this; pass the environment variable `host` with the value of `0.0.0.0` to the grid server.
 Or configure it through a `config.toml` file under a `[server]` section. Example:
+
 ```toml
 [server]
 host = "0.0.0.0"
 ```
+
+Configuration for the `hub` and `router` images, should be placed in `/opt/selenium/config.toml`.
