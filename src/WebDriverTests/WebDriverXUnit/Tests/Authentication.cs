@@ -1,4 +1,6 @@
+using System.Collections.ObjectModel;
 using OpenQA.Selenium;
+using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.UI;
 using WebDriverXUnit.ClassData;
@@ -19,20 +21,21 @@ public class Authentication : IClassFixture<GridUri>
         _testOutputHelper = testOutputHelper;
     }
 
-    [Theory]
-    [ClassData(typeof(AuthenticationClassData))]
-    public async Task Test1(DriverOptions driverOptions)
+    [Fact]
+    public async Task SmokeTest()
     {
-        Task[] parallelTests = new Task[AvailableDriverOptions.GetAmount()];
+        DriverOptions[] driverOptions = Helpers.AvailableDriverOptions.Get();
+        Task[] parallelTests = new Task[driverOptions.Length];
 
-        for (int i = 0; i < parallelTests.Length; i++)
+        for (int i = 0; i < Helpers.AvailableDriverOptions.GetAmount(); i++)
         {
-            Task task = Task.Run(async () => {
+            DriverOptions options = driverOptions[i];
+            Task task = Task.Run(() => {
                 RemoteWebDriver? driver = null;
                 var uri = _fixture.WebDriverUri;
                 try
                 {
-                    driver = new RemoteWebDriver(uri, driverOptions);
+                    driver = new RemoteWebDriver(uri, options);
 
                     driver.Navigate().GoToUrl("https://dev.betterboard.dk/#/login");
 
@@ -45,9 +48,9 @@ public class Authentication : IClassFixture<GridUri>
                         return element.Displayed ? element : null;
                     });
                     Assert.NotNull(header);
-                    Assert.Equal("Velkommen til BetterBoard", header.Text);
+                    Assert.Equal("Welcome to BetterBoard.", header.Text);
 
-                    _testOutputHelper.WriteLine($"{driverOptions.BrowserName} WebDriver finished tests without errors");
+                    _testOutputHelper.WriteLine($"{options.BrowserName} WebDriver finished tests without errors");
                 }
                 catch (Exception e)
                 {
@@ -64,5 +67,84 @@ public class Authentication : IClassFixture<GridUri>
         await Task.WhenAll(parallelTests);
 
         _testOutputHelper.WriteLine("All WebDriver tests finished without errors in parallel");
+    }
+
+    [Fact]
+    public async Task LoginTest() {
+        DriverOptions[] driverOptions = Helpers.AvailableDriverOptions.Get();
+        Task[] parallelTests = new Task[driverOptions.Length];
+
+        var testUserCredentials = TestUsers.GetTestUser();
+
+        for (int i = 0; i < Helpers.AvailableDriverOptions.GetAmount(); i++)
+        {
+            DriverOptions options = driverOptions[i];
+            Task task = Task.Run(() => {
+                RemoteWebDriver? driver = null;
+                Uri? uri = _fixture.WebDriverUri;
+                try
+                {
+                    driver = new RemoteWebDriver(uri, options);
+
+                    driver.Navigate().GoToUrl("https://dev.betterboard.dk/#/login");
+
+                    Assert.Equal("BetterBoard - Board Management System", driver.Title);
+
+                    WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(20));
+                    wait.IgnoreExceptionTypes(typeof(NoSuchElementException), typeof(ElementNotVisibleException));
+                    IWebElement? header = wait.Until<IWebElement?>(webDriver => {
+                        IWebElement element = webDriver.FindElement(By.TagName("h4"));
+                        return element.Displayed ? element : null;
+                    });
+                    Assert.NotNull(header);
+                    Assert.Equal("Welcome to BetterBoard.", header.Text);
+
+                    // Find fields
+                    wait = new WebDriverWait(driver, TimeSpan.FromSeconds(5)) { PollingInterval = TimeSpan.FromMilliseconds(500)};
+                    wait.IgnoreExceptionTypes(typeof(NoSuchElementException), typeof(ElementNotVisibleException), typeof(ElementNotInteractableException));
+                    var element = driver.FindElement(By.ClassName("form-control"));
+                    bool fieldDisplayed = wait.Until(x => element.Displayed);
+                    Assert.True(fieldDisplayed);
+
+                    var fields = driver.FindElements(By.ClassName("form-control"));
+                    Assert.NotEmpty(fields);
+                    var submit = driver.FindElement(By.ClassName("btn-primary"));
+                    Assert.NotNull(submit);
+
+                    var usernameField = fields[0];
+                    usernameField.SendKeys(testUserCredentials.Username);
+                    var passwordField = fields[1];
+                    passwordField.SendKeys(testUserCredentials.Password);
+
+                    submit.Click();
+
+                    wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10)) { PollingInterval = TimeSpan.FromMilliseconds(500)};
+                    wait.IgnoreExceptionTypes(typeof(NoSuchElementException), typeof(ElementNotVisibleException), typeof(ElementNotInteractableException), typeof(NoSuchElementException));
+                    var boardHeader = wait.Until(x => {
+                        var element = x.FindElement(By.TagName("h2"));
+                        return element.Displayed ? element : null;
+                    });
+                    
+                    Assert.Contains("John Test", boardHeader?.Text);
+
+                    _testOutputHelper.WriteLine($"{options.BrowserName} WebDriver Successfully logged in");
+
+                }
+                catch (Exception e)
+                {
+                    _testOutputHelper.WriteLine(e.Message);
+                }
+                finally
+                {
+                    driver?.Quit();
+                }
+            });
+            parallelTests[i] = task;
+        }
+
+        await Task.WhenAll(parallelTests);
+
+        _testOutputHelper.WriteLine("All WebDriver tests finished without errors in parallel");
+
     }
 }
