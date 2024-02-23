@@ -21,7 +21,9 @@ public static class TestUsers {
         Dictionary<string, string> configValues = new Dictionary<string, string>();
         try
         {
-            using (StreamReader streamReader = new StreamReader(@"../johntest.txt")) {
+            var file = "johntest.txt";
+            var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, file);
+            using (StreamReader streamReader = new StreamReader(filePath)) {
                 string? line;
                 while ((line = streamReader.ReadLine()) is not null) {
                     string[]parts = line.Split(new char[] { '=' }, 2, StringSplitOptions.RemoveEmptyEntries);

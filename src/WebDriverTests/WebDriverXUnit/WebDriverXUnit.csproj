@@ -21,4 +21,12 @@
     <Using Include="Xunit" />
   </ItemGroup>
 
+  <!-- Copy configuration files to output directory -->
+  <Target Name="CopyConfigFiles" BeforeTargets="PreBuildEvent">
+    <ItemGroup>
+      <ConfigFiles Include="*.txt" />
+    </ItemGroup>
+    <Copy SourceFiles="@(ConfigFiles)" DestinationFolder="$(OutputPath)" />
+  </Target>
+
 </Project>
