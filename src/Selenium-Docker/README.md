@@ -1,9 +1,26 @@
+# Table of Contents
+
+- [Selenium Grid Components](#selenium-grid-components)
+    - [Router](#router)
+    - [Distributor](#distributor)
+        - [Register and keep track of all Nodes and their capabilities](#register-and-keep-track-of-all-nodes-and-their-capabilities)
+        - [Query the New Session Queue and process any pending new session requests](#query-the-new-session-queue-and-process-any-pending-new-session-requests)
+    - [Session Map](#session-map)
+    - [New Session Queue](#new-session-queue)
+    - [Node](#node)
+    - [Event Bus](#event-bus)
+- [Configuration](#configuration)
+    - [Network](#network)
+    - [Video Recording](#video-recording)
+
+<a id="selenium-grid-components"></a>
 # Selenium Grid Components
 
 [Source article](https://www.selenium.dev/documentation/grid/components/)
 
 ![Selenium Grid Components!](selenium-grid-components.png "Selenium Grid Copmonents")
 
+<a id="router"></a>
 ## Router
 
 The **Router** is the entry point of the Grid, receiving all external requests, and forwards them to the correct component.
@@ -14,22 +31,27 @@ If the request belongs to an existing session, the **Router** will query the **S
 
 The **Router** balances the load in the Grid by sending the requests to the component that is able to handle them better, without overloading any component that is not needed in the process.
 
+<a id="distributor"></a>
 ## Distributor
 
 A **Distributor** has two main responsibilities:
 
-### Register and keep track of all **Nodes** and their capabilities
+<a id="register-and-keep-track-of-all-nodes-and-their-capabilities"></a>
+### Register and keep track of all Nodes and their capabilities
 
 A **Node** registers to the **Distributor** by sending a **Node** registration event through the **Event Bus**. The **Distributor** reads it, and then tries to reach the **Node** via HTTP to confirm its existence. If the request is successful, the **Distributor** registers the Node and keeps track of all **Nodes** capabilities through the **GridModel**.
 
+<a id="query-the-new-session-queue-and-process-any-pending-new-session-requests"></a>
 ### Query the New Session Queue and process any pending new session requests
 
 When a new session request is sent to the **Router**, it gets forwarded to the **New Session Queue**, where it will wait in the queue. The **Distributor** will poll the **New Session Queue** for pending new session requests, and then finds a suitable **Node** where the session can be created. After the session has been created, the **Distributor** stores in the **Session Map** the relation between the session id and **Node** where the session is being executed.
 
+<a id="session-map"></a>
 ## Session Map
 
 The **Session Map** is a data store that keeps the relationship between the session id and the **Node** where the session is running it. It supports the **Router** in the process of forwarding a request to the **Node**. The **Router** will ask the **Session Map** for the **Node** associated to a session id.
 
+<a id="new-session-queue"></a>
 ## New Session Queue
 
 The **New Session Queue** holds all the new session requests in a First In First Out order. It has configurable parameters for setting the request timeout and request retry interval (how often the timout will be checked).
@@ -42,6 +64,7 @@ Once the requested capabilities match the capabilities of any of the free **Node
 
 After a session is created successfully, the **Distributor** sends the session information to the **New Session Queue**, which then gets sent back to the **Router**, and finally to the client.
 
+<a id="node"></a>
 ## Node
 
 Runs a [WebDriver session](https://w3c.github.io/webdriver/#dfn-sessions). Each session is assigned to a slot, and each node has one or more slots.
@@ -52,11 +75,16 @@ The **Node** registers itself to the **Distributor** through the **Event Bus**, 
 
 A **Node** only executes the received commands, it does not evaluate, make judgments, or control anything other than the flow of commands and responses. The machines where the **Node** is running does not need to have the same operating systems as the other components. For example, A Windows **Node** might have the capability of offering IE Mode on Edge as a browser option, whereas this would not be possible on Linux or Mac, and a Grid can have multiple **Nodes** configured with Windows, Mac, or Linux.
 
+<a id="event-bus"></a>
 ## Event Bus
 
 The **Event Bus** serves as a communication path between the **Nodes**, **Distributor**, **New Session Queue**, and **Session Map**. The Grid does most of its internal communication through messages, avoiding expensive HTTP calls. When starting the grid in its fully distributed mode, the **Event Bus** is the first component that should be started.
 
-# Network Configuration
+<a id="configuration"></a>
+# Configuration
+
+<a id="network"></a>
+## Network
 
 By default, the Selenium Grid (hub) server is set to bind its port to 4444, specifically to the Docker Daemon IP.
 Which means that it's impossible to have other containers attempt to communicate with the Selenium Grid server
@@ -70,3 +98,7 @@ host = "0.0.0.0"
 ```
 
 Configuration for the `hub` and `router` images, should be placed in `/opt/selenium/config.toml`.
+Otherwise default to the path `/opt/bin/config.toml`
+
+<a id="video-recording"></a>
+## Video Recording
