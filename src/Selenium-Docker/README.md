@@ -116,6 +116,12 @@ FirefoxOptions options = new FirefoxOptions();
 options.AddAdditionalOptions("se:recordVideo", "true");
 ```
 
+You can also set a time zone and screen resolution:
+```csharp
+options.AddAdditionalOptions("se:timeZone", "US/Pacific");
+options.AddAdditionalOptions("se:screenResolution", "1920x1080");
+```
+
 Then made sure you've volume mounted the assets from within the **Docker Node**:
 ```yaml
 docker-node:
@@ -123,3 +129,7 @@ docker-node:
     volumes:
       - ./node-docker/assets:/opt/selenium/assets
 ```
+
+## Docker Node
+
+The **Docker Node** supports configuration for its spawned [**Nodes**](https://www.selenium.dev/documentation/grid/configuration/cli_options/#node) as well as [itself](https://www.selenium.dev/documentation/grid/configuration/cli_options/#docker). Options that might be worth changing for all spawnes **Nodes** includes: `max-sessions` (to override CPU core default, since there are multiple available browsers), `heartbeat-period`, and `session-timeout`.
