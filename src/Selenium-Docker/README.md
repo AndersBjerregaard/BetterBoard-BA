@@ -102,3 +102,24 @@ Otherwise default to the path `/opt/bin/config.toml`
 
 <a id="video-recording"></a>
 ## Video Recording
+
+To record a WebDriver session from a `selenium/node-docker`, configure a `video-image` in the `config.toml` file for the docker node: For example:
+```
+# config.toml
+[docker]
+video-image = "selenium/video:ffmpeg-6.1-202420220"
+```
+
+Then add the options to the WebDriver session to enable video recording. You can do this from the client script:
+```csharp
+FirefoxOptions options = new FirefoxOptions();
+options.AddAdditionalOptions("se:recordVideo", "true");
+```
+
+Then made sure you've volume mounted the assets from within the **Docker Node**:
+```yaml
+docker-node:
+    image: selenium/node-docker:4.18.0-20240220
+    volumes:
+      - ./node-docker/assets:/opt/selenium/assets
+```

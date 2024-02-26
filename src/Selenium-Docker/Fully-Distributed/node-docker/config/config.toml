@@ -9,5 +9,5 @@ configs = [
     "selenium/standalone-chrome:4.18.0-20240220", '{"browserName": "chrome"}',
     "selenium/standalone-edge:4.18.0-20240220", '{"browserName": "MicrosoftEdge"}'
 ]
-url = "http://127.0.0.1:2375"
+url = "http://127.0.0.1:2375" # docker socket
 video-image = "selenium/video:ffmpeg-6.1-20240220"
