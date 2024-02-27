@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  webdriver-scripts:
+    container_name: webdriver-scripts
+    build:
+      context: .
+      dockerfile: .Dockerfile
+    environment:
+      - GRID_URI=selenium-router
+    networks:
+      - selenium-grid
+
+networks:
+  selenium-grid:
+    name: selenium-grid
+    driver: bridge
