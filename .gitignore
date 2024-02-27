@@ -7,3 +7,5 @@
 **/test_config.txt
 **/architecture/*
 **/logical_backup/*
+**/TEST_USERS.json
+**/.env
