@@ -2,7 +2,29 @@
 # wait_for_grid.sh
 
 set -e
-url="http://selenium-router/status:4444"
+url="default"
+
+while getopts "u:" opt; do
+    case ${opt} in
+        u )
+            url="$OPTARG"
+            ;;
+        \? )
+            echo "Usage: $0 [-u VALUE]"
+            exit 1
+            ;;
+    esac
+done
+
+shift $((OPTIND -1))
+
+if [ "$url" = "default" ] ; then
+    echo "Selenium uri was unset. Use -u flag with a uri when executing."
+    echo "Example:"
+    echo "./wait_for_grid.sh -u http://localhost/status:4444"
+    exit 1
+fi
+
 wait_interval_in_seconds=1
 max_wait_time_in_seconds=30
 end_time=$((SECONDS + max_wait_time_in_seconds))
