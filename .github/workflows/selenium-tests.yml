@@ -28,3 +28,17 @@ jobs:
             
             - name: dotnet build
               run: dotnet build --no-restore WebDriverTests.sln
+    
+    test:
+
+        needs: build
+
+        name: Run Selenium Scripts
+
+        runs-on: self-hosted
+
+        steps:
+
+            - name: healthcheck selenium grid
+              
+              run: .\wait_for_grid.sh
