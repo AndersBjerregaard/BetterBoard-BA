@@ -10,12 +10,7 @@ RUN apt update -y && apt upgrade -y
 RUN useradd -m docker
 
 RUN apt install -y --no-install-recommends \
-    curl jq ca-certificates
-
-# Prep dotnet installation
-RUN mkdir -vp /usr/share/dotnet
-
-RUN chmod go=w /usr/share/dotnet
+    curl jq ca-certificates dotnet-sdk-8.0
 
 RUN mkdir -v /home/docker/actions-runner
 
