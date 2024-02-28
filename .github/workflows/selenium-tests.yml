@@ -44,3 +44,6 @@ jobs:
 
             - name: Healthcheck Selenium Grid
               run: ./wait_for_grid.sh
+
+            - name: Execute WebDriver tests
+              run: dotnet test --no-restore --no-build

@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  ngrok_tunnel:
+    container_name: ngrok_tunnel
+    build:
+      context: .
+      dockerfile: .Dockerfile
+    env_file:
+      - .env
+    network_mode: "host"

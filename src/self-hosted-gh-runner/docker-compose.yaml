@@ -2,6 +2,7 @@ version: '3.8'
 
 services:
   runner:
+    container_name: gh-actions-runner
     image: anders97/gh-actions-runner:latest
     restart: always
     env_file:
