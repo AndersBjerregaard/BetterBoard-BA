@@ -12,6 +12,11 @@ RUN useradd -m docker
 RUN apt install -y --no-install-recommends \
     curl jq ca-certificates
 
+# Prep dotnet installation
+RUN mkdir -vp /usr/share/dotnet
+
+RUN chmod go=w /usr/share/dotnet
+
 RUN mkdir -v /home/docker/actions-runner
 
 WORKDIR /home/docker/actions-runner
