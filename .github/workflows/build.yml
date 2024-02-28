@@ -1,5 +1,6 @@
 name: build-dotnet-webdriver-project
 
+# Manual trigger with `gh workflow run <workflow_name>`
 on: workflow_dispatch
 
 run-name: build-dotnet-webdriver-project
