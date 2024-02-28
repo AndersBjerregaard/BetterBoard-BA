@@ -10,7 +10,7 @@ RUN apt update -y && apt upgrade -y
 RUN useradd -m docker
 
 RUN apt install -y --no-install-recommends \
-    curl jq build-essential libssl-dev libffi-dev python3 python3-venv python3-dev python3-pip
+    curl jq ca-certificates
 
 RUN mkdir -v /home/docker/actions-runner
 

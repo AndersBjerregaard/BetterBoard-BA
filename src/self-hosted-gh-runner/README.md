@@ -14,13 +14,28 @@ docker build --tag <your-tag> --file .Dockerfile .
 
 Populate environment variables `REPO` and `TOKEN`
 
+Example `.env` file:
+```env
+# .env
+REPO=foo/bar
+ACCESS_TOKEN=1234
+```
+
 ## Create a registration token for a repository
 
 [*source article*](https://docs.github.com/en/rest/actions/self-hosted-runners?apiVersion=2022-11-28#create-a-registration-token-for-a-repository)
 
 This is used for a self-hosted runner, in order to authenticate it.
+The endpoint works with the following token types:
+- [GitHub App user access tokens](https://docs.github.com/en/apps/creating-github-apps/authenticating-with-a-github-app/generating-a-user-access-token-for-a-github-app)
+- [GitHub App installation access tokens](https://docs.github.com/en/apps/creating-github-apps/authenticating-with-a-github-app/generating-an-installation-access-token-for-a-github-app)
+- [Fine-grained personal access tokens](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-fine-grained-personal-access-token)
+
+The token must have the following permission set:
+- `administration:write`
 
 Example request:
+
 *`OWNER` and `REPO` are not case sensitive.*
 ```shell
 curl -L \
@@ -39,8 +54,6 @@ Example response:
 }
 ```
 
-## TODO:
+# TODO:
 
-runner-1  | Http response code: NotFound from 'POST https://api.github.com/actions/runner-registration' (Request Id: BAC3:2A4E86:15F22FB:1622CBC:65DDF59C)
-runner-1  | {"message":"Not Found","documentation_url":"https://docs.github.com/rest"}
-runner-1  | Response status code does not indicate success: 404 (Not Found).
+Add relevant capabilities to runner
