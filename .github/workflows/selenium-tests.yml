@@ -43,7 +43,11 @@ jobs:
               run: chmod +x ./wait_for_grid.sh
 
             - name: Healthcheck Selenium Grid
-              run: ./wait_for_grid.sh
+              env:
+                GRID_URI: ${{ secrets.GRID_URI }}
+              run: ./wait_for_grid.sh -u $GRID_URI
 
             - name: Execute WebDriver tests
+              env:
+                GRID_URI: ${{ secrets.GRID_URI }}
               run: dotnet test --no-restore --no-build
