@@ -41,4 +41,4 @@ jobs:
 
             - name: healthcheck selenium grid
               
-              run: .\wait_for_grid.sh
+              run: ./wait_for_grid.sh
