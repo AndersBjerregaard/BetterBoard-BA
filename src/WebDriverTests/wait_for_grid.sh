@@ -25,7 +25,7 @@ if [ "$url" = "default" ] ; then
     exit 1
 fi
 
-url = "$url/status"
+url="$url/status"
 wait_interval_in_seconds=1
 max_wait_time_in_seconds=30
 end_time=$((SECONDS + max_wait_time_in_seconds))
