@@ -16,7 +16,7 @@ public class GridUri : IDisposable
             WebDriverUri = new Uri(@"http://localhost:4444");
         } else {
             Debug.WriteLine($"Environment variable 'GRID_URI' loaded as {env}");
-            WebDriverUri = new Uri($"http://{env}:4444");
+            WebDriverUri = new Uri(env);
         }
     }
 

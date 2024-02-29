@@ -77,3 +77,12 @@ $ ./wait-for-grid.sh mvn clean test
 ```
 
 Like this, the script will poll until the Grid is ready, and then your tests will start.
+
+# Executing Tests From GitHub Actions Workflow
+
+As per the file `.github/workflow/selenium-tests.yml`. Set the following secrets:
+```shell
+$ gh secret set GRID_URI
+
+$ gh secret set TEST_USERS
+```
