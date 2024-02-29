@@ -4,6 +4,7 @@ using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.UI;
 using WebDriverXUnit.ClassData;
+using WebDriverXUnit.Domain;
 using WebDriverXUnit.Fixtures;
 using WebDriverXUnit.Helpers;
 using WebDriverXUnit.Helpers.Interfaces;
@@ -15,12 +16,15 @@ public class Authentication : IClassFixture<GridUri>
 {
     private readonly GridUri _fixture;
     private readonly ITestOutputHelper _testOutputHelper;
-    private ITestUsers? _testUsers;
+    private readonly ITestUsers _testUsers;
+    private readonly UserCredentials _testUserCredentials;
 
     public Authentication(GridUri fixture, ITestOutputHelper testOutputHelper)
     {
         _fixture = fixture;
         _testOutputHelper = testOutputHelper;
+        _testUsers = new TestUsersEnvironment();
+        _testUserCredentials = _testUsers.GetTestUser();
     }
 
     [Fact]
@@ -76,10 +80,6 @@ public class Authentication : IClassFixture<GridUri>
         DriverOptions[] driverOptions = Helpers.AvailableDriverOptions.Get();
         Task[] parallelTests = new Task[driverOptions.Length];
 
-        _testUsers = new TestUsersFile();
-
-        var testUserCredentials = _testUsers.GetTestUser();
-
         for (int i = 0; i < Helpers.AvailableDriverOptions.GetAmount(); i++)
         {
             DriverOptions options = driverOptions[i];
@@ -116,9 +116,9 @@ public class Authentication : IClassFixture<GridUri>
                     Assert.NotNull(submit);
 
                     var usernameField = fields[0];
-                    usernameField.SendKeys(testUserCredentials.Username);
+                    usernameField.SendKeys(_testUserCredentials.Username);
                     var passwordField = fields[1];
-                    passwordField.SendKeys(testUserCredentials.Password);
+                    passwordField.SendKeys(_testUserCredentials.Password);
 
                     submit.Click();
 
@@ -155,10 +155,6 @@ public class Authentication : IClassFixture<GridUri>
     [Fact]
     public void EnvironmentTest() {
 
-        _testUsers = new TestUsersEnvironment();
-
-        var testUserCredentials = _testUsers.GetTestUser();
-
-        _testOutputHelper.WriteLine($"Email: {testUserCredentials.Username}\nPassword: {testUserCredentials.Password}");
+        _testOutputHelper.WriteLine($"Email: {_testUserCredentials.Username}\nPassword: {_testUserCredentials.Password}");
     }
 }

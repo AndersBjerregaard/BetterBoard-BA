@@ -50,4 +50,5 @@ jobs:
             - name: Execute WebDriver tests
               env:
                 GRID_URI: ${{ secrets.GRID_URI }}
+                TEST_USERS: ${{ secrets.TEST_USERS }}
               run: dotnet test --no-restore --no-build
