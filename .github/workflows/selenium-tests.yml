@@ -51,4 +51,5 @@ jobs:
               env:
                 GRID_URI: ${{ secrets.GRID_URI }}
                 TEST_USERS: ${{ secrets.TEST_USERS }}
+                RUNTIME_ENVIRONMENT: STAGING 
               run: dotnet test --no-restore --no-build --logger "console;verbosity=detailed"

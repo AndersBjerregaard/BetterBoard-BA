@@ -23,7 +23,15 @@ public class Authentication : IClassFixture<GridUri>
     {
         _fixture = fixture;
         _testOutputHelper = testOutputHelper;
-        _testUsers = new TestUsersEnvironment();
+
+        string? environment = Environment.GetEnvironmentVariable("RUNTIME_ENVIRONMENT");
+
+        if (string.IsNullOrEmpty(environment) || environment == "DEV") {
+            _testUsers = new TestUsersFile();
+        } else {
+            _testUsers = new TestUsersEnvironment();
+        }
+
         _testUserCredentials = _testUsers.GetTestUser();
     }
 
@@ -116,7 +124,7 @@ public class Authentication : IClassFixture<GridUri>
                     Assert.NotNull(submit);
 
                     var usernameField = fields[0];
-                    usernameField.SendKeys(_testUserCredentials.Username);
+                    usernameField.SendKeys(_testUserCredentials.Email);
                     var passwordField = fields[1];
                     passwordField.SendKeys(_testUserCredentials.Password);
 
@@ -136,7 +144,19 @@ public class Authentication : IClassFixture<GridUri>
                 }
                 catch (Exception e)
                 {
-                    _testOutputHelper.WriteLine(e.Message);
+                    string errorMessage = $"An exception of type {e.GetType().Name} occurred: {e.Message}.";
+                    string stackTrace = $"Stack Trace: {e.StackTrace}";
+
+                    // If there's an inner exception, include its message and stack trace
+                    if (e.InnerException != null)
+                    {
+                        errorMessage += $" Inner Exception: {e.InnerException.Message}.";
+                        stackTrace += $"\nInner Exception Stack Trace: {e.InnerException.StackTrace}";
+                    }
+
+                    // Log the error message and stack trace
+                    _testOutputHelper.WriteLine(errorMessage);
+                    _testOutputHelper.WriteLine(stackTrace);
                 }
                 finally
                 {
@@ -150,6 +170,12 @@ public class Authentication : IClassFixture<GridUri>
 
         _testOutputHelper.WriteLine("All WebDriver tests finished without errors in parallel");
 
+    }
+
+    [Fact]
+    public void EnvironmentTest() {
+        string? environment = Environment.GetEnvironmentVariable("RUNTIME_ENVIRONMENT") ?? "unset";
+        _testOutputHelper.WriteLine("Environment: " + environment);
     }
 
 }

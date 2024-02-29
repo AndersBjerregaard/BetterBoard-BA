@@ -14,8 +14,12 @@ public class TestUsersFile : ITestUsers {
     public UserCredentials GetTestUser() {
         Dictionary<string, string> configValues = new Dictionary<string, string>();
 
-        KeyValuePair<string, string>? keyValuePair = ReadUserFile() ?? throw new Exception("Empty or invalid test user file.");
-        configValues[keyValuePair.Value.Key] = keyValuePair.Value.Value;
+        KeyValuePair<string, string>[] keyValuePairs = ReadUserFile();
+        int i = 0;
+        while (i < keyValuePairs.Length) {
+            configValues.Add(keyValuePairs[i].Key, keyValuePairs[i].Value);
+            i++;
+        }
 
         if (!configValues.ContainsKey("email") || !configValues.ContainsKey("password"))
             throw new IncompleteUserCredentials("Missing key-value pairs from user file");
@@ -23,20 +27,22 @@ public class TestUsersFile : ITestUsers {
         return new UserCredentials(configValues["email"], configValues["password"]);
     }
 
-    private static KeyValuePair<string, string>? ReadUserFile() {
-        KeyValuePair<string, string>? configValue = null;
+    private static KeyValuePair<string, string>[] ReadUserFile() {
+        KeyValuePair<string, string>[] configValue = new KeyValuePair<string, string>[2];
         try
         {
             var file = "johntest.txt";
             var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, file);
             using (StreamReader streamReader = new StreamReader(filePath)) {
                 string? line;
+                int i = 0;
                 while ((line = streamReader.ReadLine()) is not null) {
                     string[]parts = line.Split(new char[] { '=' }, 2, StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length == 2) {
                         string key = parts[0].Trim();
                         string value = parts[1].Trim().Trim('"');
-                        configValue = new KeyValuePair<string, string>(key, value);
+                        configValue[i] = new KeyValuePair<string, string>(key, value);
+                        i++;
                     }
                 }
             }

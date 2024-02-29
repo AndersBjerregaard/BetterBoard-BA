@@ -1,10 +1,15 @@
 namespace WebDriverXUnit.Domain;
 
-public class UserCredentials(string username, string password)
+public class UserCredentials(string email, string password)
 {
-    private readonly string _username = username;
+    private readonly string _email = email;
     private readonly string _password = password;
 
-    public string Username { get => _username; }
+    public string Email { get => _email; }
     public string Password { get => _password; }
+
+    public override string ToString()
+    {
+        return $"Email: {_email} Password: {_password}";
+    }
 }
