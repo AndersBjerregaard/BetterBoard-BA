@@ -152,9 +152,4 @@ public class Authentication : IClassFixture<GridUri>
 
     }
 
-    [Fact]
-    public void EnvironmentTest() {
-
-        _testOutputHelper.WriteLine($"Email: {_testUserCredentials.Username}\nPassword: {_testUserCredentials.Password}");
-    }
 }
