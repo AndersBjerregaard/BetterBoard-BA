@@ -3,7 +3,7 @@ name: Build & Execute Tests .Net WebDriver project
 # Manual trigger with `gh workflow run <workflow_name>`
 on: workflow_dispatch
 
-run-name: build-dotnet-webdriver-project
+run-name: E2E Tests
 
 defaults:
     run:
