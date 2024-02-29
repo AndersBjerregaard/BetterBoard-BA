@@ -21,7 +21,7 @@ shift $((OPTIND -1))
 if [ "$url" = "default" ] ; then
     echo "Selenium uri was unset. Use -u flag with a uri when executing."
     echo "Example:"
-    echo "./wait_for_grid.sh -u http://localhost/status:4444"
+    echo "./wait_for_grid.sh -u http://localhost:4444/status"
     exit 1
 fi
 

@@ -6,6 +6,7 @@ using OpenQA.Selenium.Support.UI;
 using WebDriverXUnit.ClassData;
 using WebDriverXUnit.Fixtures;
 using WebDriverXUnit.Helpers;
+using WebDriverXUnit.Helpers.Interfaces;
 using Xunit.Abstractions;
 
 namespace WebDriverXUnit.Tests;
@@ -14,6 +15,7 @@ public class Authentication : IClassFixture<GridUri>
 {
     private readonly GridUri _fixture;
     private readonly ITestOutputHelper _testOutputHelper;
+    private ITestUsers? _testUsers;
 
     public Authentication(GridUri fixture, ITestOutputHelper testOutputHelper)
     {
@@ -74,7 +76,9 @@ public class Authentication : IClassFixture<GridUri>
         DriverOptions[] driverOptions = Helpers.AvailableDriverOptions.Get();
         Task[] parallelTests = new Task[driverOptions.Length];
 
-        var testUserCredentials = TestUsers.GetTestUser();
+        _testUsers = new TestUsersFile();
+
+        var testUserCredentials = _testUsers.GetTestUser();
 
         for (int i = 0; i < Helpers.AvailableDriverOptions.GetAmount(); i++)
         {
@@ -146,5 +150,15 @@ public class Authentication : IClassFixture<GridUri>
 
         _testOutputHelper.WriteLine("All WebDriver tests finished without errors in parallel");
 
+    }
+
+    [Fact]
+    public void EnvironmentTest() {
+
+        _testUsers = new TestUsersEnvironment();
+
+        var testUserCredentials = _testUsers.GetTestUser();
+
+        _testOutputHelper.WriteLine($"Email: {testUserCredentials.Username}\nPassword: {testUserCredentials.Password}");
     }
 }
