@@ -1,4 +1,6 @@
-# selenium-shenanigans
+# BetterBoard Automatic E2E Testing
+
+![E2E Testing Components!](./documentation/betterboard-e2e.png "E2E Testing Copmonents")
 
 ## Selenium WebDriver NuGet
 
