@@ -15,7 +15,7 @@ namespace WebDriverXUnit.Tests;
 public class Authentication : IClassFixture<GridUri>
 {
     private readonly GridUri _fixture;
-    private readonly ITestOutputHelper _testOutputHelper;
+    private ITestOutputHelper _testOutputHelper;
     private readonly ITestUsers _testUsers;
     private readonly UserCredentials _testUserCredentials;
 
@@ -144,19 +144,7 @@ public class Authentication : IClassFixture<GridUri>
                 }
                 catch (Exception e)
                 {
-                    string errorMessage = $"An exception of type {e.GetType().Name} occurred: {e.Message}.";
-                    string stackTrace = $"Stack Trace: {e.StackTrace}";
-
-                    // If there's an inner exception, include its message and stack trace
-                    if (e.InnerException != null)
-                    {
-                        errorMessage += $" Inner Exception: {e.InnerException.Message}.";
-                        stackTrace += $"\nInner Exception Stack Trace: {e.InnerException.StackTrace}";
-                    }
-
-                    // Log the error message and stack trace
-                    _testOutputHelper.WriteLine(errorMessage);
-                    _testOutputHelper.WriteLine(stackTrace);
+                    ExceptionLogger.LogException(e, ref _testOutputHelper);
                 }
                 finally
                 {
@@ -168,8 +156,7 @@ public class Authentication : IClassFixture<GridUri>
 
         await Task.WhenAll(parallelTests);
 
-        _testOutputHelper.WriteLine("All WebDriver tests finished without errors in parallel");
-
+        _testOutputHelper.WriteLine($"{nameof(LoginTest)} completed.");
     }
 
     [Fact]

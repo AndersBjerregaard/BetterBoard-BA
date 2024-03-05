@@ -1,4 +1,5 @@
-using OpenQA.Selenium.DevTools.V119.Tracing;
+using System.Diagnostics;
+using System.Text.Json;
 using WebDriverXUnit.Domain;
 using WebDriverXUnit.Domain.Exceptions;
 using WebDriverXUnit.Helpers.Interfaces;
@@ -6,52 +7,34 @@ using WebDriverXUnit.Helpers.Interfaces;
 namespace WebDriverXUnit.Helpers;
 
 public class TestUsersFile : ITestUsers {
+
+    private static readonly string FILE_NAME = "TEST_USERS.json";
+
     /// <summary>
     /// 
     /// </summary>
     /// <returns></returns>
     /// <exception cref="IncompleteUserCredentials"></exception>
     public UserCredentials GetTestUser() {
-        Dictionary<string, string> configValues = new Dictionary<string, string>();
+        UserCredentials userCredentials = ReadUserFile() ?? 
+            throw new IncompleteUserCredentials($"Null {nameof(UserCredentials)} return value from {nameof(ReadUserFile)}");
 
-        KeyValuePair<string, string>[] keyValuePairs = ReadUserFile();
-        int i = 0;
-        while (i < keyValuePairs.Length) {
-            configValues.Add(keyValuePairs[i].Key, keyValuePairs[i].Value);
-            i++;
-        }
-
-        if (!configValues.ContainsKey("email") || !configValues.ContainsKey("password"))
-            throw new IncompleteUserCredentials("Missing key-value pairs from user file");
-
-        return new UserCredentials(configValues["email"], configValues["password"]);
+        return userCredentials;
     }
 
-    private static KeyValuePair<string, string>[] ReadUserFile() {
-        KeyValuePair<string, string>[] configValue = new KeyValuePair<string, string>[2];
-        try
-        {
-            var file = "johntest.txt";
-            var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, file);
+    private static UserCredentials? ReadUserFile() {
+        UserCredentials? userCredentials = null;
+            var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, FILE_NAME);
             using (StreamReader streamReader = new StreamReader(filePath)) {
                 string? line;
                 int i = 0;
                 while ((line = streamReader.ReadLine()) is not null) {
-                    string[]parts = line.Split(new char[] { '=' }, 2, StringSplitOptions.RemoveEmptyEntries);
-                    if (parts.Length == 2) {
-                        string key = parts[0].Trim();
-                        string value = parts[1].Trim().Trim('"');
-                        configValue[i] = new KeyValuePair<string, string>(key, value);
-                        i++;
-                    }
+                    UserCredentials? deserialized = JsonSerializer.Deserialize<UserCredentials>(line) ??
+                        throw new JsonException($"Error deserializing contents from file '{FILE_NAME}' into type '{nameof(UserCredentials)}'");
+                    userCredentials = deserialized;
+                    i++;
                 }
             }
-        }
-        catch (System.Exception ex)
-        {
-            Console.WriteLine("Could not read file 'johntest.txt'");
-            Console.WriteLine(ex.Message);
-        }
-        return configValue;
+        return userCredentials;
     }
 }
