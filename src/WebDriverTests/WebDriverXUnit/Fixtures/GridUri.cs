@@ -2,7 +2,9 @@ using System.Diagnostics;
 
 namespace WebDriverXUnit.Fixtures;
 
+#pragma warning disable S3881 // "IDisposable" should be implemented correctly
 public class GridUri : IDisposable
+#pragma warning restore S3881 // "IDisposable" should be implemented correctly
 {
     public Uri? WebDriverUri { get; private set; }
 
@@ -20,5 +22,5 @@ public class GridUri : IDisposable
         }
     }
 
-    public void Dispose() => WebDriverUri = null;
+    void IDisposable.Dispose() => WebDriverUri = null;
 }

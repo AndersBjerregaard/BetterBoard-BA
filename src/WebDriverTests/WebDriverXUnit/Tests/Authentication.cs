@@ -158,11 +158,4 @@ public class Authentication : IClassFixture<GridUri>
 
         _testOutputHelper.WriteLine($"{nameof(LoginTest)} completed.");
     }
-
-    [Fact]
-    public void EnvironmentTest() {
-        string? environment = Environment.GetEnvironmentVariable("RUNTIME_ENVIRONMENT") ?? "unset";
-        _testOutputHelper.WriteLine("Environment: " + environment);
-    }
-
 }

@@ -5,7 +5,7 @@ namespace WebDriverXUnit.ClassData;
 
 public class AuthenticationClassData : IEnumerable<object[]>
 {
-    DriverOptions[] driverOptions = Helpers.AvailableDriverOptions.Get();
+    readonly DriverOptions[] driverOptions = Helpers.AvailableDriverOptions.Get();
 
     public IEnumerator<object[]> GetEnumerator()
     {

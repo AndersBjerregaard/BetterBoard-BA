@@ -14,10 +14,10 @@ public class TestUsersFile : ITestUsers {
     /// 
     /// </summary>
     /// <returns></returns>
-    /// <exception cref="IncompleteUserCredentials"></exception>
+    /// <exception cref="IncompleteUserCredentialsException"></exception>
     public UserCredentials GetTestUser() {
         UserCredentials userCredentials = ReadUserFile() ?? 
-            throw new IncompleteUserCredentials($"Null {nameof(UserCredentials)} return value from {nameof(ReadUserFile)}");
+            throw new IncompleteUserCredentialsException($"Null {nameof(UserCredentials)} return value from {nameof(ReadUserFile)}");
 
         return userCredentials;
     }
