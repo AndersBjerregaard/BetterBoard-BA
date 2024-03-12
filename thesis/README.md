@@ -26,7 +26,7 @@ BB har problemer med at opnå en ambition om at kunne *deploy* ændringer, lavet
 
 Udviklingsafdelingen får skabt nok ændringer i løbet af en dag, til ovenstående mål. Men den eksisterende CI / CD pipeline udfører kun *continuous delivery*, og ikke *continuous deployment*. Dette er et bevidst valg, da der ikke er høj nok tillid til den nuværende automatiske kvalitetssikring for software produktet.
 
-Ydermere er der følgende flaskehals for at kunne opnå deployment målet: Pipelines eksekveringstiden. Den eksisterende eksekverings plan, består primært af at udnytte *self-hosted azure pipeline agents* på udviklernes host maskiner. Dette resulterer i en uskalerbar eksekverings plan, der ikke kan følge med ambitioner.
+Ydermere er der følgende flaskehals for at kunne opnå deployment målet: Pipelines eksekveringstiden. Den eksisterende eksekverings plan, består primært af at udnytte *self-hosted azure pipeline agents* på udviklernes host maskiner. Dette resulterer i en uskalerbar eksekverings plan, der ikke kan følge med ambitionerne.
 
 Derudover er majoriteten af BB's software infrastruktur udokumenteret. Da det primært er blevet kreeret gennem brugergrænsefladen på Azure (som er BB's cloud provider). Dette har dannet problemer ift. at:
 - Gennemsøge eksisterende konfigurationer.
