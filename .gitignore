@@ -10,3 +10,11 @@
 **/TEST_USERS.json
 **/.env
 **.bkp
+**.aux
+**.log
+**.lot
+**.bcf
+**.toc
+**.xmpi
+**.lof
+**.run.xml
