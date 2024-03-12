@@ -41,12 +41,17 @@ Opgaven ønsker ydermere at implementere en ny eksekverings plan for alle eksist
 Og sidst: Ønskes at, den mest kritiske software infrastruktur der står udokumenteret, skal i stedet dokumenteres i en passende form for *infrastructure as code* for firmaet. Samt, skal al ny infrastruktur berørt i denne opgave, følge samme *IaC*.
 Opsummeret set undersøger denne opgave følgende:
 
-    Hvordan kan BB sikre en høj kvalitet i det leverede produkt, når der er en ambition om at opdatere det 16 gange om dagen - og ikke har et team af testere siddende.
+    Hvordan kan BB sikre en høj kvalitet i det leverede produkt,
+    når der er en ambition om at opdatere det 16 gange om dagen 
+    - og ikke har et team af testere siddende.
 
 Ud fra ovenstående udliciteres følgende underspørgsmål:
 
-    Hvordan kan BB kvalitetssikre deres softwareprodukter, løbende og kontinuerligt når de opdateres eller ændres, før det når ud til deres kunder?
+    Hvordan kan BB kvalitetssikre dets softwareprodukter, løbende og kontinuerligt når softwaren opdateres eller ændres, 
+    før det når ud til målgruppen?
 
-    Hvordan kan BB teste deres softwareprodukter på en vis der, i så høj grad som muligt, kendetegner endebrugernes perspektiv?
+    Hvordan kan BB teste dets softwareprodukter på en vis der, 
+    i så høj grad som muligt, kendetegner endebrugernes perspektiv?
 
-    Hvad skal der til for at BB får dokumenteret deres software infrastruktur, på en vis der er genskabelig og driftbar - i et udrulningsperspektiv?
+    Hvad skal der til for at BB får dokumenteret deres software infrastruktur, 
+    på en vis der er genskabelig og driftbar - i et udrulningsperspektiv?
