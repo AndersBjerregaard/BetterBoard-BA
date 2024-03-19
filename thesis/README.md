@@ -50,7 +50,7 @@ Ud fra ovenstående udliciteres følgende underspørgsmål:
     Hvordan kan BB kvalitetssikre dets softwareprodukter, løbende og kontinuerligt når softwaren opdateres eller ændres, 
     før det når ud til slutbrugeren?
 
-    Hvad skal der til for at implementere en automatiseret testplan. Der som minimum, dækker de manuelle
+    Hvad skal der til for at implementere en automatiseret kvalitetssikring. Der som minimum, dækker de manuelle
     tests der bliver foretaget før hver udrulning?
 
     Hvad skal der til at dokumentere den automatiseret drift?
