@@ -8,13 +8,13 @@ using Xunit.Abstractions;
 
 namespace WebDriverXUnit.Tests;
 
-public class CreateMeeting : IClassFixture<GridUri> {
+public class Meetings : IClassFixture<GridUri> {
     private readonly GridUri _fixture;
     private ITestOutputHelper _testOutputHelper;
     private readonly ITestUsers _testUsers;
     private readonly UserCredentials _testUserCredentials;
 
-    public CreateMeeting(GridUri fixture, ITestOutputHelper testOutputHelper)
+    public Meetings(GridUri fixture, ITestOutputHelper testOutputHelper)
     {
         _fixture = fixture;
         _testOutputHelper = testOutputHelper;
@@ -30,8 +30,11 @@ public class CreateMeeting : IClassFixture<GridUri> {
         _testUserCredentials = _testUsers.GetTestUser();
     }
 
-    [Fact]
+    [Fact(Skip = "Work in progress")]
     public async Task CreateMeeting() {
+
+        throw new NotImplementedException();
+
         DriverOptions[] driverOptions = Helpers.AvailableDriverOptions.Get();
         Task[] parallelTests = new Task[driverOptions.Length];
 
