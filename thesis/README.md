@@ -4,7 +4,7 @@ The following document is written in Danish. As the target audience for my thesi
 
 # Begrebsafklaring
 
-Målgruppen for denne rapport regnes for at være artikulær inden for software miljøet. Derfor vil der, i denne rapport, være antagelser for at læseren har forhånds forståelse for centrale begreber og akronymer inden for software.
+Målgruppen for denne rapport regnes for at være kyndig inden for software miljøet. Derfor vil der, i denne rapport, være antagelser for at læseren har forhånds forståelse for centrale begreber og akronymer inden for software.
 Andre begreber og akronymer kan der ses en beskrivelse for herunder:
 
 | Begreb | Beskrivelse |
@@ -18,7 +18,7 @@ Andre begreber og akronymer kan der ses en beskrivelse for herunder:
 BB har (blandt andre) et primært softwareprodukt som de udstiller til deres kunder. Denne software versioneres på ét repository, og kan karakteriseres som en monolitisk sammenkobling af et *frontend* og *backend* software projekt.
 Det er denne kodebase som ser de hyppigste ændringer.
 
-BB har problemer med at opnå en ambition om at kunne *deploy* ændringer, lavet i monolitten, som minimum 16 gange om dagen.
+BB har problemer med at opnå en ambition om at kunne *deploy* ændringer, lavet i monolitten, som minimum 8 gange om dagen.
 Ændringer kan være:
 - Nye Features
 - Ændringer på eksisterende features
@@ -42,7 +42,7 @@ Og sidst: Ønskes at, den mest kritiske software infrastruktur der står udokume
 Opsummeret set undersøger denne opgave følgende:
 
     Hvordan kan BB sikre en høj kvalitet i det leverede produkt,
-    når der er en ambition om at opdatere det mindst 10 gange om dagen 
+    når der er en ambition om at opdatere det mindst 8 gange om dagen 
     - og ikke har et team af testere siddende.
 
 Ud fra ovenstående udliciteres følgende underspørgsmål:
@@ -50,7 +50,7 @@ Ud fra ovenstående udliciteres følgende underspørgsmål:
     Hvordan kan BB kvalitetssikre dets softwareprodukter, løbende og kontinuerligt når softwaren opdateres eller ændres, 
     før det når ud til slutbrugeren?
 
-    Hvor gennemført en testplan skal der implementeres, for at garantere slutbrugeren en software kvalitet
-    der stemmer overens med firmaets Service Level Agreement (SLA)
+    Hvad skal der til for at implementere en automatiseret testplan. Der som minimum, dækker de manuelle
+    tests der bliver foretaget før hver udrulning?
 
     Hvad skal der til at dokumentere den automatiseret drift?
