@@ -1,3 +1,19 @@
+# Using VSCode as IDE
+
+## Project identification
+
+Ensure that `rust-analyzer` extension is installed. Which is the official Rust LSP.
+
+If it doesn't exist already. Create the `.vscode` folder inside the root of the project, and create a `settings.json` file with the following content:
+
+```json
+{
+    "rust-analyzer.linkedProjects": [
+        "./automation/plotter/Cargo.toml"
+    ]
+}
+```
+
 # BetterBoard Automatic E2E Testing
 
 ![E2E Testing Components!](./documentation/betterboard-e2e.png "E2E Testing Copmonents")
