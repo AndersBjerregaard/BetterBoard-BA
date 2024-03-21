@@ -1,6 +1,9 @@
 ### Retrieves all estimates of issues that are "Done"
 ## Example output:
 # 7.5
+# "2024-04-02"
+# 2.0
+# 2024-04-02"
 $DONE_ISSUES = gh api graphql -f query='
     query{
         node(id: "PVT_kwHOBVT5U84Aerum") {
@@ -48,9 +51,10 @@ $DONE_ISSUES = gh api graphql -f query='
                 }
             }
         }
-    }' | jq -r '.data.node.items.nodes[] | select(.fieldValues.nodes[] | select(.field.name == "Status" and .name == "Done"))'
+    }' | jq -r '.data.node.items.nodes[] | select(.fieldValues.nodes[] | select(.field.name == "Status" and .name == "Done")) | .fieldValues.nodes[] | select(.field.name == "Date" or .field.name == "Estimate") | .number + .date'
 
-$DONE_ISSUES | jq --slurp '.[] | .fieldValues.nodes[] | select(.field.name == "Date" or .field.name == "Estimate")'
+$DONE_ISSUES
 
-# | {fieldName: .field.name, value: .date or .number}#
-# .fieldValues.nodes[] | select(.number != null or .date != null) | .number, .date
+# $ESTIMATE_DATES = $DONE_ISSUES | jq --slurp '.[] | .fieldValues.nodes[] | select(.field.name == "Date" or .field.name == "Estimate")'
+
+# $ESTIMATE_DATES | jq '.number + .date'
