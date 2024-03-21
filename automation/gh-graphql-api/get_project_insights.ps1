@@ -51,10 +51,8 @@ $DONE_ISSUES = gh api graphql -f query='
                 }
             }
         }
-    }' | jq -r '.data.node.items.nodes[] | select(.fieldValues.nodes[] | select(.field.name == "Status" and .name == "Done")) | .fieldValues.nodes[] | select(.field.name == "Date" or .field.name == "Estimate") | .number + .date'
+    }' | jq -r '.data.node.items.nodes[] | select(.fieldValues.nodes[] | select(.field.name == "Status" and .name == "Done"))'
 
-$DONE_ISSUES
+$ESTIMATE_DATES = $DONE_ISSUES | jq --slurp '.[] | .fieldValues.nodes[] | select(.field.name == "Date" or .field.name == "Estimate")'
 
-# $ESTIMATE_DATES = $DONE_ISSUES | jq --slurp '.[] | .fieldValues.nodes[] | select(.field.name == "Date" or .field.name == "Estimate")'
-
-# $ESTIMATE_DATES | jq '.number + .date'
+$ESTIMATE_DATES | jq '.number + .date'
