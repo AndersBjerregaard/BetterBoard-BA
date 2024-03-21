@@ -1,12 +1,17 @@
-use std::{error::Error, fs::File};
+pub mod csv_reader;
+pub mod insights;
 
+use chrono::NaiveDate;
 use plotters::prelude::*;
-use csv::{self, ReaderBuilder};
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Sample data
-    let projected = projected()?;
-    let actual = vec![(0, 320.0), (30, 170.7), (61, 30.0)];
+    let projected = csv_reader::read_naive_date()?;
+    // let actual = vec![
+    //     (NaiveDate::from_ymd_opt(2024, 4, 1).unwrap(), 320.0_f32), 
+    //     (NaiveDate::from_ymd_opt(2024, 4, 30).unwrap(), 170.7_f32), 
+    //     (NaiveDate::from_ymd_opt(2024, 5, 31).unwrap(), 30.0_f32)];
+    let actual = insights::get()?;
 
     // Set up the chart area
     let root = 
@@ -19,7 +24,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .margin(5)
         .x_label_area_size(30)
         .y_label_area_size(30)
-        .build_cartesian_2d(0..61, 0.0..320.0)?;
+        .build_cartesian_2d(
+            NaiveDate::from_ymd_opt(2024, 4, 1).unwrap()
+                ..NaiveDate::from_ymd_opt(2024, 6, 2).unwrap(), 
+            0.0_f32..320.0_f32)?;
 
     chart.configure_mesh().draw()?;
 
@@ -43,17 +51,4 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .draw()?;
 
     Ok(())
-}
-
-fn projected() -> Result<Vec<(i32, f64)>, Box<dyn Error>> {
-    let mut projected = Vec::new();
-    let file = File::open("projected.csv")?;
-    let mut rdr = ReaderBuilder::new().has_headers(false).from_reader(file);
-    for result in rdr.records() {
-        let record = result?;
-        let x: i32 = record[0].parse()?;
-        let y: f64 = record[1].parse()?;
-        projected.push((x, y));
-    }
-    Result::Ok(projected)
 }
