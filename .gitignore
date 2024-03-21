@@ -10,6 +10,7 @@
 **/TEST_USERS.json
 **/.env
 **.bkp
+**.dtmp
 **.aux
 **.log
 **.lot
