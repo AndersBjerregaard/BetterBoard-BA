@@ -14,9 +14,15 @@ If it doesn't exist already. Create the `.vscode` folder inside the root of the 
 }
 ```
 
+# Project Tooling
+
+## Burndown Chart
+
+![Burndown Chart!](./documentation/automation.png "Burndown Chart system")
+
 # BetterBoard Automatic E2E Testing
 
-![E2E Testing Components!](./documentation/betterboard-e2e.png "E2E Testing Copmonents")
+![E2E Testing Components!](./documentation/betterboard-e2e.png "E2E Testing Components")
 
 ## Selenium WebDriver NuGet
 
