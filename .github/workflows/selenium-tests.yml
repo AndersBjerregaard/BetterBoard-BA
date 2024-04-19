@@ -12,6 +12,8 @@ defaults:
 
 jobs:
 
+    # Deploy selenium grid
+
     build:
 
         name: Build .Net 8 WebDriver project
@@ -54,3 +56,5 @@ jobs:
                 API_KEY: ${{ secrets.API_KEY }}
                 RUNTIME_ENVIRONMENT: STAGING 
               run: dotnet test --no-restore --no-build --logger "console;verbosity=detailed"
+
+    # Tear down selenium grid
