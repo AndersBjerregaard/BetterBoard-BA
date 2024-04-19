@@ -83,3 +83,13 @@ Then you can create a project template through the cli like so:
 ```
 dotnet new aspire-starter
 ```
+
+# Startup Order / Readiness
+
+On the topic of startup order of services. As per example of a docker compose utilizing the `depends_on` parameter.
+
+.NET Aspire does not support, and probably will never support, orchestrating startup order. As discussed in this [GitHub Issue](https://github.com/dotnet/aspire/issues/921).
+
+TLDR comment from David Fowler:
+
+"*Controlling startup order of services is something we generally do not want to offer be because notion does not exist in reality when you deploy. There are a few tasks and jobs that you do want to run in some order (migrations for example), but we’re not convinced that adding startup order generally is a positive .*"

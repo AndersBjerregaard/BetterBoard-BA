@@ -6,6 +6,12 @@ Execute the test runner with the `logger` option:
 dotnet test --logger "console;verbosity=detailed"
 ```
 
+Optionally, pass an environment variable value to set the Selenium WebDriver uri:
+
+```
+dotnet test --logger "console;verbosity=detailed" -e GRID_URI="http://localhost:8082" --filter WebDriverXUnit.Tests.Authentication.FirefoxSmokeTest
+```
+
 # Linting
 
 [*SonarLint*](https://www.sonarsource.com/products/sonarlint/)

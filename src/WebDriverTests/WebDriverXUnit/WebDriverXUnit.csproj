@@ -29,6 +29,7 @@
   <Target Name="CopyConfigFiles" BeforeTargets="PreBuildEvent">
     <ItemGroup>
       <ConfigFiles Include="*.txt" />
+      <ConfigFiles Include="TEST_USERS.json" />
     </ItemGroup>
     <Copy SourceFiles="@(ConfigFiles)" DestinationFolder="$(OutputPath)" />
   </Target>

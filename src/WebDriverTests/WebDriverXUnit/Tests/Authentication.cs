@@ -36,6 +36,39 @@ public class Authentication : IClassFixture<GridUri>
     }
 
     [Fact]
+    public void FirefoxSmokeTest()
+    {
+        var options = new FirefoxOptions();
+        var uri = _fixture.WebDriverUri;
+
+        RemoteWebDriver? driver = null;
+        try
+        {
+            driver = new RemoteWebDriver(uri, options);
+
+            driver.Navigate().GoToUrl("https://app.betterboard.dk/#/login");
+
+            Assert.Equal("BetterBoard - Board Management System", driver.Title);
+
+            var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(20));
+            wait.IgnoreExceptionTypes(typeof(NoSuchElementException), typeof(ElementNotVisibleException));
+            IWebElement? header = wait.Until(webDriver => {
+                 var element = webDriver.FindElement(By.TagName("h4"));
+                 return element.Displayed ? element : null;
+              });
+             Assert.NotNull(header);
+             Assert.Equal("Welcome to BetterBoard.", header.Text);
+
+             _testOutputHelper.WriteLine("Smoketest complete");    
+        }
+        finally
+        {
+            driver?.Quit();
+        }
+        
+    }
+
+    [Fact]
     public async Task SmokeTest()
     {
         DriverOptions[] driverOptions = Helpers.AvailableDriverOptions.Get();
