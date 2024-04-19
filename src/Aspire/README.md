@@ -93,3 +93,61 @@ On the topic of startup order of services. As per example of a docker compose ut
 TLDR comment from David Fowler:
 
 "*Controlling startup order of services is something we generally do not want to offer be because notion does not exist in reality when you deploy. There are a few tasks and jobs that you do want to run in some order (migrations for example), but we’re not convinced that adding startup order generally is a positive .*"
+
+# Deploy to Azure Container Apps
+
+*[source article](https://learn.microsoft.com/en-us/dotnet/aspire/deployment/azure/aca-deployment-azd-in-depth?tabs=windows)*
+
+![azd up!](../../documentation/azd-internals.png "azd up")
+
+## Prerequisite
+
+Have `Azure Developer CLI` installed.
+
+Windows:
+```PowerShell
+winget install microsoft.azd
+```
+
+Linux:
+```Bash
+curl -fsSL https://aka.ms/install-azd.sh | bash
+```
+
+macOS:
+```
+brew tap azure/azd && brew install azd
+```
+
+## Initialize with `azd init`
+
+In Aspire working directory, with the `Aspire.sln` file in the working directory.
+```shell
+azd init
+```
+
+## Configure CI / CD
+
+```shell
+azd auth login
+```
+
+
+
+## Generate Manifest
+
+```shell
+dotnet run --project Aspire.AppHost.csproj -- --publisher manifest --output-path ../aspire-manifest.json
+```
+
+## Generate Bicep
+
+```shell
+azd provision
+```
+
+## Deploy
+
+```shell
+azd deploy
+```
