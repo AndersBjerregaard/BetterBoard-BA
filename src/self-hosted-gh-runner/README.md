@@ -10,7 +10,7 @@
 docker build --tag <your-tag> --file .Dockerfile .
 ```
 
-## Running
+## Prerequisite
 
 Populate environment variables `REPO` and `TOKEN`
 
@@ -19,6 +19,12 @@ Example `.env` file:
 # .env
 REPO=foo/bar
 ACCESS_TOKEN=1234
+```
+
+## Running with `docker run`
+
+```shell
+docker run -dti --network=host --env-file .env --name gh-actions-runner anders97/gh-actions-runner:latest
 ```
 
 ## Create a registration token for a repository
