@@ -13,4 +13,9 @@ public static class SeleniumBuilderExtensions
             .WithExternalHttpEndpoints() // Allow external ingress communication outside container environment
             .WithImage(SeleniumStandaloneResource.Image, SeleniumStandaloneResource.Tag);
     }
+
+    public static IDistributedApplicationBuilder AddSeleniumGrid(this IDistributedApplicationBuilder builder)
+    {
+        return builder;
+    }
 }
