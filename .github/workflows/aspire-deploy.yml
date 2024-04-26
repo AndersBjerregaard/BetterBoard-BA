@@ -6,7 +6,7 @@ permissions:
   contents: read
 
 jobs:
-  build:
+  deploy:
     runs-on: self-hosted
     env:
       AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
@@ -28,4 +28,4 @@ jobs:
 
       - name: Deploy bicep
         run: |
-          az deployment sub create --name selenium-deployment --location westeurope --template-file ./src/Aspire/infra/main.bicep
+          az deployment sub create --name selenium-deployment --location westeurope --template-file ./src/Aspire/infra/main.bicep --parameters ./src/Aspire/infra/main.parameters.json
