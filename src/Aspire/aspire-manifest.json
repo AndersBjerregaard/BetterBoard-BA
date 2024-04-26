@@ -1,0 +1,18 @@
+{
+  "resources": {
+    "selenium-standalone": {
+      "type": "container.v0",
+      "image": "selenium/standalone-firefox:4.18.0-20240220",
+      "bindings": {
+        "webdriver": {
+          "scheme": "http",
+          "protocol": "tcp",
+          "transport": "http",
+          "port": 8082,
+          "targetPort": 4444,
+          "external": true
+        }
+      }
+    }
+  }
+}

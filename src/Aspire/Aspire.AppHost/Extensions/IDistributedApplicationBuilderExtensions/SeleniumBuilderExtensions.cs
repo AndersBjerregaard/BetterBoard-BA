@@ -10,6 +10,7 @@ public static class SeleniumBuilderExtensions
 
         return builder.AddResource(seleniumStandalone)
             .WithHttpEndpoint(port: port, targetPort: 4444, name: SeleniumStandaloneResource.PrimaryEndpointName) // Internal port defaults to 4444
+            .WithExternalHttpEndpoints() // Allow external ingress communication outside container environment
             .WithImage(SeleniumStandaloneResource.Image, SeleniumStandaloneResource.Tag);
     }
 }
