@@ -1,0 +1,72 @@
+- Indledning
+	- Introduktion til firmaet & domænet
+- Problemstilling
+	- Overflade system-diagram over problemstilling
+	- Problemformulering
+- Afgrænsning
+	- Test niveauet mod BB stacken vil være web app frontend interaktion & validering
+	- Azure & .NET stacken
+	- Docker som container runtime
+- Metode
+	- Continuous Integration & Continuous Delivery / Deployment pipelines
+		- Secret / key management
+	- Virtualisering / Containerisering
+	- Systemdokumentation (diagrammer)
+		- System infrastruktur diagrammer
+		- Sekvensdiagrammer
+	- Azure Cloud & Tooling
+	- Testniveauer
+		- End-to-end
+			- Automatiseret web interaktion
+		- Integration
+		- Unit
+	- Kommunikationsprotokoller
+		- HTTP / S
+		- AMQP
+- Analyse
+	- Source control
+		- GitHub
+			- Blev valgt pga. letheden ved at gøre open-source
+		- Azure DevOps
+			- Ville nok være favoritten
+	- Automatiseret web interaktion tooling
+		- Selenium
+			- Bliver udgangspunktet ved implementering
+		- Cypress
+	- Virtualisering
+		- Genskabelig miljøer
+			- Konfiguration
+		- Lokal & Cloud miljø
+			- Ngrok i lokal miljø
+			- Azure docker image understøttelse
+	- E2E tests
+		- Usecases
+		- Validering af webdriver resultater
+		- Test eksekverings miljø
+			- Staging
+			- Prod
+		- Test miljø
+			- Seed / Teardown
+			- Tailored fresh database instance
+	- CI / CD
+		- GitHub Actions
+			- Blev valgt pga. projektets rammer
+		- Azure Pipelines
+			- Ville være favorit hvis Azure DevOps er valgte source control
+			- Er også lettere hvis Azure er valgte cloud provider
+		- Secret / Key management
+			- Azure Key Vault
+			- GitHub Secrets
+		- Self-hosted runners / agents vs. Cloud provided runners / agents
+	- Sikkerhedsimplementering (? Skal det snakkes om ?) 
+	- Udrulning til Azure
+		- Infrastructure-as-code
+		- .NET Aspire
+		- Azure web GUI
+- Konklusion
+	- Lokalt system infrastruktur diagram
+	- Distribueret system infrastruktur diagram
+	- Sekvensdiagram på monolit endpoints
+	- Blev problemformuleringens spørgsmål opnået?
+- Litteraturliste
+- Bilag
