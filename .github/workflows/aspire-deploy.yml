@@ -29,4 +29,4 @@ jobs:
 
       - name: Deploy bicep
         run: |
-          az deployment group create --resource-group ${{ env.AZURE_RESOURCE_GROUP }} --name selenium-deployment --template-file ./src/Aspire/infra/main.bicep --parameters ./src/Aspire/infra/main.parameters.json
+          az deployment group create --resource-group ${{ env.AZURE_RESOURCE_GROUP }} --name selenium-deployment --template-file ./IaC/selenium-hub/main.bicep --parameters ./IaC/selenium-hub/main.parameters.json

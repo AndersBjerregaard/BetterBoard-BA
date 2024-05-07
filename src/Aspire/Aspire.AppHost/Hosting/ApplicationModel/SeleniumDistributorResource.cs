@@ -1,4 +1,4 @@
-﻿namespace Aspire.AppHost.ApplicationModel;
+﻿namespace Aspire.Hosting.ApplicationModel;
 
 public class SeleniumDistributorResource(string name, string? entrypoint = null) : ContainerResource(name, entrypoint), IResource
 {

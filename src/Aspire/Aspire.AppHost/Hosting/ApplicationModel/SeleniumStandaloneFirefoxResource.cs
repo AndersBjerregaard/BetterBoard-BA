@@ -1,6 +1,6 @@
-﻿namespace Aspire.AppHost.ApplicationModel;
+﻿namespace Aspire.Hosting.ApplicationModel;
 
-public class SeleniumStandaloneResource(string name, string? entrypoint = null) : ContainerResource(name, entrypoint), IResource
+public class SeleniumStandaloneFirefoxResource(string name, string? entrypoint = null) : ContainerResource(name, entrypoint), IResource
 {
     internal const string? PrimaryEndpointName = "webdriver";
     internal const string Image = "selenium/standalone-firefox";
