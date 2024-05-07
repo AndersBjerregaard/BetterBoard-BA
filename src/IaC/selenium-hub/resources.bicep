@@ -73,14 +73,15 @@ resource seleniumHub 'Microsoft.App/containerApps@2023-05-02-preview' = {
       ]
       scale: {
         minReplicas: 1
+        maxReplicas: 1
       }
     }
   }
   tags: union(tags, {'aspire-resource-name': 'selenium-hub'})
 }
 
-resource seleniumNode 'Microsoft.App/containerApps@2023-05-02-preview' = {
-  name: 'selenium-node'
+resource seleniumNodeFirefox 'Microsoft.App/containerApps@2023-05-02-preview' = {
+  name: 'selenium-node-firefox'
   location: location
   dependsOn: [
      seleniumHub
@@ -94,11 +95,11 @@ resource seleniumNode 'Microsoft.App/containerApps@2023-05-02-preview' = {
        containers: [
          {
            image: 'selenium/node-firefox:4.18.0-20240220'
-           name: 'selenium-node'
+           name: 'selenium-node-firefox'
            env: [
              {
                name: 'SE_EVENT_BUS_HOST'
-               value: seleniumHub.id
+               value: seleniumHub.properties.outboundIpAddresses[0]
              }
              {
                name: 'SE_EVENT_BUS_PUBLISH_PORT'
@@ -108,9 +109,129 @@ resource seleniumNode 'Microsoft.App/containerApps@2023-05-02-preview' = {
                name: 'SE_EVENT_BUS_SUBSCRIBE_PORT'
                value: '4443'
              }
+             {
+               name: 'SE_NODE_SESSION_TIMEOUT'
+               value: '60'
+             }
+             {
+               name: 'SE_NODE_OVERRIDE_MAX_SESSIONS'
+               value: 'true'
+             }
+             {
+               name: 'SE_NODE_MAX_SESSIONS'
+               value: '3'
+             }
            ]
          }
        ]
+       scale: {
+         minReplicas: 1
+         maxReplicas: 1
+       }
+     }
+  }
+}
+
+resource seleniumNodeChrome 'Microsoft.App/containerApps@2023-05-02-preview' = {
+  name: 'selenium-node-chrome'
+  location: location
+  dependsOn: [
+     seleniumHub
+  ]
+  properties: {
+     environmentId: containerAppEnvironment.id
+     configuration: {
+       activeRevisionsMode: 'Single'
+     }
+     template: {
+       containers: [
+         {
+           image: 'selenium/node-chrome:4.18.0-20240220'
+           name: 'selenium-node-chrome'
+           env: [
+             {
+               name: 'SE_EVENT_BUS_HOST'
+               value: seleniumHub.properties.outboundIpAddresses[0]
+             }
+             {
+               name: 'SE_EVENT_BUS_PUBLISH_PORT'
+               value: '4442'
+             }
+             {
+               name: 'SE_EVENT_BUS_SUBSCRIBE_PORT'
+               value: '4443'
+             }
+             {
+               name: 'SE_NODE_SESSION_TIMEOUT'
+               value: '60'
+             }
+             {
+               name: 'SE_NODE_OVERRIDE_MAX_SESSIONS'
+               value: 'true'
+             }
+             {
+               name: 'SE_NODE_MAX_SESSIONS'
+               value: '3'
+             }
+           ]
+         }
+       ]
+       scale: {
+         minReplicas: 1
+         maxReplicas: 1
+       }
+     }
+  }
+}
+
+resource seleniumNodeEdge 'Microsoft.App/containerApps@2023-05-02-preview' = {
+  name: 'selenium-node-edge'
+  location: location
+  dependsOn: [
+     seleniumHub
+  ]
+  properties: {
+     environmentId: containerAppEnvironment.id
+     configuration: {
+       activeRevisionsMode: 'Single'
+     }
+     template: {
+       containers: [
+         {
+           image: 'selenium/node-edge:4.18.0-20240220'
+           name: 'selenium-node-edge'
+           env: [
+             {
+               name: 'SE_EVENT_BUS_HOST'
+               value: seleniumHub.properties.outboundIpAddresses[0]
+             }
+             {
+               name: 'SE_EVENT_BUS_PUBLISH_PORT'
+               value: '4442'
+             }
+             {
+               name: 'SE_EVENT_BUS_SUBSCRIBE_PORT'
+               value: '4443'
+             }
+             {
+               name: 'SE_NODE_SESSION_TIMEOUT'
+               value: '60'
+             }
+             {
+               name: 'SE_NODE_OVERRIDE_MAX_SESSIONS'
+               value: 'true'
+             }
+             {
+               name: 'SE_NODE_MAX_SESSIONS'
+               value: '3'
+             }
+           ]
+         }
+       ]
+       scale: {
+         minReplicas: 1
+         maxReplicas: 1
+       }
      }
   }
 }
