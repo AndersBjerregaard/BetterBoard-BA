@@ -3,18 +3,7 @@ version: '3.8'
 services:
   runner:
     container_name: gh-actions-runner
-    image: anders97/gh-actions-runner:0.10
+    image: anders97/gh-actions-runner:latest
     restart: always
     env_file:
       - .env
-    network_mode: "host"
-    # deploy:
-    #   mode: replicated
-    #   replicas: 1
-    #   resources:
-    #     limits:
-    #       cpus: '0.35'
-    #       memory: 300M
-    #     reservations:
-    #       cpus: '0.25'
-    #       memory: 128M

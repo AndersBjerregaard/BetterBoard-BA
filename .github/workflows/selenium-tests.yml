@@ -1,18 +1,54 @@
-name: Build & Execute Tests .Net WebDriver project
+name: Acceptance Tests Through GUI
 
 # Manual trigger with `gh workflow run <workflow_name>`
 on: workflow_dispatch
 
-run-name: E2E Tests
+run-name: Acceptance Tests Through GUI
 
 defaults:
     run:
         shell: bash
-        working-directory: src/WebDriverTests
+        working-directory: src
 
 jobs:
 
-    # Deploy selenium grid
+    runidentifier:
+      
+      name: Generate unique identifier for this action run
+
+      runs-on: self-hosted
+
+      outputs:
+        outputid: ${{ steps.idstep.outputs.identifier }}
+        outputobjectid: ${{ steps.objectidstep.outputs.objectid }}
+
+      steps:
+
+        - name: Set execute permissions
+          run: chmod +x ./test-transaction/objectidgen.sh
+
+        - id: idstep
+          run: echo "identifier=$(uuidgen)" >> $GITHUB_OUTPUT
+
+        - id: objectidstep
+          run: echo "objectid=$(./test-transaction/objectidgen.sh)" >> $GITHUB_OUTPUT
+
+    seed:
+
+      name: Set-up for test
+
+      runs-on: self-hosted
+
+      needs: runidentifier
+
+      steps:
+        
+        - name: Execute permissions
+
+          run: chmod +x ./test-transaction/setup.sh
+
+        - name: setup script
+          run: ./test-transaction/setup.sh ${{ secrets.API_KEY }} ${{ needs.runidentifier.outputs.outputid }} ${{ needs.runidentifier.outputs.outputobjectid }}
 
     build:
 
@@ -24,6 +60,9 @@ jobs:
 
             - name: checkout
               uses: actions/checkout@v4
+
+            - name: working directory
+              run: cd WebDriverTests
 
             - name: dotnet restore
               run: dotnet restore WebDriverTests.sln
@@ -41,6 +80,9 @@ jobs:
 
         steps:
 
+            - name: working directory
+              run: cd WebDriverTests
+
             - name: Set execute permissions for shell script
               run: chmod +x ./wait_for_grid.sh
 
@@ -55,6 +97,20 @@ jobs:
                 TEST_USERS: ${{ secrets.TEST_USERS }}
                 API_KEY: ${{ secrets.API_KEY }}
                 RUNTIME_ENVIRONMENT: STAGING 
-              run: dotnet test --no-restore --no-build --logger "console;verbosity=detailed"
+              run: dotnet test --no-restore --no-build --logger "console;verbosity=detailed" -e GRID_URI=${{ secrets.GRID_URI }} --filter WebDriverXUnit.Tests.Authentication.FirefoxSmokeTest
 
-    # Tear down selenium grid
+    teardown:
+
+      name: teardown
+
+      runs-on: self-hosted
+
+      needs: runidentifier
+
+      steps:
+
+        - name: execution permissions
+          run: chmod +x ./test-transaction/cleanup.sh
+
+        - name: teardown script
+          run: ./test-transaction/cleanup.sh ${{ secrets.API_KEY }} ${{ needs.runidentifier.outputs.outputid }} ${{ needs.runidentifier.outputs.outputobjectid }}
