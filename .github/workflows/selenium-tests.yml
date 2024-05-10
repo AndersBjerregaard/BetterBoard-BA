@@ -99,7 +99,7 @@ jobs:
                 TEST_USERS: ${{ secrets.TEST_USERS }}
                 API_KEY: ${{ secrets.API_KEY }}
                 RUNTIME_ENVIRONMENT: STAGING 
-              run: dotnet test --no-restore --no-build --logger "console;verbosity=detailed" -e GRID_URI=${{ secrets.GRID_URI }} --filter WebDriverXUnit.Tests.Authentication.FirefoxSmokeTest ./src/WebDriverTests/WebDriverXUnit/WebDriverXUnit.csproj
+              run: dotnet test --no-restore --no-build --logger "console;verbosity=detailed" --filter WebDriverXUnit.Tests.Authentication.FirefoxSmokeTest ./src/WebDriverTests/WebDriverXUnit/WebDriverXUnit.csproj
 
     teardown:
 
