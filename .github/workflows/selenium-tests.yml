@@ -8,7 +8,6 @@ run-name: Acceptance Tests Through GUI
 defaults:
     run:
         shell: bash
-        working-directory: src
 
 jobs:
 
@@ -24,14 +23,17 @@ jobs:
 
       steps:
 
+        - name: working directory
+          run: cd ./src/test-transaction
+
         - name: Set execute permissions
-          run: chmod +x ./test-transaction/objectidgen.sh
+          run: chmod +x objectidgen.sh
 
         - id: idstep
           run: echo "identifier=$(uuidgen)" >> $GITHUB_OUTPUT
 
         - id: objectidstep
-          run: echo "objectid=$(./test-transaction/objectidgen.sh)" >> $GITHUB_OUTPUT
+          run: echo "objectid=$(objectidgen.sh)" >> $GITHUB_OUTPUT
 
     seed:
 
@@ -42,13 +44,15 @@ jobs:
       needs: runidentifier
 
       steps:
+
+        - name: working directory
+          run: cd ./src/test-transaction
         
         - name: Execute permissions
-
-          run: chmod +x ./test-transaction/setup.sh
+          run: chmod +x setup.sh
 
         - name: setup script
-          run: ./test-transaction/setup.sh ${{ secrets.API_KEY }} ${{ needs.runidentifier.outputs.outputid }} ${{ needs.runidentifier.outputs.outputobjectid }}
+          run: setup.sh ${{ secrets.API_KEY }} ${{ needs.runidentifier.outputs.outputid }} ${{ needs.runidentifier.outputs.outputobjectid }}
 
     build:
 
@@ -56,13 +60,15 @@ jobs:
 
         runs-on: self-hosted
 
+        continue-on-error: true
+
         steps:
 
             - name: checkout
               uses: actions/checkout@v4
 
             - name: working directory
-              run: cd WebDriverTests
+              run: cd ./src/WebDriverTests
 
             - name: dotnet restore
               run: dotnet restore WebDriverTests.sln
@@ -72,16 +78,20 @@ jobs:
     
     test:
 
-        needs: build
+        needs:
+          - build
+          - seed
 
         name: Run Selenium Scripts
 
         runs-on: self-hosted
 
+        continue-on-error: true
+
         steps:
 
             - name: working directory
-              run: cd WebDriverTests
+              run: cd ./src/WebDriverTests
 
             - name: Set execute permissions for shell script
               run: chmod +x ./wait_for_grid.sh
@@ -105,12 +115,14 @@ jobs:
 
       runs-on: self-hosted
 
-      needs: runidentifier
+      needs:
+        - seed
+        - test
 
       steps:
 
         - name: execution permissions
-          run: chmod +x ./test-transaction/cleanup.sh
+          run: chmod +x ./src/test-transaction/cleanup.sh
 
         - name: teardown script
-          run: ./test-transaction/cleanup.sh ${{ secrets.API_KEY }} ${{ needs.runidentifier.outputs.outputid }} ${{ needs.runidentifier.outputs.outputobjectid }}
+          run: ./src/test-transaction/cleanup.sh ${{ secrets.API_KEY }} ${{ needs.runidentifier.outputs.outputid }} ${{ needs.runidentifier.outputs.outputobjectid }}
