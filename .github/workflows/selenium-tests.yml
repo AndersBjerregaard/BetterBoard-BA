@@ -27,7 +27,7 @@ jobs:
           uses: actions/checkout@v4
 
         - id: idstep
-          run: echo "identifier=$(uuidgen)" >> $GITHUB_OUTPUT
+          run: echo "identifier=$(uuidgen | tr -d '-')" >> $GITHUB_OUTPUT
 
         - id: objectidstep
           run: echo "objectid=$(tr -dc 'a-f0-9' < /dev/urandom | head -c 24)" >> $GITHUB_OUTPUT
@@ -45,8 +45,12 @@ jobs:
         - name: Execute permissions
           run: chmod +x ./src/test-transaction/setup.sh
 
+        # - name: setup script
+        #   run: ./src/test-transaction/setup.sh ${{ secrets.API_KEY }} ${{ needs.runidentifier.outputs.outputid }} ${{ needs.runidentifier.outputs.outputobjectid }}
+
         - name: setup script
-          run: ./src/test-transaction/setup.sh ${{ secrets.API_KEY }} ${{ needs.runidentifier.outputs.outputid }} ${{ needs.runidentifier.outputs.outputobjectid }}
+          run: |
+            curl --location "https://communal-hardy-ewe.ngrok-free.app/api/v1/testtransaction/start" --header "X-Api-Key: ${{ secrets.API_KEY }}" --header "Content-Type: application/json" --data "{ "Id": "${{ needs.runidentifier.outputs.outputid }}", "CompanyId": "${{ needs.runidentifier.outputs.outputobjectid }}" }"
 
     build:
 
@@ -112,5 +116,9 @@ jobs:
         - name: execution permissions
           run: chmod +x ./src/test-transaction/cleanup.sh
 
+        # - name: teardown script
+        #   run: ./src/test-transaction/cleanup.sh ${{ secrets.API_KEY }} ${{ needs.runidentifier.outputs.outputid }} ${{ needs.runidentifier.outputs.outputobjectid }}
+
         - name: teardown script
-          run: ./src/test-transaction/cleanup.sh ${{ secrets.API_KEY }} ${{ needs.runidentifier.outputs.outputid }} ${{ needs.runidentifier.outputs.outputobjectid }}
+          run: |
+            curl --location --request DELETE "https://communal-hardy-ewe.ngrok-free.app/api/v1/testtransaction/cleanup" --header "X-Api-Key: ${{ secrets.API_KEY }}" --header "Content-Type: application/json" --data "{ "Id": "${{ needs.runidentifier.outputs.outputid }}", "CompanyId": "${{ needs.runidentifier.outputs.outputobjectid }}" }"
