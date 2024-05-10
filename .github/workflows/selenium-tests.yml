@@ -23,6 +23,9 @@ jobs:
 
       steps:
 
+        - name: checkout
+          uses: actions/checkout@v4
+
         - name: Set execute permissions
           run: chmod +x ./src/test-transaction/objectidgen.sh
 
