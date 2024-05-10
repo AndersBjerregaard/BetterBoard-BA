@@ -29,11 +29,8 @@ jobs:
         - id: idstep
           run: echo "identifier=$(uuidgen)" >> $GITHUB_OUTPUT
 
-        - name: Set execute permissions
-          run: chmod +x ./src/test-transaction/objectidgen.sh
-
         - id: objectidstep
-          run: echo "objectid=$(./src/test-transaction/objectidgen.sh)" >> $GITHUB_OUTPUT
+          run: echo "objectid=$(tr -dc 'a-f0-9' < /dev/urandom | head -c 24)" >> $GITHUB_OUTPUT
 
     seed:
 
