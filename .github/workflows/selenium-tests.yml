@@ -46,7 +46,7 @@ jobs:
           run: chmod +x ./src/test-transaction/setup.sh
 
         - name: setup script
-          run: setup.sh ${{ secrets.API_KEY }} ${{ needs.runidentifier.outputs.outputid }} ${{ needs.runidentifier.outputs.outputobjectid }}
+          run: ./src/test-transaction/setup.sh ${{ secrets.API_KEY }} ${{ needs.runidentifier.outputs.outputid }} ${{ needs.runidentifier.outputs.outputobjectid }}
 
     build:
 

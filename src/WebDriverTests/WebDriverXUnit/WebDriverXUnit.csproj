@@ -26,12 +26,12 @@
   </ItemGroup>
 
   <!-- Copy configuration files to output directory -->
-  <Target Name="CopyConfigFiles" BeforeTargets="PreBuildEvent">
+  <!-- <Target Name="CopyConfigFiles" BeforeTargets="PreBuildEvent">
     <ItemGroup>
       <ConfigFiles Include="*.txt" />
       <ConfigFiles Include="TEST_USERS.json" />
     </ItemGroup>
-    <Copy SourceFiles="@(ConfigFiles)" DestinationFolder="$(OutputPath)" />
+    <Copy SourceFiles="@(ConfigFiles)" DestinationFolder="$(OutputPath)" /> -->
   </Target>
 
 </Project>
