@@ -23,17 +23,14 @@ jobs:
 
       steps:
 
-        - name: working directory
-          run: cd ./src/test-transaction
-
         - name: Set execute permissions
-          run: chmod +x objectidgen.sh
+          run: chmod +x ./src/test-transaction/objectidgen.sh
 
         - id: idstep
           run: echo "identifier=$(uuidgen)" >> $GITHUB_OUTPUT
 
         - id: objectidstep
-          run: echo "objectid=$(objectidgen.sh)" >> $GITHUB_OUTPUT
+          run: echo "objectid=$(./src/test-transaction/objectidgen.sh)" >> $GITHUB_OUTPUT
 
     seed:
 
@@ -44,12 +41,9 @@ jobs:
       needs: runidentifier
 
       steps:
-
-        - name: working directory
-          run: cd ./src/test-transaction
         
         - name: Execute permissions
-          run: chmod +x setup.sh
+          run: chmod +x ./src/test-transaction/setup.sh
 
         - name: setup script
           run: setup.sh ${{ secrets.API_KEY }} ${{ needs.runidentifier.outputs.outputid }} ${{ needs.runidentifier.outputs.outputobjectid }}
@@ -67,14 +61,11 @@ jobs:
             - name: checkout
               uses: actions/checkout@v4
 
-            - name: working directory
-              run: cd ./src/WebDriverTests
-
             - name: dotnet restore
-              run: dotnet restore WebDriverTests.sln
+              run: dotnet restore ./src/WebDriverTests/WebDriverTests.sln
             
             - name: dotnet build
-              run: dotnet build --no-restore WebDriverTests.sln
+              run: dotnet build --no-restore ./src/WebDriverTests/WebDriverTests.sln
     
     test:
 
@@ -90,16 +81,13 @@ jobs:
 
         steps:
 
-            - name: working directory
-              run: cd ./src/WebDriverTests
-
             - name: Set execute permissions for shell script
-              run: chmod +x ./wait_for_grid.sh
+              run: chmod +x ./src/WebDriverTests/wait_for_grid.sh
 
             - name: Healthcheck Selenium Grid
               env:
                 GRID_URI: ${{ secrets.GRID_URI }}
-              run: ./wait_for_grid.sh -u $GRID_URI
+              run: ./src/WebDriverTests/wait_for_grid.sh -u $GRID_URI
 
             - name: Execute WebDriver tests
               env:
@@ -107,7 +95,7 @@ jobs:
                 TEST_USERS: ${{ secrets.TEST_USERS }}
                 API_KEY: ${{ secrets.API_KEY }}
                 RUNTIME_ENVIRONMENT: STAGING 
-              run: dotnet test --no-restore --no-build --logger "console;verbosity=detailed" -e GRID_URI=${{ secrets.GRID_URI }} --filter WebDriverXUnit.Tests.Authentication.FirefoxSmokeTest
+              run: dotnet test --no-restore --no-build --logger "console;verbosity=detailed" -e GRID_URI=${{ secrets.GRID_URI }} --filter WebDriverXUnit.Tests.Authentication.FirefoxSmokeTest ./src/WebDriverTests/WebDriverXUnit/WebDriverXUnit.csproj
 
     teardown:
 
