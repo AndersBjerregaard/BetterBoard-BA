@@ -26,11 +26,11 @@ jobs:
         - name: checkout
           uses: actions/checkout@v4
 
-        - name: Set execute permissions
-          run: chmod +x ./src/test-transaction/objectidgen.sh
-
         - id: idstep
           run: echo "identifier=$(uuidgen)" >> $GITHUB_OUTPUT
+
+        - name: Set execute permissions
+          run: chmod +x ./src/test-transaction/objectidgen.sh
 
         - id: objectidstep
           run: echo "objectid=$(./src/test-transaction/objectidgen.sh)" >> $GITHUB_OUTPUT
