@@ -7,7 +7,9 @@ namespace WebDriverXUnit.Helpers;
 
 public static class AvailableDriverOptions {
 
-    private static readonly DriverOptions[] DRIVER_OPTIONS = [new FirefoxOptions(), new ChromeOptions(), new EdgeOptions()];
+    // private static readonly DriverOptions[] DRIVER_OPTIONS = [new FirefoxOptions(), new ChromeOptions(), new EdgeOptions()];
+
+    private static readonly DriverOptions[] DRIVER_OPTIONS = [new EdgeOptions()];
 
     public static DriverOptions[] Get() {
         return DRIVER_OPTIONS;

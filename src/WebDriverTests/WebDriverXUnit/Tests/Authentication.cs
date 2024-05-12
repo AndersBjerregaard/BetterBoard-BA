@@ -126,6 +126,7 @@ public class Authentication : IClassFixture<GridUri>
     public async Task LoginTest() {
         DriverOptions[] driverOptions = Helpers.AvailableDriverOptions.Get();
         Task[] parallelTests = new Task[driverOptions.Length];
+        bool failed = false;
 
         for (int i = 0; i < Helpers.AvailableDriverOptions.GetAmount(); i++)
         {
@@ -151,6 +152,7 @@ public class Authentication : IClassFixture<GridUri>
                 catch (Exception e)
                 {
                     ExceptionLogger.LogException(e, ref _testOutputHelper);
+                    failed = true;
                 }
                 finally
                 {
@@ -161,6 +163,8 @@ public class Authentication : IClassFixture<GridUri>
         }
 
         await Task.WhenAll(parallelTests);
+
+        Assert.False(failed);
 
         _testOutputHelper.WriteLine($"{nameof(LoginTest)} completed.");
     }
