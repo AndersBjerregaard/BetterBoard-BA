@@ -8,6 +8,8 @@ using WebDriverXUnit.Domain;
 using WebDriverXUnit.Fixtures;
 using WebDriverXUnit.Helpers;
 using WebDriverXUnit.Helpers.Interfaces;
+using WebDriverXUnit.WindowDrivers;
+using WebDriverXUnit.WindowDrivers.Interfaces;
 using Xunit.Abstractions;
 
 namespace WebDriverXUnit.Tests;
@@ -35,7 +37,7 @@ public class Authentication : IClassFixture<GridUri>
         _targetUri = new Uri(targetUri);
     }
 
-    [Fact]
+    [Fact(Skip = "Obselete")]
     public void FirefoxSmokeTest()
     {
         var options = new FirefoxOptions();
@@ -135,47 +137,14 @@ public class Authentication : IClassFixture<GridUri>
                 {
                     driver = new RemoteWebDriver(uri, options);
 
-                    driver.Navigate().GoToUrl("https://dev.betterboard.dk/#/login");
+                    ILoginWindow loginWindow = new LoginWindow(driver, _targetUri);
 
-                    Assert.Equal("BetterBoard - Board Management System", driver.Title);
+                    loginWindow.Navigate();
+                    loginWindow.AssertNavigation();
 
-                    WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(20));
-                    wait.IgnoreExceptionTypes(typeof(NoSuchElementException), typeof(ElementNotVisibleException));
-                    IWebElement? header = wait.Until<IWebElement?>(webDriver => {
-                        IWebElement element = webDriver.FindElement(By.TagName("h4"));
-                        return element.Displayed ? element : null;
-                    });
-                    Assert.NotNull(header);
-                    Assert.Equal("Welcome to BetterBoard.", header.Text);
-
-                    // Find fields
-                    wait = new WebDriverWait(driver, TimeSpan.FromSeconds(5)) { PollingInterval = TimeSpan.FromMilliseconds(500)};
-                    wait.IgnoreExceptionTypes(typeof(NoSuchElementException), typeof(ElementNotVisibleException), typeof(ElementNotInteractableException));
-                    var element = driver.FindElement(By.ClassName("form-control"));
-                    bool fieldDisplayed = wait.Until(x => element.Displayed);
-                    Assert.True(fieldDisplayed);
-
-                    var fields = driver.FindElements(By.ClassName("form-control"));
-                    Assert.NotEmpty(fields);
-                    var submit = driver.FindElement(By.ClassName("btn-primary"));
-                    Assert.NotNull(submit);
-
-                    var usernameField = fields[0];
-                    usernameField.SendKeys(_testUserCredentials.Email);
-                    var passwordField = fields[1];
-                    passwordField.SendKeys(_testUserCredentials.Password);
-
-                    submit.Click();
-
-                    wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10)) { PollingInterval = TimeSpan.FromMilliseconds(500)};
-                    wait.IgnoreExceptionTypes(typeof(NoSuchElementException), typeof(ElementNotVisibleException), typeof(ElementNotInteractableException), typeof(NoSuchElementException));
-                    var boardHeader = wait.Until(x => {
-                        var element = x.FindElement(By.TagName("h2"));
-                        return element.Displayed ? element : null;
-                    });
+                    loginWindow.Login(_testUserCredentials);
+                    loginWindow.AssertLogin(_testUserCredentials);
                     
-                    Assert.Contains("John Test", boardHeader?.Text);
-
                     _testOutputHelper.WriteLine($"{options.BrowserName} WebDriver Successfully logged in");
 
                 }
