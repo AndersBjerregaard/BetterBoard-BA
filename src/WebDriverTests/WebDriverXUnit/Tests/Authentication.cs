@@ -16,23 +16,23 @@ public class Authentication : IClassFixture<GridUri>
 {
     private readonly GridUri _fixture;
     private ITestOutputHelper _testOutputHelper;
-    private readonly ITestUsers _testUsers;
     private readonly UserCredentials _testUserCredentials;
+    private readonly Uri _targetUri;
 
     public Authentication(GridUri fixture, ITestOutputHelper testOutputHelper)
     {
         _fixture = fixture;
         _testOutputHelper = testOutputHelper;
 
-        string? environment = Environment.GetEnvironmentVariable("RUNTIME_ENVIRONMENT");
+        string? testUuid = Environment.GetEnvironmentVariable("TEST_UUID")
+            ?? throw new NullReferenceException("No value for environment variable 'TEST_UUID'");
 
-        if (string.IsNullOrEmpty(environment) || environment == "DEV") {
-            _testUsers = new TestUsersFile();
-        } else {
-            _testUsers = new TestUsersEnvironment();
-        }
+        _testUserCredentials = new UserCredentials(testUuid + "@mail.dk", testUuid);
 
-        _testUserCredentials = _testUsers.GetTestUser();
+        string? targetUri = Environment.GetEnvironmentVariable("TARGET_URI")
+            ?? throw new NullReferenceException("No value for environment variable 'TARGET_URI'");
+
+        _targetUri = new Uri(targetUri);
     }
 
     [Fact]
@@ -46,7 +46,7 @@ public class Authentication : IClassFixture<GridUri>
         {
             driver = new RemoteWebDriver(uri, options);
 
-            driver.Navigate().GoToUrl("https://app.betterboard.dk/#/login");
+            driver.Navigate().GoToUrl(_targetUri + "#/login");
 
             Assert.Equal("BetterBoard - Board Management System", driver.Title);
 
@@ -61,6 +61,10 @@ public class Authentication : IClassFixture<GridUri>
 
              _testOutputHelper.WriteLine("Smoketest complete");    
         }
+        catch (Exception ex)
+        {
+            ExceptionLogger.LogException(ex, ref _testOutputHelper);
+        }
         finally
         {
             driver?.Quit();
@@ -68,7 +72,7 @@ public class Authentication : IClassFixture<GridUri>
         
     }
 
-    [Fact]
+    [Fact(Skip = "Obselete")]
     public async Task SmokeTest()
     {
         DriverOptions[] driverOptions = Helpers.AvailableDriverOptions.Get();

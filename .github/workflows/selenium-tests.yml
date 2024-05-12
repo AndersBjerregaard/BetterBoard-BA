@@ -90,6 +90,8 @@ jobs:
                 GRID_URI: ${{ secrets.GRID_URI }}
               run: ./src/WebDriverTests/wait_for_grid.sh -u $GRID_URI
 
+              # There's an issue with the current version of ubuntu, that doesn't let you execute 'dotnet test' with the '--no-build' and '--no-restore' flags: https://github.com/dotnet/sdk/issues/29742
+              # Otherwise they should be added to the command
             - name: Execute WebDriver tests
               env:
                 GRID_URI: ${{ secrets.GRID_URI }}
