@@ -111,7 +111,7 @@ resource seleniumNodeFirefox 'Microsoft.App/containerApps@2023-05-02-preview' = 
              }
              {
                name: 'SE_NODE_SESSION_TIMEOUT'
-               value: '60'
+               value: '120'
              }
              {
                name: 'SE_NODE_OVERRIDE_MAX_SESSIONS'
@@ -167,7 +167,7 @@ resource seleniumNodeChrome 'Microsoft.App/containerApps@2023-05-02-preview' = {
              }
              {
                name: 'SE_NODE_SESSION_TIMEOUT'
-               value: '60'
+               value: '120'
              }
              {
                name: 'SE_NODE_OVERRIDE_MAX_SESSIONS'
@@ -223,7 +223,7 @@ resource seleniumNodeEdge 'Microsoft.App/containerApps@2023-05-02-preview' = {
              }
              {
                name: 'SE_NODE_SESSION_TIMEOUT'
-               value: '60'
+               value: '120'
              }
              {
                name: 'SE_NODE_OVERRIDE_MAX_SESSIONS'

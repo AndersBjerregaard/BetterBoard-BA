@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Edge;
 using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.UI;
@@ -132,10 +133,17 @@ public class Authentication : IClassFixture<GridUri>
         for (int i = 0; i < Helpers.AvailableDriverOptions.GetAmount(); i++)
         {
             DriverOptions options = driverOptions[i];
-            if (options.GetType().Name == nameof(ChromeOptions)) {
+            var typeName = options.GetType().Name;
+            if (typeName == nameof(ChromeOptions)) {
                 var chromeOptions = options as ChromeOptions;
                 // Chrome flags https://github.com/GoogleChrome/chrome-launcher/blob/main/docs/chrome-flags-for-tools.md
                 chromeOptions.AddArguments(["--no-sandbox", "--disable-dev-shm-usage"]);
+            } else if (typeName == nameof(FirefoxOptions)) {
+                var firefoxOptions = options as FirefoxOptions;
+                firefoxOptions.AddArguments(["--no-sandbox", "--disable-dev-shm-usage"]);
+            } else if (typeName == nameof(EdgeOptions)) {
+                var edgeOptions = options as EdgeOptions;
+                edgeOptions.AddArguments(["--no-sandbox", "--disable-dev-shm-usage"]);
             }
             Task task = Task.Run(() => {
                 RemoteWebDriver? driver = null;

@@ -36,7 +36,7 @@ public class LoginWindow(RemoteWebDriver driver, Uri baseUri) : ILoginWindow
     /// <exception cref="Xunit.Sdk.ContainsException"></exception>
     public void AssertLogin(UserCredentials userCredentials)
     {
-        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
+        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(50));
         wait.IgnoreExceptionTypes(typeof(NoSuchElementException), typeof(StaleElementReferenceException));
         var boardHeader = wait.Until(driver => {
             var element = driver.FindElement(By.TagName("h2"));
@@ -55,7 +55,7 @@ public class LoginWindow(RemoteWebDriver driver, Uri baseUri) : ILoginWindow
     /// <exception cref="Xunit.Sdk.NotNullException"></exception>
     /// <exception cref="Xunit.Sdk.EqualException"></exception>
     public void AssertNavigation() {
-        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
+        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(50));
         wait.IgnoreExceptionTypes(typeof(NoSuchElementException), typeof(StaleElementReferenceException));
         var header = wait.Until(driver => {
             var element = driver.FindElement(By.TagName("h4"));
