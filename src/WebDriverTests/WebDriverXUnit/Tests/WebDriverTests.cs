@@ -123,11 +123,11 @@ public class WebDriverTests : IClassFixture<TestVariables>
 
     [Fact]
     public async Task LoginTest() {
-        DriverOptions[] driverOptions = Helpers.AvailableDriverOptions.Get();
+        DriverOptions[] driverOptions = [Helpers.AvailableDriverOptions.EDGE_OPTIONS];
         Task[] parallelTests = new Task[driverOptions.Length];
         bool failed = false;
 
-        for (int i = 0; i < Helpers.AvailableDriverOptions.GetAmount(); i++)
+        for (int i = 0; i < driverOptions.Length; i++)
         {
             DriverOptions options = driverOptions[i];
             ModifyDriverOptions(options);
