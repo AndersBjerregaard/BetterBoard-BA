@@ -4,8 +4,8 @@ namespace WebDriverXUnit.Helpers;
 
 public static class ExceptionLogger {
     public static void LogException(Exception e, ref ITestOutputHelper logger) {
-        string errorMessage = $"An exception of type {e.GetType().Name} occurred: {e.Message}.";
-        string stackTrace = $"Stack Trace: {e.StackTrace}";
+        string errorMessage = $"[ERROR] An exception of type {e.GetType().Name} occurred: {e.Message}.";
+        string stackTrace = $"[ERROR STACK TRACE] {e.StackTrace}";
 
         // If there's an inner exception, include its message and stack trace
         if (e.InnerException != null)

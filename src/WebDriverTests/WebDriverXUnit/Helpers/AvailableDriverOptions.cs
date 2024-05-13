@@ -10,6 +10,7 @@ public static class AvailableDriverOptions {
     private static readonly DriverOptions[] DRIVER_OPTIONS = [new FirefoxOptions(), new ChromeOptions(), new EdgeOptions()];
 
     public static readonly ChromeOptions CHROME_OPTIONS = new ChromeOptions();
+    public static readonly EdgeOptions EDGE_OPTIONS = new EdgeOptions();
 
     public static DriverOptions[] Get() {
         return DRIVER_OPTIONS;

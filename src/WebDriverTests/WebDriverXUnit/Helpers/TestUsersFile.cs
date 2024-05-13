@@ -24,17 +24,19 @@ public class TestUsersFile : ITestUsers {
 
     private static UserCredentials? ReadUserFile() {
         UserCredentials? userCredentials = null;
-            var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, FILE_NAME);
-            using (StreamReader streamReader = new StreamReader(filePath)) {
-                string? line;
-                int i = 0;
-                while ((line = streamReader.ReadLine()) is not null) {
-                    UserCredentials? deserialized = JsonSerializer.Deserialize<UserCredentials>(line) ??
-                        throw new JsonException($"Error deserializing contents from file '{FILE_NAME}' into type '{nameof(UserCredentials)}'");
-                    userCredentials = deserialized;
-                    i++;
-                }
+        var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, FILE_NAME);
+        using (StreamReader streamReader = new StreamReader(filePath))
+        {
+            string? line;
+            int i = 0;
+            while ((line = streamReader.ReadLine()) is not null)
+            {
+                UserCredentials? deserialized = JsonSerializer.Deserialize<UserCredentials>(line) ??
+                    throw new JsonException($"Error deserializing contents from file '{FILE_NAME}' into type '{nameof(UserCredentials)}'");
+                userCredentials = deserialized;
+                i++;
             }
+        }
         return userCredentials;
     }
 }

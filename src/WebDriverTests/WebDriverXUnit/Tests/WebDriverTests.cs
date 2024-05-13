@@ -16,27 +16,24 @@ using Xunit.Abstractions;
 
 namespace WebDriverXUnit.Tests;
 
-public class Authentication : IClassFixture<GridUri>
+public class WebDriverTests : IClassFixture<TestVariables>
 {
-    private readonly GridUri _fixture;
+    private readonly TestVariables _fixture;
     private ITestOutputHelper _testOutputHelper;
     private readonly UserCredentials _testUserCredentials;
     private readonly Uri _targetUri;
+    private readonly Uri? _gridUri;
 
-    public Authentication(GridUri fixture, ITestOutputHelper testOutputHelper)
+    public WebDriverTests(TestVariables fixture, ITestOutputHelper testOutputHelper)
     {
         _fixture = fixture;
         _testOutputHelper = testOutputHelper;
 
-        string? testUuid = Environment.GetEnvironmentVariable("TEST_UUID")
-            ?? throw new NullReferenceException("No value for environment variable 'TEST_UUID'");
+        _testUserCredentials = new UserCredentials(_fixture.TestUuid + "@mail.dk", _fixture.TestUuid);
 
-        _testUserCredentials = new UserCredentials(testUuid + "@mail.dk", testUuid);
+        _targetUri = _fixture.TargetUri;
 
-        string? targetUri = Environment.GetEnvironmentVariable("TARGET_URI")
-            ?? throw new NullReferenceException("No value for environment variable 'TARGET_URI'");
-
-        _targetUri = new Uri(targetUri);
+        _gridUri = _fixture.WebDriverUri;
     }
 
     [Fact(Skip = "Obselete")]
@@ -133,24 +130,13 @@ public class Authentication : IClassFixture<GridUri>
         for (int i = 0; i < Helpers.AvailableDriverOptions.GetAmount(); i++)
         {
             DriverOptions options = driverOptions[i];
-            var typeName = options.GetType().Name;
-            if (typeName == nameof(ChromeOptions)) {
-                var chromeOptions = options as ChromeOptions;
-                // Chrome flags https://github.com/GoogleChrome/chrome-launcher/blob/main/docs/chrome-flags-for-tools.md
-                chromeOptions.AddArguments(["--no-sandbox", "--disable-dev-shm-usage"]);
-            } else if (typeName == nameof(FirefoxOptions)) {
-                var firefoxOptions = options as FirefoxOptions;
-                firefoxOptions.AddArguments(["--no-sandbox", "--disable-dev-shm-usage"]);
-            } else if (typeName == nameof(EdgeOptions)) {
-                var edgeOptions = options as EdgeOptions;
-                edgeOptions.AddArguments(["--no-sandbox", "--disable-dev-shm-usage"]);
-            }
-            Task task = Task.Run(() => {
+            ModifyDriverOptions(options);
+            Task task = Task.Run(() =>
+            {
                 RemoteWebDriver? driver = null;
-                Uri? uri = _fixture.WebDriverUri;
                 try
                 {
-                    driver = new RemoteWebDriver(uri, options);
+                    driver = new RemoteWebDriver(_gridUri, options);
 
                     ILoginWindow loginWindow = new LoginWindow(driver, _targetUri);
 
@@ -159,8 +145,8 @@ public class Authentication : IClassFixture<GridUri>
 
                     loginWindow.Login(_testUserCredentials);
                     loginWindow.AssertLogin(_testUserCredentials);
-                    
-                    _testOutputHelper.WriteLine($"{options.BrowserName} WebDriver Successfully logged in");
+
+                    _testOutputHelper.WriteLine($"[SUCCESS] {options.BrowserName} WebDriver successfully logged in");
 
                 }
                 catch (Exception e)
@@ -179,7 +165,106 @@ public class Authentication : IClassFixture<GridUri>
         await Task.WhenAll(parallelTests);
 
         Assert.False(failed);
+    }
 
-        _testOutputHelper.WriteLine($"{nameof(LoginTest)} completed.");
+    [Fact(Skip = "Not Implemented")]
+    public async Task FrontPageTest() {
+        throw new NotImplementedException();
+    }
+
+    [Fact]
+    public async Task MeetingCreationTest() {
+        DriverOptions[] driverOptions = [Helpers.AvailableDriverOptions.EDGE_OPTIONS];
+        Task[] parallelTests = new Task[driverOptions.Length];
+        bool failed = false;
+
+        for (int i = 0; i < driverOptions.Length; i++)
+        {
+            DriverOptions options = driverOptions[i];
+            ModifyDriverOptions(options);
+            Task task = Task.Run(() =>
+            {
+                RemoteWebDriver? driver = null;
+                try
+                {
+                    driver = new RemoteWebDriver(_gridUri, options);
+
+                    ILoginWindow loginWindow = new LoginWindow(driver, _targetUri);
+
+                    loginWindow.Navigate();
+                    loginWindow.AssertNavigation();
+
+                    loginWindow.Login(_testUserCredentials);
+                    loginWindow.AssertLogin(_testUserCredentials);
+
+                    IBoardsWindow boardsWindow = new BoardsWindow(driver, _targetUri);
+
+                    boardsWindow.GoToBoard("Test Board");
+
+                    _testOutputHelper.WriteLine($"[SUCCESS] {options.BrowserName} WebDriver successfully created a meeting.");
+
+                }
+                catch (Exception e)
+                {
+                    ExceptionLogger.LogException(e, ref _testOutputHelper);
+                    failed = true;
+                }
+                finally
+                {
+                    driver?.Quit();
+                }
+            });
+            parallelTests[i] = task;
+        }
+
+        await Task.WhenAll(parallelTests);
+
+        Assert.False(failed);
+    }
+
+    [Fact(Skip = "Not Implemented")]
+    public async Task MeetingAgendaTest() {
+        throw new NotImplementedException();
+    }
+
+    [Fact(Skip = "Not Implemented")]
+    public async Task MeetingSummaryTest() {
+        throw new NotImplementedException();
+    }
+
+    [Fact(Skip = "Not Implemented")]
+    public async Task FileSearchTest() {
+        throw new NotImplementedException();
+    }
+
+    /// <summary>
+    /// Projected to be a test of testing the scrive signature process feature.
+    /// However there's a economic liability of executing this in a production-like environment.
+    /// It's worth looking into SCRIVE's developer tools, to get a work-around.
+    /// </summary>
+    [Fact(Skip = "Economically non-viable")]
+    public async Task SignatureProcessTest() {
+        throw new NotImplementedException();
+    }
+
+    private static void ModifyDriverOptions(DriverOptions options)
+    {
+        var typeName = options.GetType().Name;
+        if (typeName == nameof(ChromeOptions))
+        {
+            var chromeOptions = options as ChromeOptions;
+            // Flags seems to work on all browsers https://github.com/GoogleChrome/chrome-launcher/blob/main/docs/chrome-flags-for-tools.md
+            chromeOptions.AddArguments(["--no-sandbox", "--disable-dev-shm-usage"]);
+        }
+        else if (typeName == nameof(FirefoxOptions))
+        {
+            var firefoxOptions = options as FirefoxOptions;
+            firefoxOptions.AddArguments(["--no-sandbox", "--disable-dev-shm-usage"]);
+        }
+        else if (typeName == nameof(EdgeOptions))
+        {
+            var edgeOptions = options as EdgeOptions;
+            edgeOptions.AddArguments(["--no-sandbox", "--disable-dev-shm-usage"]);
+        }
     }
 }
