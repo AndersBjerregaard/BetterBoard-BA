@@ -122,6 +122,10 @@ resource seleniumNodeFirefox 'Microsoft.App/containerApps@2023-05-02-preview' = 
                value: '3'
              }
            ]
+           resources: {
+             cpu: json('1')
+             memory: '2'
+           }
          }
        ]
        scale: {
@@ -174,6 +178,10 @@ resource seleniumNodeChrome 'Microsoft.App/containerApps@2023-05-02-preview' = {
                value: '3'
              }
            ]
+           resources: {
+             cpu: json('1')
+             memory: '2'
+           }
          }
        ]
        scale: {
@@ -226,6 +234,10 @@ resource seleniumNodeEdge 'Microsoft.App/containerApps@2023-05-02-preview' = {
                value: '3'
              }
            ]
+           resources: {
+             cpu: json('1')
+             memory: '2'
+           }
          }
        ]
        scale: {
