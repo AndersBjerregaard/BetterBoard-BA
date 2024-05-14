@@ -29,7 +29,7 @@ public class WebDriverTests : IClassFixture<TestVariables>
         _fixture = fixture;
         _testOutputHelper = testOutputHelper;
 
-        _testUserCredentials = new UserCredentials(_fixture.TestUuid + "@mail.dk", _fixture.TestUuid);
+        _testUserCredentials = _fixture.TestUuid;
 
         _targetUri = _fixture.TargetUri;
 
