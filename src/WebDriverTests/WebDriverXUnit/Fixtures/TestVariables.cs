@@ -1,5 +1,7 @@
 using System.Diagnostics;
+using System.Text.Json;
 using OpenQA.Selenium.DevTools;
+using WebDriverXUnit.Domain;
 using WebDriverXUnit.Helpers;
 
 namespace WebDriverXUnit.Fixtures;
@@ -9,7 +11,7 @@ public class TestVariables : IDisposable
 #pragma warning restore S3881 // "IDisposable" should be implemented correctly
 {
     public Uri? WebDriverUri { get; private set; }
-    public string? TestUuid { get; private set; }
+    public UserCredentials? TestUuid { get; private set; }
     public Uri? TargetUri { get; private set; }
 
     public TestVariables()
@@ -26,17 +28,33 @@ public class TestVariables : IDisposable
             WebDriverUri = new Uri(gridUri);
         }
 
-        string? testUuid = Environment.GetEnvironmentVariable("TEST_UUID");
+        string? decoratedCreds = Environment.GetEnvironmentVariable("TEST_CREDS");
 
-        if (string.IsNullOrWhiteSpace(testUuid)) {
-            Debug.WriteLine("Environment variable 'TEST_UUID' was unset." + 
-                " Defaulting to environment file...");
-            TestUuid = EnvironmentFileReader.Settings.TestUuid;
-            Debug.WriteLine($"'TEST_UUID' loaded as {TestUuid}");
-        } else {
-            Debug.WriteLine($"Environment variable 'TEST_UUID' loaded as {testUuid}");
-            TestUuid = testUuid;
+        if (!string.IsNullOrWhiteSpace(decoratedCreds))
+        {
+            Debug.WriteLine("Environment Variable 'TEST_CREDS' detected, omitting 'TEST_UUID'...");
+            UserCredentials? deserialized = JsonSerializer.Deserialize<UserCredentials>(decoratedCreds);
+            TestUuid = deserialized;
         }
+        else
+        {
+            string? testUuid = Environment.GetEnvironmentVariable("TEST_UUID");
+
+            if (string.IsNullOrWhiteSpace(testUuid))
+            {
+                Debug.WriteLine("Environment variable 'TEST_UUID' was unset." +
+                    " Defaulting to environment file...");
+                TestUuid = new UserCredentials(EnvironmentFileReader.Settings.TestUuid + "@mail.dk", EnvironmentFileReader.Settings.TestUuid);
+                Debug.WriteLine($"'TEST_UUID' loaded as {TestUuid}");
+            }
+            else
+            {
+                Debug.WriteLine($"Environment variable 'TEST_UUID' loaded as {testUuid}");
+                TestUuid = new UserCredentials(testUuid + "@mail.dk", testUuid);
+            }
+        }
+
+
 
         string? targetUri = Environment.GetEnvironmentVariable("TARGET_URI");
 
@@ -47,7 +65,7 @@ public class TestVariables : IDisposable
             Debug.WriteLine($"'TARGET_URI' loaded as {TargetUri}");
         } else {
             Debug.WriteLine($"Environment variable 'TARGET_URI' loaded as {targetUri}");
-            TestUuid = targetUri;
+            TargetUri = new Uri(targetUri);
         }
     }
 

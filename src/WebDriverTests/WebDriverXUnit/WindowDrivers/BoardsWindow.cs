@@ -3,6 +3,7 @@ using System.Diagnostics;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Remote;
 using WebDriverXUnit.WindowDrivers.Interfaces;
+using Xunit.Abstractions;
 
 namespace WebDriverXUnit.WindowDrivers;
 
@@ -10,7 +11,7 @@ namespace WebDriverXUnit.WindowDrivers;
 // Redirect: btn-transparent
 public class BoardsWindow(RemoteWebDriver driver, Uri baseUri) : IBoardsWindow
 {
-    public void GoToBoard(string boardName)
+    public void GoToBoard(string boardName, ref ITestOutputHelper testOutput)
     {
         var boardDivs = driver.FindElements(By.ClassName("col-sm-6"));
         foreach (var boardDiv in boardDivs)
@@ -24,7 +25,7 @@ public class BoardsWindow(RemoteWebDriver driver, Uri baseUri) : IBoardsWindow
                     var rows = boardDiv.FindElements(By.XPath("./child::*"));
                     foreach (var row in rows)
                     {
-                        Debug.WriteLine(row);
+                        testOutput.WriteLine(row.ToString());
                     }
                 }
             }

@@ -174,6 +174,10 @@ public class WebDriverTests : IClassFixture<TestVariables>
 
     [Fact]
     public async Task MeetingCreationTest() {
+        _testOutputHelper.WriteLine("Target Uri: " + _targetUri);
+        _testOutputHelper.WriteLine("Grid Uri: " + _gridUri);
+        _testOutputHelper.WriteLine("User Credentials: " + _testUserCredentials);
+
         DriverOptions[] driverOptions = [Helpers.AvailableDriverOptions.EDGE_OPTIONS];
         Task[] parallelTests = new Task[driverOptions.Length];
         bool failed = false;
@@ -199,7 +203,7 @@ public class WebDriverTests : IClassFixture<TestVariables>
 
                     IBoardsWindow boardsWindow = new BoardsWindow(driver, _targetUri);
 
-                    boardsWindow.GoToBoard("Test Board");
+                    boardsWindow.GoToBoard("Test Board", ref _testOutputHelper);
 
                     _testOutputHelper.WriteLine($"[SUCCESS] {options.BrowserName} WebDriver successfully created a meeting.");
 
