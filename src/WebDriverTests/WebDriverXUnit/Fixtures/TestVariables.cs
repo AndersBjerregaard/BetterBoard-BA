@@ -6,9 +6,7 @@ using WebDriverXUnit.Helpers;
 
 namespace WebDriverXUnit.Fixtures;
 
-#pragma warning disable S3881 // "IDisposable" should be implemented correctly
 public class TestVariables : IDisposable
-#pragma warning restore S3881 // "IDisposable" should be implemented correctly
 {
     public Uri? WebDriverUri { get; private set; }
     public UserCredentials? TestUuid { get; private set; }
@@ -69,5 +67,9 @@ public class TestVariables : IDisposable
         }
     }
 
-    void IDisposable.Dispose() => WebDriverUri = null;
+    void IDisposable.Dispose() {
+        WebDriverUri = null;
+        TestUuid = null;
+        TargetUri = null;
+    }
 }
