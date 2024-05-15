@@ -22,7 +22,8 @@ public class WebDriverTests : IClassFixture<TestVariables>
     private ITestOutputHelper _testOutputHelper;
     private readonly UserCredentials _testUserCredentials;
     private readonly Uri _targetUri;
-    private readonly Uri? _gridUri;
+    private readonly Uri _gridUri;
+    private static readonly string[] DEFAULT_WEBDRIVER_ARGUMENTS = ["--no-sandbox", "--disable-dev-shm-usage", "--headless"];
 
     public WebDriverTests(TestVariables fixture, ITestOutputHelper testOutputHelper)
     {
@@ -258,17 +259,17 @@ public class WebDriverTests : IClassFixture<TestVariables>
         {
             var chromeOptions = options as ChromeOptions;
             // Flags seems to work on all browsers https://github.com/GoogleChrome/chrome-launcher/blob/main/docs/chrome-flags-for-tools.md
-            chromeOptions.AddArguments(["--no-sandbox", "--disable-dev-shm-usage"]);
+            chromeOptions?.AddArguments(DEFAULT_WEBDRIVER_ARGUMENTS);
         }
         else if (typeName == nameof(FirefoxOptions))
         {
             var firefoxOptions = options as FirefoxOptions;
-            firefoxOptions.AddArguments(["--no-sandbox", "--disable-dev-shm-usage"]);
+            firefoxOptions?.AddArguments(DEFAULT_WEBDRIVER_ARGUMENTS);
         }
         else if (typeName == nameof(EdgeOptions))
         {
             var edgeOptions = options as EdgeOptions;
-            edgeOptions.AddArguments(["--no-sandbox", "--disable-dev-shm-usage"]);
+            edgeOptions?.AddArguments(DEFAULT_WEBDRIVER_ARGUMENTS);
         }
     }
 }
