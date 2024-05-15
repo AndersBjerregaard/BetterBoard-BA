@@ -9,6 +9,11 @@ defaults:
     run:
         shell: bash
 
+env:
+    SETUP_ENDPOINT: https://devapi.betterboard.dk/api/v1/testtransaction/start
+    TEARDOWN_ENDPOINT: https://devapi.betterboard.dk/api/v1/testtransaction/cleanup
+    TARGET_URI: https://dev.betterboard.dk/
+
 jobs:
 
     runidentifier:
@@ -47,7 +52,7 @@ jobs:
 
         - name: setup script
           run: |
-            curl --location -X POST 'https://devapi.betterboard.dk/api/v1/testtransaction/start' --header 'X-Api-Key: ${{ secrets.API_KEY }}' --header 'Content-Type: application/json' --data '{ "Id": "${{ needs.runidentifier.outputs.outputid }}", "CompanyId": "${{ needs.runidentifier.outputs.outputobjectid }}" }'
+            curl --location -X POST '${{ env.SETUP_ENDPOINT }}' --header 'X-Api-Key: ${{ secrets.API_KEY }}' --header 'Content-Type: application/json' --data '{ "Id": "${{ needs.runidentifier.outputs.outputid }}", "CompanyId": "${{ needs.runidentifier.outputs.outputobjectid }}" }'
 
     build:
 
@@ -73,6 +78,7 @@ jobs:
         needs:
           - build
           - seed
+          - runidentifier
 
         name: Run Selenium Scripts
 
@@ -95,7 +101,8 @@ jobs:
             - name: Execute WebDriver tests
               env:
                 GRID_URI: ${{ secrets.GRID_URI }}
-                TEST_USERS: ${{ secrets.TEST_USERS }}
+                TEST_UUID: ${{ needs.runidentifier.outputs.outputid }}
+                TARGET_URI: ${{ env.TARGET_URI }}
                 API_KEY: ${{ secrets.API_KEY }}
                 RUNTIME_ENVIRONMENT: STAGING 
               run: dotnet test --logger "console;verbosity=detailed" --filter WebDriverXUnit.Tests.Authentication.FirefoxSmokeTest ./src/WebDriverTests/WebDriverXUnit/WebDriverXUnit.csproj
@@ -118,4 +125,4 @@ jobs:
 
         - name: teardown script
           run: |
-            curl --location -X DELETE 'https://devapi.betterboard.dk/api/v1/testtransaction/cleanup' --header 'X-Api-Key: ${{ secrets.API_KEY }}' --header 'Content-Type: application/json' --data '{ "Id": "${{ needs.runidentifier.outputs.outputid }}", "CompanyId": "${{ needs.runidentifier.outputs.outputobjectid }}" }'
+            curl --location -X DELETE '${{ env.TEARDOWN_ENDPOINT }}' --header 'X-Api-Key: ${{ secrets.API_KEY }}' --header 'Content-Type: application/json' --data '{ "Id": "${{ needs.runidentifier.outputs.outputid }}", "CompanyId": "${{ needs.runidentifier.outputs.outputobjectid }}" }'

@@ -30,7 +30,7 @@ public class TestVariables : IDisposable
 
         if (!string.IsNullOrWhiteSpace(decoratedCreds))
         {
-            Debug.WriteLine("Environment Variable 'TEST_CREDS' detected, omitting 'TEST_UUID'...");
+            Debug.WriteLine("Value for environment variable 'TEST_CREDS' detected, omitting 'TEST_UUID'...");
             UserCredentials? deserialized = JsonSerializer.Deserialize<UserCredentials>(decoratedCreds);
             TestUuid = deserialized;
         }
