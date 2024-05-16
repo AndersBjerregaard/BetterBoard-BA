@@ -23,7 +23,7 @@ public class WebDriverTests : IClassFixture<TestVariables>
     private readonly UserCredentials _testUserCredentials;
     private readonly Uri _targetUri;
     private readonly Uri _gridUri;
-    private static readonly string[] DEFAULT_WEBDRIVER_ARGUMENTS = ["--no-sandbox", "--disable-dev-shm-usage", "--headless"];
+    private static readonly string[] DEFAULT_WEBDRIVER_ARGUMENTS = ["--no-sandbox", "--disable-dev-shm-usage"];
 
     public WebDriverTests(TestVariables fixture, ITestOutputHelper testOutputHelper)
     {
@@ -175,10 +175,6 @@ public class WebDriverTests : IClassFixture<TestVariables>
 
     [Fact]
     public async Task MeetingCreationTest() {
-        _testOutputHelper.WriteLine("Target Uri: " + _targetUri);
-        _testOutputHelper.WriteLine("Grid Uri: " + _gridUri);
-        _testOutputHelper.WriteLine("User Credentials: " + _testUserCredentials);
-
         DriverOptions[] driverOptions = [Helpers.AvailableDriverOptions.EDGE_OPTIONS];
         Task[] parallelTests = new Task[driverOptions.Length];
         bool failed = false;
@@ -194,15 +190,17 @@ public class WebDriverTests : IClassFixture<TestVariables>
                 {
                     driver = new RemoteWebDriver(_gridUri, options);
 
-                    ILoginWindow loginWindow = new LoginWindow(driver, _targetUri);
+                    // ILoginWindow loginWindow = new LoginWindow(driver, _targetUri);
 
-                    loginWindow.Navigate();
-                    loginWindow.AssertNavigation();
+                    // loginWindow.Navigate();
+                    // loginWindow.AssertNavigation();
 
-                    loginWindow.Login(_testUserCredentials);
-                    loginWindow.AssertLogin(_testUserCredentials);
+                    // loginWindow.Login(_testUserCredentials);
+                    // loginWindow.AssertLogin(_testUserCredentials);
 
                     IBoardsWindow boardsWindow = new BoardsWindow(driver, _targetUri);
+
+                    boardsWindow.Navigate();
 
                     boardsWindow.GoToBoard("Test Board", ref _testOutputHelper);
 

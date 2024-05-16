@@ -2,7 +2,7 @@ using Xunit.Abstractions;
 
 namespace WebDriverXUnit.WindowDrivers.Interfaces;
 
-public interface IBoardsWindow {
+public interface IBoardsWindow : IWindowDriver {
     void GoToBoard(string boardName, ref ITestOutputHelper testOutput);
     void AssertGotoBoard(string boardName);
 }
