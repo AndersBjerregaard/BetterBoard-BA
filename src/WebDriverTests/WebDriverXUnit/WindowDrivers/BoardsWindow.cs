@@ -8,73 +8,69 @@ using Xunit.Abstractions;
 
 namespace WebDriverXUnit.WindowDrivers;
 
-// Header: h3
-// Redirect: btn-transparent
 public class BoardsWindow(RemoteWebDriver driver, Uri baseUri) : IBoardsWindow
 {
+    /// <summary>
+    /// This method depends on the fact that the boards page renders a board & dataroom wrapped in a <div></div>.
+    /// Thus the header and redirect button for each board & dataroom should have the same corresponding index, since they're children in the same div.
+    /// </summary>
     public void GoToBoard(string boardName, ref ITestOutputHelper testOutput)
     {
-        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(60));
+        // Find board name's index
+        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(20));
         wait.IgnoreExceptionTypes([typeof(NoSuchElementException), typeof(StaleElementReferenceException)]);
-        var btn = wait.Until(d => {
-            var e = d.FindElement(By.TagName("button"));
-            return e.Displayed ? e : null;
-        });
-        Assert.NotNull(btn);
-        btn.Click();
-
-
-        wait = new WebDriverWait(driver, TimeSpan.FromSeconds(60));
-        wait.IgnoreExceptionTypes([typeof(NoSuchElementException), typeof(StaleElementReferenceException)]);
-        var header = wait.Until(d => {
-            var e = d.FindElement(By.TagName("h2"));
-            return e.Displayed ? e : null;
-        });
-        Assert.NotNull(header);
-        Assert.Contains("Godeftermiddag", header.Text);
-
-
-        wait = new WebDriverWait(driver, TimeSpan.FromSeconds(60));
-        wait.IgnoreExceptionTypes([typeof(NoSuchElementException), typeof(StaleElementReferenceException)]);
-        var btns = wait.Until(d => {
-            var e = d.FindElements(By.ClassName("btn-transparent"));
+        var headers = wait.Until(d =>
+        {
+            var e = d.FindElements(By.TagName("h5"));
             return e.Any() ? e : null;
         });
+        Assert.NotNull(headers);
+        int? headerIndex = null;
+        for (var i = 0; i < headers.Count; i++)
+        {
+            var e = headers[i];
+            if (e.Text.Contains(boardName))
+            {
+                headerIndex = i;
+            }
+        }
+        Assert.NotNull(headerIndex);
 
+        // Find board redirect by index
+        var btns = driver.FindElements(By.ClassName("btn-transparent"));
         Assert.NotNull(btns);
-        Assert.Equal(3, btns.Count);
-
-        // var boardDivs = driver.FindElements(By.ClassName("col-sm-6"));
-        // foreach (var boardDiv in boardDivs)
-        // {
-        //     var sections = boardDiv.FindElements(By.XPath("./child::*"));
-        //     foreach (var section in sections)
-        //     {
-        //         var widgetBodies = boardDiv.FindElements(By.XPath("./child::*"));
-        //         foreach (var widgetBody in widgetBodies)
-        //         {
-        //             var rows = boardDiv.FindElements(By.XPath("./child::*"));
-        //             foreach (var row in rows)
-        //             {
-        //                 testOutput.WriteLine(row.ToString());
-        //             }
-        //         }
-        //     }
-        // }
+        var btn = btns[headerIndex.Value];
+        Assert.NotNull(btn);
+        btn.Click();
     }
 
     public void AssertGotoBoard(string boardName)
     {
-        throw new NotImplementedException();
+        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(20));
+        wait.IgnoreExceptionTypes(typeof(NoSuchElementException), typeof(StaleElementReferenceException));
+        var small = wait.Until(driver => {
+            var element = driver.FindElement(By.TagName("small"));
+            return element.Displayed ? element : null;
+        });
+        Assert.NotNull(small);
+        Assert.Contains(boardName, small.Text);
     }
 
     public void Navigate()
     {
-        driver.Navigate().GoToUrl(baseUri);
+        driver.Navigate().GoToUrl(baseUri + "#/boards");
     }
 
     public void AssertNavigation()
     {
-        throw new NotImplementedException();
+        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(20));
+        wait.IgnoreExceptionTypes(typeof(NoSuchElementException), typeof(StaleElementReferenceException));
+        var paragraph = wait.Until(driver => {
+            var element = driver.FindElement(By.TagName("p"));
+            return element.Displayed ? element : null;
+        });
+        Assert.NotNull(paragraph);
+        var text = paragraph.Text;
+        Assert.True(text == "Welcome to your BetterBoard home screen" || text == "Velkommen til BetterBoard");
     }
 }

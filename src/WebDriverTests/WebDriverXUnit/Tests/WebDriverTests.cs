@@ -23,7 +23,7 @@ public class WebDriverTests : IClassFixture<TestVariables>
     private readonly UserCredentials _testUserCredentials;
     private readonly Uri _targetUri;
     private readonly Uri _gridUri;
-    private static readonly string[] DEFAULT_WEBDRIVER_ARGUMENTS = ["--no-sandbox", "--disable-dev-shm-usage"];
+    private static readonly string[] DEFAULT_WEBDRIVER_ARGUMENTS = ["--no-sandbox", "--disable-dev-shm-usage", "--incognito"];
 
     public WebDriverTests(TestVariables fixture, ITestOutputHelper testOutputHelper)
     {
@@ -139,13 +139,7 @@ public class WebDriverTests : IClassFixture<TestVariables>
                 {
                     driver = new RemoteWebDriver(_gridUri, options);
 
-                    ILoginWindow loginWindow = new LoginWindow(driver, _targetUri);
-
-                    loginWindow.Navigate();
-                    loginWindow.AssertNavigation();
-
-                    loginWindow.Login(_testUserCredentials);
-                    loginWindow.AssertLogin(_testUserCredentials);
+                    _ = LoginSession.Login(driver, _targetUri, _testUserCredentials);
 
                     _testOutputHelper.WriteLine($"[SUCCESS] {options.BrowserName} WebDriver successfully logged in");
 
@@ -190,19 +184,15 @@ public class WebDriverTests : IClassFixture<TestVariables>
                 {
                     driver = new RemoteWebDriver(_gridUri, options);
 
-                    // ILoginWindow loginWindow = new LoginWindow(driver, _targetUri);
-
-                    // loginWindow.Navigate();
-                    // loginWindow.AssertNavigation();
-
-                    // loginWindow.Login(_testUserCredentials);
-                    // loginWindow.AssertLogin(_testUserCredentials);
+                    _ = LoginSession.Login(driver, _targetUri, _testUserCredentials);
 
                     IBoardsWindow boardsWindow = new BoardsWindow(driver, _targetUri);
 
                     boardsWindow.Navigate();
+                    boardsWindow.AssertNavigation();
 
                     boardsWindow.GoToBoard("Test Board", ref _testOutputHelper);
+                    boardsWindow.AssertGotoBoard("Test Board");
 
                     _testOutputHelper.WriteLine($"[SUCCESS] {options.BrowserName} WebDriver successfully created a meeting.");
 
