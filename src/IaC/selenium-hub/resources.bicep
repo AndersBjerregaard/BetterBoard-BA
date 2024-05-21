@@ -90,6 +90,11 @@ resource seleniumNodeFirefox 'Microsoft.App/containerApps@2023-05-02-preview' = 
      environmentId: containerAppEnvironment.id
      configuration: {
        activeRevisionsMode: 'Single'
+       ingress: {
+         external: false
+         targetPort: 5555
+         allowInsecure: true
+       }
      }
      template: {
        containers: [
@@ -99,7 +104,7 @@ resource seleniumNodeFirefox 'Microsoft.App/containerApps@2023-05-02-preview' = 
            env: [
              {
                name: 'SE_EVENT_BUS_HOST'
-               value: seleniumHub.properties.outboundIpAddresses[0]
+               value: seleniumHub.name
              }
              {
                name: 'SE_EVENT_BUS_PUBLISH_PORT'
@@ -146,6 +151,11 @@ resource seleniumNodeChrome 'Microsoft.App/containerApps@2023-05-02-preview' = {
      environmentId: containerAppEnvironment.id
      configuration: {
        activeRevisionsMode: 'Single'
+       ingress: {
+         external: false
+         targetPort: 5555
+         allowInsecure: true
+       }
      }
      template: {
        containers: [
@@ -155,7 +165,7 @@ resource seleniumNodeChrome 'Microsoft.App/containerApps@2023-05-02-preview' = {
            env: [
              {
                name: 'SE_EVENT_BUS_HOST'
-               value: seleniumHub.properties.outboundIpAddresses[0]
+               value: seleniumHub.name
              }
              {
                name: 'SE_EVENT_BUS_PUBLISH_PORT'
@@ -202,6 +212,11 @@ resource seleniumNodeEdge 'Microsoft.App/containerApps@2023-05-02-preview' = {
      environmentId: containerAppEnvironment.id
      configuration: {
        activeRevisionsMode: 'Single'
+       ingress: {
+         external: false
+         targetPort: 5555
+         allowInsecure: true
+       }
      }
      template: {
        containers: [
@@ -211,7 +226,7 @@ resource seleniumNodeEdge 'Microsoft.App/containerApps@2023-05-02-preview' = {
            env: [
              {
                name: 'SE_EVENT_BUS_HOST'
-               value: seleniumHub.properties.outboundIpAddresses[0]
+               value: seleniumHub.name
              }
              {
                name: 'SE_EVENT_BUS_PUBLISH_PORT'
