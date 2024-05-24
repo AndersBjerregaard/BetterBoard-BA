@@ -69,7 +69,7 @@ public static class SeleniumBuilderExtensions
         return builder;
     }
 
-    public static IDistributedApplicationBuilder AddSeleniumHub(this  IDistributedApplicationBuilder builder)
+    public static IDistributedApplicationBuilder AddSeleniumHub(this IDistributedApplicationBuilder builder)
     {
         var seleniumHub = new SeleniumHubResource("selenium-hub");
 
