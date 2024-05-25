@@ -43,7 +43,7 @@ Det er forstået således at alle *Use Cases* - medmindre andet eksplicit er skr
 ## UC 03 - Møde Oprettelse
 
 - Ud fra forsiden på en portal: Klik på `Opret møde`, i kolonnen til venstre.
-- Verificer at man **ikke** kan oprette mødet for formularen er udfyldt med de nødvendige informationer. 
+- Verificer at man **ikke** kan oprette mødet før formularen er udfyldt med de nødvendige informationer. 
   - F.eks. test med ukorrekt tidspunkt: Et uangivet tidspunkt, eller starttidspunkt **efter** sluttidspunkt.
 - Udfyld formularen tilstrækkeligt. 
   - Vælg én eller flere test brugere at sende notifikation til.
