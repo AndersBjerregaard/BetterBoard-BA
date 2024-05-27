@@ -194,6 +194,14 @@ public class WebDriverTests : IClassFixture<TestVariables>
                     boardsWindow.GoToBoard("Test Board", ref _testOutputHelper);
                     boardsWindow.AssertGotoBoard("Test Board");
 
+                    INavigationMenuWindow navMenuWindow = new NavigationMenuWindow(driver, _targetUri);
+
+                    navMenuWindow.CreateMeeting();
+                    navMenuWindow.AssertMeetingPopup();
+
+                    navMenuWindow.FillAndConfirmMeeting();
+                    navMenuWindow.AssertConfirmedMeeting();
+
                     _testOutputHelper.WriteLine($"[SUCCESS] {options.BrowserName} WebDriver successfully created a meeting.");
 
                 }
