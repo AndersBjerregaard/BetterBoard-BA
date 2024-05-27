@@ -6,6 +6,4 @@ public interface INavigationMenuWindow : IWindowDriver {
     /// </summary>
     void CreateMeeting();
     void AssertMeetingPopup();
-    void FillAndConfirmMeeting();
-    void AssertConfirmedMeeting();
 }

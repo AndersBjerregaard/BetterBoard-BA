@@ -3,9 +3,9 @@ using WebDriverXUnit.WindowDrivers.Interfaces;
 
 namespace WebDriverXUnit.WindowDrivers;
 
-public class NavigationMenuWindow(RemoteWebDriver driver, Uri baseUri) : INavigationMenuWindow
+public class MeetingWindow(RemoteWebDriver driver, Uri baseUri) : IMeetingWindow
 {
-    public void AssertMeetingPopup()
+    public void AssertMeetingConfirmed()
     {
         throw new NotImplementedException();
     }
@@ -15,7 +15,7 @@ public class NavigationMenuWindow(RemoteWebDriver driver, Uri baseUri) : INaviga
         throw new NotImplementedException();
     }
 
-    public void CreateMeeting()
+    public void FillAndConfirmMeeting()
     {
         throw new NotImplementedException();
     }

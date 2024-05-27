@@ -199,8 +199,10 @@ public class WebDriverTests : IClassFixture<TestVariables>
                     navMenuWindow.CreateMeeting();
                     navMenuWindow.AssertMeetingPopup();
 
-                    navMenuWindow.FillAndConfirmMeeting();
-                    navMenuWindow.AssertConfirmedMeeting();
+                    IMeetingWindow meetingWindow = new MeetingWindow(driver, _targetUri);
+
+                    meetingWindow.FillAndConfirmMeeting();
+                    meetingWindow.AssertMeetingConfirmed();
 
                     _testOutputHelper.WriteLine($"[SUCCESS] {options.BrowserName} WebDriver successfully created a meeting.");
 
