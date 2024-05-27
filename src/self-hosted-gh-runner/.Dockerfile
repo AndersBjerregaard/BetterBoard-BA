@@ -10,7 +10,6 @@ RUN apt update -y && apt upgrade -y
 RUN useradd -m docker
 
 # Uuid generation package
-
 RUN apt install uuid-runtime
 
 # Packages for .net
