@@ -131,7 +131,7 @@ public class WebDriverTests : IClassFixture<TestVariables>
         for (int i = 0; i < driverOptions.Length; i++)
         {
             DriverOptions options = driverOptions[i];
-            ModifyDriverOptions(options);
+            ApplyOptionArguments(options);
             Task task = Task.Run(() =>
             {
                 RemoteWebDriver? driver = null;
@@ -169,14 +169,14 @@ public class WebDriverTests : IClassFixture<TestVariables>
 
     [Fact]
     public async Task MeetingCreationTest() {
-        DriverOptions[] driverOptions = [Helpers.AvailableDriverOptions.EDGE_OPTIONS];
+        DriverOptions[] driverOptions = AvailableDriverOptions.Get();
         Task[] parallelTests = new Task[driverOptions.Length];
         bool failed = false;
 
         for (int i = 0; i < driverOptions.Length; i++)
         {
             DriverOptions options = driverOptions[i];
-            ModifyDriverOptions(options);
+            ApplyOptionArguments(options);
             Task task = Task.Run(() =>
             {
                 RemoteWebDriver? driver = null;
@@ -250,7 +250,7 @@ public class WebDriverTests : IClassFixture<TestVariables>
         throw new NotImplementedException();
     }
 
-    private static void ModifyDriverOptions(DriverOptions options)
+    private static void ApplyOptionArguments(DriverOptions options)
     {
         var typeName = options.GetType().Name;
         if (typeName == nameof(ChromeOptions))
