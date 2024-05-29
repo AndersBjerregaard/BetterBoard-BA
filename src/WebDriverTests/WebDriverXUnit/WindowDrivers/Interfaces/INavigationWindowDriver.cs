@@ -1,6 +1,6 @@
 namespace WebDriverXUnit.WindowDrivers.Interfaces;
 
-public interface INavigationMenuWindow : IWindowDriver {
+public interface INavigationMenuWindow {
     /// <summary>
     /// Is assumed to generate a pop-up
     /// </summary>

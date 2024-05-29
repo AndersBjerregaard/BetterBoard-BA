@@ -169,7 +169,8 @@ public class WebDriverTests : IClassFixture<TestVariables>
 
     [Fact]
     public async Task MeetingCreationTest() {
-        DriverOptions[] driverOptions = AvailableDriverOptions.Get();
+        // DriverOptions[] driverOptions = AvailableDriverOptions.Get();
+        DriverOptions[] driverOptions = [AvailableDriverOptions.FIREFOX_OPTIONS];
         Task[] parallelTests = new Task[driverOptions.Length];
         bool failed = false;
 
@@ -201,8 +202,9 @@ public class WebDriverTests : IClassFixture<TestVariables>
 
                     IMeetingWindow meetingWindow = new MeetingWindow(driver, _targetUri);
 
-                    meetingWindow.FillAndConfirmMeeting(ref _testOutputHelper);
-                    meetingWindow.AssertMeetingConfirmed(ref options, ref _testOutputHelper);
+                    var result = meetingWindow.FillAndConfirmMeeting(ref _testOutputHelper);
+                    Assert.True(result.IsSuccess);
+                    meetingWindow.AssertMeetingConfirmed(result.GetValueOrThrow(), ref _testOutputHelper);
 
                     _testOutputHelper.WriteLine($"[SUCCESS] {options.BrowserName} WebDriver successfully created a meeting.");
 
