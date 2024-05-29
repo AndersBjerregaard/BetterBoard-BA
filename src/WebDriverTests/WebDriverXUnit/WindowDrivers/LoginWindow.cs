@@ -1,3 +1,4 @@
+using FluentAssertions;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.UI;
@@ -55,6 +56,7 @@ public class LoginWindow(RemoteWebDriver driver, Uri baseUri) : ILoginWindow
     /// <exception cref="Xunit.Sdk.NotNullException"></exception>
     /// <exception cref="Xunit.Sdk.EqualException"></exception>
     public void AssertNavigation() {
+        driver.Url.Should().Be(baseUri + "#/login");
         var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(20));
         wait.IgnoreExceptionTypes(typeof(NoSuchElementException), typeof(StaleElementReferenceException));
         var header = wait.Until(driver => {

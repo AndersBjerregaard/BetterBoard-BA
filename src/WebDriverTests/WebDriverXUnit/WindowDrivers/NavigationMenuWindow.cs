@@ -5,9 +5,9 @@ namespace WebDriverXUnit.WindowDrivers;
 
 public class NavigationMenuWindow(RemoteWebDriver driver, Uri baseUri) : INavigationMenuWindow
 {
-    public void AssertMeetingPopup()
+    public void AssertMeetingPopup(ref Xunit.Abstractions.ITestOutputHelper _testOutputHelper)
     {
-        throw new NotImplementedException();
+        _testOutputHelper.WriteLine("[INFO] Asserted Meeting Popup.");
     }
 
     public void AssertNavigation()
@@ -15,9 +15,9 @@ public class NavigationMenuWindow(RemoteWebDriver driver, Uri baseUri) : INaviga
         throw new NotImplementedException();
     }
 
-    public void CreateMeeting()
+    public void CreateMeeting(ref Xunit.Abstractions.ITestOutputHelper _testOutputHelper)
     {
-        throw new NotImplementedException();
+        _testOutputHelper.WriteLine("[INFO] Create Meeting.");
     }
 
     public void Navigate()

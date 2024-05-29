@@ -124,7 +124,7 @@ public class WebDriverTests : IClassFixture<TestVariables>
 
     [Fact]
     public async Task LoginTest() {
-        DriverOptions[] driverOptions = [Helpers.AvailableDriverOptions.EDGE_OPTIONS];
+        DriverOptions[] driverOptions = AvailableDriverOptions.Get();
         Task[] parallelTests = new Task[driverOptions.Length];
         bool failed = false;
 
@@ -196,13 +196,13 @@ public class WebDriverTests : IClassFixture<TestVariables>
 
                     INavigationMenuWindow navMenuWindow = new NavigationMenuWindow(driver, _targetUri);
 
-                    navMenuWindow.CreateMeeting();
-                    navMenuWindow.AssertMeetingPopup();
+                    navMenuWindow.CreateMeeting(ref _testOutputHelper);
+                    navMenuWindow.AssertMeetingPopup(ref _testOutputHelper);
 
                     IMeetingWindow meetingWindow = new MeetingWindow(driver, _targetUri);
 
-                    meetingWindow.FillAndConfirmMeeting();
-                    meetingWindow.AssertMeetingConfirmed();
+                    meetingWindow.FillAndConfirmMeeting(ref _testOutputHelper);
+                    meetingWindow.AssertMeetingConfirmed(ref options, ref _testOutputHelper);
 
                     _testOutputHelper.WriteLine($"[SUCCESS] {options.BrowserName} WebDriver successfully created a meeting.");
 

@@ -4,6 +4,6 @@ public interface INavigationMenuWindow : IWindowDriver {
     /// <summary>
     /// Is assumed to generate a pop-up
     /// </summary>
-    void CreateMeeting();
-    void AssertMeetingPopup();
+    void CreateMeeting(ref Xunit.Abstractions.ITestOutputHelper _testOutputHelper);
+    void AssertMeetingPopup(ref Xunit.Abstractions.ITestOutputHelper _testOutputHelper);
 }

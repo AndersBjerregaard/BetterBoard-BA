@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using FluentAssertions;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.UI;
@@ -58,11 +59,15 @@ public class BoardsWindow(RemoteWebDriver driver, Uri baseUri) : IBoardsWindow
 
     public void Navigate()
     {
+        if (driver.Url == baseUri + "#/boards") {
+            return;
+        }
         driver.Navigate().GoToUrl(baseUri + "#/boards");
     }
 
     public void AssertNavigation()
     {
+        driver.Url.Should().Be(baseUri.ToString() + "#/boards");
         var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(20));
         wait.IgnoreExceptionTypes(typeof(NoSuchElementException), typeof(StaleElementReferenceException));
         var paragraph = wait.Until(driver => {
@@ -71,6 +76,9 @@ public class BoardsWindow(RemoteWebDriver driver, Uri baseUri) : IBoardsWindow
         });
         Assert.NotNull(paragraph);
         var text = paragraph.Text;
-        Assert.True(text == "Welcome to your BetterBoard home screen" || text == "Velkommen til BetterBoard");
+        text.Should().BeOneOf(
+            "Welcome to your BetterBoard home screen",
+            "Velkommen til BetterBoard"
+        );
     }
 }
