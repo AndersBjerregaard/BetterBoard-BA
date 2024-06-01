@@ -18,7 +18,12 @@ public class LoginWindow(RemoteWebDriver driver, Uri baseUri) : ILoginWindow
     /// <exception cref="OpenQA.Selenium.StaleElementReferenceException"></exception>
     public void Login(UserCredentials userCredentials)
     {
-        var fields = driver.FindElements(By.ClassName("form-control"));
+        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
+        wait.IgnoreExceptionTypes(typeof(NoSuchElementException), typeof(StaleElementReferenceException));
+        var fields = wait.Until(d => {
+            var elements = driver.FindElements(By.ClassName("form-control"));
+            return elements.Any() ? elements : null;
+        });
         Assert.NotNull(fields);
         Assert.NotEmpty(fields);
         var submit = driver.FindElement(By.ClassName("btn-primary"));
