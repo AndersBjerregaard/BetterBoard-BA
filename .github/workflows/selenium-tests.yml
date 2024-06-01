@@ -10,9 +10,9 @@ defaults:
         shell: bash
 
 env:
-    SETUP_ENDPOINT: https://devapi.betterboard.dk/api/v1/testtransaction/start
-    TEARDOWN_ENDPOINT: https://devapi.betterboard.dk/api/v1/testtransaction/cleanup
-    TARGET_URI: https://dev.betterboard.dk/
+    SETUP_ENDPOINT: https://api.betterboard.dk/api/v1/testtransaction/start
+    TEARDOWN_ENDPOINT: https://api.betterboard.dk/api/v1/testtransaction/cleanup
+    TARGET_URI: https://app.betterboard.dk/
 
 jobs:
 
