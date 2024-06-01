@@ -164,7 +164,7 @@ public class WebDriverTests : IClassFixture<TestVariables>
     }
 
     [Fact(Skip = "Not Implemented")]
-    public async Task FrontPageTest() {
+    public void FrontPageTest() {
         throw new NotImplementedException();
     }
 
@@ -228,17 +228,17 @@ public class WebDriverTests : IClassFixture<TestVariables>
     }
 
     [Fact(Skip = "Not Implemented")]
-    public async Task MeetingAgendaTest() {
+    public void MeetingAgendaTest() {
         throw new NotImplementedException();
     }
 
     [Fact(Skip = "Not Implemented")]
-    public async Task MeetingSummaryTest() {
+    public void MeetingSummaryTest() {
         throw new NotImplementedException();
     }
 
     [Fact(Skip = "Not Implemented")]
-    public async Task FileSearchTest() {
+    public void FileSearchTest() {
         throw new NotImplementedException();
     }
 
