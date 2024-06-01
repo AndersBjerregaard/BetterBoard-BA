@@ -4,6 +4,6 @@ public interface INavigationMenuWindow {
     /// <summary>
     /// Is assumed to generate a pop-up
     /// </summary>
-    void CreateMeeting(ref Xunit.Abstractions.ITestOutputHelper _testOutputHelper);
-    void AssertMeetingPopup(ref Xunit.Abstractions.ITestOutputHelper _testOutputHelper);
+    void CreateMeeting(ref Xunit.Abstractions.ITestOutputHelper _testOutputHelper, ReadOnlySpan<char> browserName);
+    void AssertMeetingPopup(ref Xunit.Abstractions.ITestOutputHelper _testOutputHelper, ReadOnlySpan<char> browserName);
 }

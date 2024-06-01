@@ -30,23 +30,23 @@ public class WebDriverTests : IClassFixture<TestVariables>
         _fixture = fixture;
         _testOutputHelper = testOutputHelper;
 
-        _testUserCredentials = _fixture.TestUuid;
+        _testUserCredentials = _fixture.TestUuid ?? throw new NullReferenceException();
 
-        _targetUri = _fixture.TargetUri;
+        _targetUri = _fixture.TargetUri ?? throw new NullReferenceException();
 
-        _gridUri = _fixture.WebDriverUri;
+        _gridUri = _fixture.WebDriverUri ?? throw new NullReferenceException();
     }
 
     [Fact(Skip = "Obselete")]
     public void FirefoxSmokeTest()
     {
         var options = new FirefoxOptions();
-        var uri = _fixture.WebDriverUri;
+        ApplyOptionArguments(options);
 
         RemoteWebDriver? driver = null;
         try
         {
-            driver = new RemoteWebDriver(uri, options);
+            driver = new RemoteWebDriver(_gridUri, options);
 
             driver.Navigate().GoToUrl(_targetUri + "#/login");
 
@@ -54,14 +54,15 @@ public class WebDriverTests : IClassFixture<TestVariables>
 
             var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(20));
             wait.IgnoreExceptionTypes(typeof(NoSuchElementException), typeof(ElementNotVisibleException));
-            IWebElement? header = wait.Until(webDriver => {
-                 var element = webDriver.FindElement(By.TagName("h4"));
-                 return element.Displayed ? element : null;
-              });
-             Assert.NotNull(header);
-             Assert.Equal("Welcome to BetterBoard.", header.Text);
+            IWebElement? header = wait.Until(webDriver =>
+            {
+                var element = webDriver.FindElement(By.TagName("h4"));
+                return element.Displayed ? element : null;
+            });
+            Assert.NotNull(header);
+            Assert.Equal("Welcome to BetterBoard.", header.Text);
 
-             _testOutputHelper.WriteLine("Smoketest complete");    
+            _testOutputHelper.WriteLine("Smoketest complete");
         }
         catch (Exception ex)
         {
@@ -169,8 +170,7 @@ public class WebDriverTests : IClassFixture<TestVariables>
 
     [Fact]
     public async Task MeetingCreationTest() {
-        // DriverOptions[] driverOptions = AvailableDriverOptions.Get();
-        DriverOptions[] driverOptions = [AvailableDriverOptions.FIREFOX_OPTIONS];
+        DriverOptions[] driverOptions = AvailableDriverOptions.Get();
         Task[] parallelTests = new Task[driverOptions.Length];
         bool failed = false;
 
@@ -197,14 +197,14 @@ public class WebDriverTests : IClassFixture<TestVariables>
 
                     INavigationMenuWindow navMenuWindow = new NavigationMenuWindow(driver, _targetUri);
 
-                    navMenuWindow.CreateMeeting(ref _testOutputHelper);
-                    navMenuWindow.AssertMeetingPopup(ref _testOutputHelper);
+                    navMenuWindow.CreateMeeting(ref _testOutputHelper, options.BrowserName.AsSpan());
+                    navMenuWindow.AssertMeetingPopup(ref _testOutputHelper, options.BrowserName.AsSpan());
 
                     IMeetingWindow meetingWindow = new MeetingWindow(driver, _targetUri);
 
-                    var result = meetingWindow.FillAndConfirmMeeting(ref _testOutputHelper);
+                    var result = meetingWindow.FillAndConfirmMeeting(ref _testOutputHelper, options.BrowserName.AsSpan());
                     Assert.True(result.IsSuccess);
-                    meetingWindow.AssertMeetingConfirmed(result.GetValueOrThrow(), ref _testOutputHelper);
+                    meetingWindow.AssertMeetingConfirmed(result.GetValueOrThrow(), ref _testOutputHelper, options.BrowserName.AsSpan());
 
                     _testOutputHelper.WriteLine($"[SUCCESS] {options.BrowserName} WebDriver successfully created a meeting.");
 
@@ -248,7 +248,7 @@ public class WebDriverTests : IClassFixture<TestVariables>
     /// It's worth looking into SCRIVE's developer tools, to get a work-around.
     /// </summary>
     [Fact(Skip = "Economically non-viable")]
-    public async Task SignatureProcessTest() {
+    public void SignatureProcessTest() {
         throw new NotImplementedException();
     }
 
@@ -269,7 +269,7 @@ public class WebDriverTests : IClassFixture<TestVariables>
         else if (typeName == nameof(EdgeOptions))
         {
             var edgeOptions = options as EdgeOptions;
-            edgeOptions?.AddArguments(DEFAULT_WEBDRIVER_ARGUMENTS);
+            edgeOptions?.AddArguments("--no-sandbox", "--disable-dev-shm-usage", "--guest"); // Guest argument to disable personalized edge pop-ups
         }
     }
 }

@@ -11,16 +11,16 @@ namespace WebDriverXUnit.WindowDrivers;
 
 public class MeetingWindow(RemoteWebDriver driver, Uri baseUri) : IMeetingWindow
 {
-    public void AssertMeetingConfirmed(string meetingTitle, ref Xunit.Abstractions.ITestOutputHelper _testOutputHelper)
+    public void AssertMeetingConfirmed(string meetingTitle, ref Xunit.Abstractions.ITestOutputHelper _testOutputHelper, ReadOnlySpan<char> browserName)
     {
         var element = new IWebElementFinder(driver)
-            .Find(By.XPath("//span[@id='meetingTitle]"));
+            .Find(By.XPath("//span[@id='meetingTitle']"));
         Assert.NotNull(element);
         element.Text.Should().Be(meetingTitle);
-        _testOutputHelper.WriteLine("[INFO] Assert Meeting Confirmed");
+        _testOutputHelper.WriteLine($"[INFO] {browserName} Assert Meeting Confirmed");
     }
 
-    public Result<string> FillAndConfirmMeeting(ref Xunit.Abstractions.ITestOutputHelper _testOutputHelper)
+    public Result<string> FillAndConfirmMeeting(ref Xunit.Abstractions.ITestOutputHelper _testOutputHelper, ReadOnlySpan<char> browserName)
     {
         var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
         wait.IgnoreExceptionTypes(typeof(NoSuchElementException), typeof(StaleElementReferenceException));
@@ -43,19 +43,22 @@ public class MeetingWindow(RemoteWebDriver driver, Uri baseUri) : IMeetingWindow
         var actions = new Actions(driver);
         actions.Click(timePickers[0]) // Start time
             .SendKeys(Keys.ArrowLeft)
+            .SendKeys(Keys.ArrowLeft)
             .SendKeys("1159PM")
             .Build()
             .Perform();
         actions.Click(timePickers[1]) // End time
             .SendKeys(Keys.ArrowLeft)
+            .SendKeys(Keys.ArrowLeft)
             .SendKeys("1159PM")
             .Build()
             .Perform();
 
-        var submit = driver.FindElement(By.XPath("//button[text()='Create']"));
+        var submit = driver.FindElement(By.ClassName("btn-primary"));
+        Assert.Equal("Create", submit.Text);
         submit.Click();
 
-        _testOutputHelper.WriteLine("[INFO] Fill and Confirm Meeting.");
+        _testOutputHelper.WriteLine($"[INFO] {browserName} Fill and Confirm Meeting.");
 
         return Result<string>.Success(meetingTitle);
     }

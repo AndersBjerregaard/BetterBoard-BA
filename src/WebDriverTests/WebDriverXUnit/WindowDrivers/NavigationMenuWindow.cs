@@ -11,7 +11,7 @@ public class NavigationMenuWindow(RemoteWebDriver driver, Uri baseUri) : INaviga
 {
     private const string CREATE_MEETING_HEADER = "Add new meeting";
 
-    public void AssertMeetingPopup(ref Xunit.Abstractions.ITestOutputHelper _testOutputHelper)
+    public void AssertMeetingPopup(ref Xunit.Abstractions.ITestOutputHelper _testOutputHelper, ReadOnlySpan<char> browserName)
     {
         var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
         wait.IgnoreExceptionTypes(typeof(NoSuchElementException), typeof(StaleElementReferenceException));
@@ -20,9 +20,10 @@ public class NavigationMenuWindow(RemoteWebDriver driver, Uri baseUri) : INaviga
             return e.Displayed ? e : null;
         });
         Assert.NotNull(header);
+        _testOutputHelper.WriteLine($"[INFO] {browserName} Assert Meeting Popup.");
     }
 
-    public void CreateMeeting(ref Xunit.Abstractions.ITestOutputHelper _testOutputHelper)
+    public void CreateMeeting(ref Xunit.Abstractions.ITestOutputHelper _testOutputHelper, ReadOnlySpan<char> browserName)
     {
         // Expand sidebar
         var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
@@ -43,6 +44,6 @@ public class NavigationMenuWindow(RemoteWebDriver driver, Uri baseUri) : INaviga
         });
         Assert.NotNull(hyperlink);
         hyperlink.Click();
-        _testOutputHelper.WriteLine("[INFO] Create Meeting.");
+        _testOutputHelper.WriteLine($"[INFO] {browserName} Create Meeting Popup.");
     }
 }
