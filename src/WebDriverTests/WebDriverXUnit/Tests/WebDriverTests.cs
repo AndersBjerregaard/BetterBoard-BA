@@ -125,8 +125,7 @@ public class WebDriverTests : IClassFixture<TestVariables>
 
     [Fact]
     public async Task LoginTest() {
-        // DriverOptions[] driverOptions = AvailableDriverOptions.Get();
-        DriverOptions[] driverOptions = [new FirefoxOptions()];
+        DriverOptions[] driverOptions = AvailableDriverOptions.Get();
         Task[] parallelTests = new Task[driverOptions.Length];
         bool failed = false;
 
