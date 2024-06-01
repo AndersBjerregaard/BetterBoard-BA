@@ -105,7 +105,7 @@ jobs:
                 TARGET_URI: ${{ env.TARGET_URI }}
                 API_KEY: ${{ secrets.API_KEY }}
                 RUNTIME_ENVIRONMENT: STAGING 
-              run: dotnet test --logger "console;verbosity=detailed" --filter WebDriverXUnit.Tests.Authentication.FirefoxSmokeTest ./src/WebDriverTests/WebDriverXUnit/WebDriverXUnit.csproj
+              run: dotnet test --logger "console;verbosity=detailed" ./src/WebDriverTests/WebDriverXUnit/WebDriverXUnit.csproj
 
     teardown:
 
