@@ -49,7 +49,7 @@ public class LoginWindow(RemoteWebDriver driver, Uri baseUri) : ILoginWindow
             return element.Displayed ? element : null;
         });
         Assert.NotNull(boardHeader);
-        Assert.Contains(userCredentials.UserName, boardHeader.Text);
+        Assert.Contains(userCredentials.UserName.ToLower(), boardHeader.Text.ToLower());
     }
 
     public void Navigate()

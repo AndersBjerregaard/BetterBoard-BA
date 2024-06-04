@@ -12,6 +12,12 @@ Optionally, pass an environment variable value to set the Selenium WebDriver uri
 dotnet test --logger "console;verbosity=detailed" -e GRID_URI="http://localhost:8082" --filter WebDriverXUnit.Tests.Authentication.FirefoxSmokeTest
 ```
 
+Running with custom credentials:
+
+```
+dotnet test --logger "console;verbosity=detailed" -e TEST_CREDS="$(cat .\TEST_USERS.json)"
+```
+
 # Proper Execution
 
 Pass env variables for `GRID_URI`, `TEST_UUID`, and `TARGET_URI`.

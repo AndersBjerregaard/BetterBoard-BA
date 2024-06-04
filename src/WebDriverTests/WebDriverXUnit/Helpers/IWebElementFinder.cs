@@ -6,14 +6,14 @@ using OpenQA.Selenium.Support.UI;
 namespace WebDriverXUnit.Helpers;
 
 public class IWebElementFinderOptions {
-    public TimeSpan Wait { get; set; } = TimeSpan.FromSeconds(30);
+    public TimeSpan Wait { get; set; } = TimeSpan.FromSeconds(10);
     public Type[] IgnoreExceptionTypes { get; set; } = [typeof(NoSuchElementException), typeof(StaleElementReferenceException)];
 }
 
 public class IWebElementFinder {
     private readonly RemoteWebDriver _driver;
 
-    public TimeSpan Wait { get; set; } = TimeSpan.FromSeconds(30);
+    public TimeSpan Wait { get; set; } = TimeSpan.FromSeconds(10);
     public Type[] IgnoreExceptionTypes { get; set; } = [typeof(NoSuchElementException), typeof(StaleElementReferenceException)];
 
     public IWebElementFinder(RemoteWebDriver driver) {

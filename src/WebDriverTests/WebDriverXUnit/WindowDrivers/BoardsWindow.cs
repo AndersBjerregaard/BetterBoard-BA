@@ -4,6 +4,7 @@ using FluentAssertions;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.UI;
+using WebDriverXUnit.Helpers;
 using WebDriverXUnit.WindowDrivers.Interfaces;
 using Xunit.Abstractions;
 
@@ -22,7 +23,7 @@ public class BoardsWindow(RemoteWebDriver driver, Uri baseUri) : IBoardsWindow
         wait.IgnoreExceptionTypes([typeof(NoSuchElementException), typeof(StaleElementReferenceException)]);
         var headers = wait.Until(d =>
         {
-            var e = d.FindElements(By.TagName("h5"));
+            var e = d.FindElements(By.TagName("h4"));
             return e.Any() ? e : null;
         });
         Assert.NotNull(headers);
@@ -80,5 +81,17 @@ public class BoardsWindow(RemoteWebDriver driver, Uri baseUri) : IBoardsWindow
             "Welcome to your BetterBoard home screen",
             "Velkommen til BetterBoard"
         );
+    }
+
+    public IBoardsAssertion AssertBoardHas(string boardName, ITestOutputHelper _testOutputHelper)
+    {
+        var boards = new IWebElementFinder(driver)
+            .FindMultiple(By.XPath("//div[@class='widget-body clearfix']"));
+        Assert.NotNull(boards);
+        Assert.True(boards.Any());
+        var board = boards.First(x => x.GetDomProperty("innerText").Contains(boardName));
+        Assert.NotNull(board);
+        Assert.Contains("Unread documents", board.GetDomProperty("innerText"));
+        return new BoardsAssertion();
     }
 }

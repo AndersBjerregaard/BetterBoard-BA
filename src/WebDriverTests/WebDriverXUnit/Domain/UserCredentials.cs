@@ -8,7 +8,7 @@ public class UserCredentials(string email, string password)
     public string Email { get => _email; }
     public string Password { get => _password; }
     public string UserName { get { 
-        return  "Test User - " + _email.Split('@')[0];
+        return  _email.Split('@')[0];
         }
     }
 

@@ -163,9 +163,46 @@ public class WebDriverTests : IClassFixture<TestVariables>
         Assert.False(failed);
     }
 
-    [Fact(Skip = "Not Implemented")]
-    public void FrontPageTest() {
-        throw new NotImplementedException();
+    [Fact]
+    public async Task FrontPageTest() {
+        DriverOptions[] driverOptions = AvailableDriverOptions.EDGE_OPTIONS;
+        Task[] parallelTests = new Task[driverOptions.Length];
+        bool failed = false;
+
+        for (int i = 0; i < driverOptions.Length; i++)
+        {
+            DriverOptions options = driverOptions[i];
+            ApplyOptionArguments(options);
+            Task task = Task.Run(() =>
+            {
+                RemoteWebDriver? driver = null;
+                try
+                {
+                    driver = new RemoteWebDriver(_gridUri, options);
+
+                    _ = LoginSession.Login(driver, _targetUri, _testUserCredentials);
+
+                    IBoardsWindow boardsWindow = new BoardsWindow(driver, _targetUri);
+
+                    boardsWindow.Navigate();
+                    boardsWindow.AssertNavigation();
+
+                    boardsWindow.AssertBoardHas("E2E Test Board", _testOutputHelper);
+                }
+                catch (Exception e)
+                {
+                    ExceptionLogger.LogException(e, ref _testOutputHelper);
+                    failed = true;
+                }
+                finally
+                {
+                    driver?.Quit();
+                }
+            });
+            parallelTests[i] = task;
+        }
+        await Task.WhenAll(parallelTests);
+        Assert.False(failed);
     }
 
     [Fact]
