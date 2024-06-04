@@ -89,6 +89,11 @@ public class BoardsWindow(RemoteWebDriver driver, Uri baseUri) : IBoardsWindow
             .FindMultiple(By.XPath("//div[@class='widget-body clearfix']"));
         Assert.NotNull(boards);
         Assert.True(boards.Any());
+        /* for (int i = 0; i < boards.Count; i++)
+        {
+            ReadOnlySpan<char> innerText = boards[i].GetDomProperty("innerText").AsSpan();
+            innerText.Contains(boardName, StringComparison.InvariantCultureIgnoreCase);
+        } */
         var board = boards.First(x => x.GetDomProperty("innerText").Contains(boardName));
         Assert.NotNull(board);
         Assert.Contains("Unread documents", board.GetDomProperty("innerText"));
