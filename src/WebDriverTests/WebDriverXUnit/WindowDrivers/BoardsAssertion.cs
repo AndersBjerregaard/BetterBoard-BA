@@ -1,22 +1,29 @@
+using OpenQA.Selenium;
+using OpenQA.Selenium.Remote;
 using WebDriverXUnit.Abstractions;
+using WebDriverXUnit.Helpers;
 using WebDriverXUnit.WindowDrivers.Interfaces;
 
 namespace WebDriverXUnit.WindowDrivers;
 
-public class BoardsAssertion : IBoardsAssertion
+public class BoardsAssertion(IWebElement board, RemoteWebDriver driver) : IBoardsAssertion
 {
-    public Result<bool> UnreadDocuments()
+    public void HasUnreadDocuments()
     {
-        throw new NotImplementedException();
+        Assert.Contains("Unread documents", board.GetDomProperty("innerText"));
     }
 
-    public Result<bool> UnsignedDocuments()
+    public void HasUnsignedDocuments()
     {
-        throw new NotImplementedException();
+        var element = new IWebElementFinder(driver)
+            .Find(By.XPath(".//span[@title='Documents awaiting your signature']"));
+        Assert.NotNull(element);
     }
 
-    public Result<bool> UpcomingMeeting()
+    public void HasUpcomingMeeting()
     {
-        throw new NotImplementedException();
+        var element = new IWebElementFinder(driver)
+            .Find(By.XPath(".//i[@class='fa fa-calendar']"));
+        Assert.NotNull(element);
     }
 }

@@ -4,6 +4,7 @@ using FluentAssertions;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.UI;
+using WebDriverXUnit.Abstractions;
 using WebDriverXUnit.Helpers;
 using WebDriverXUnit.WindowDrivers.Interfaces;
 using Xunit.Abstractions;
@@ -83,20 +84,30 @@ public class BoardsWindow(RemoteWebDriver driver, Uri baseUri) : IBoardsWindow
         );
     }
 
-    public IBoardsAssertion AssertBoardHas(string boardName, ITestOutputHelper _testOutputHelper)
+    public IBoardsAssertion AssertBoard(IWebElement board)
+    {
+        return new BoardsAssertion(board, driver);
+    }
+
+    public Result<IWebElement> FindBoard(string boardName)
     {
         var boards = new IWebElementFinder(driver)
             .FindMultiple(By.XPath("//div[@class='widget-body clearfix']"));
         Assert.NotNull(boards);
         Assert.True(boards.Any());
-        /* for (int i = 0; i < boards.Count; i++)
-        {
-            ReadOnlySpan<char> innerText = boards[i].GetDomProperty("innerText").AsSpan();
-            innerText.Contains(boardName, StringComparison.InvariantCultureIgnoreCase);
-        } */
         var board = boards.First(x => x.GetDomProperty("innerText").Contains(boardName));
         Assert.NotNull(board);
-        Assert.Contains("Unread documents", board.GetDomProperty("innerText"));
-        return new BoardsAssertion();
+        return Result<IWebElement>.Success(board);
+    }
+
+    public Result<IWebElement> FindBoard(string boardName, string companyName)
+    {
+        var boards = new IWebElementFinder(driver)
+            .FindMultiple(By.XPath("//div[@class='widget-body clearfix']"));
+        Assert.NotNull(boards);
+        Assert.True(boards.Any());
+        var board = boards.First(x => x.GetDomProperty("innerText").Contains(boardName) && x.GetDomProperty("innerText").Contains(companyName));
+        Assert.NotNull(board);
+        return Result<IWebElement>.Success(board);
     }
 }

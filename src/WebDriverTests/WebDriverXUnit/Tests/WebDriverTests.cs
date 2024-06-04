@@ -187,7 +187,16 @@ public class WebDriverTests : IClassFixture<TestVariables>
                     boardsWindow.Navigate();
                     boardsWindow.AssertNavigation();
 
-                    boardsWindow.AssertBoardHas("E2E Test Board", _testOutputHelper);
+                    var result = boardsWindow.FindBoard("Bestyrelsen", "Anders Test ApS");
+                    Assert.True(result.IsSuccess);
+                    var board = result.GetValueOrThrow();
+                    boardsWindow.AssertBoard(board).HasUnreadDocuments();
+                    boardsWindow.AssertBoard(board).HasUnsignedDocuments();
+
+                    result = boardsWindow.FindBoard("Bestyrelsen", "BetterBoard ApS");
+                    Assert.True(result.IsSuccess);
+                    board = result.GetValueOrThrow();
+                    boardsWindow.AssertBoard(board).HasUpcomingMeeting();
                 }
                 catch (Exception e)
                 {

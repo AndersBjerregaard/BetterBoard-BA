@@ -1,3 +1,5 @@
+using OpenQA.Selenium;
+using WebDriverXUnit.Abstractions;
 using Xunit.Abstractions;
 
 namespace WebDriverXUnit.WindowDrivers.Interfaces;
@@ -5,5 +7,7 @@ namespace WebDriverXUnit.WindowDrivers.Interfaces;
 public interface IBoardsWindow : IWindowDriver {
     void GoToBoard(string boardName, ref ITestOutputHelper testOutput);
     void AssertGotoBoard(string boardName);
-    IBoardsAssertion AssertBoardHas(string boardName, ITestOutputHelper _testOutputHelper);
+    Result<IWebElement> FindBoard(string boardName);
+    Result<IWebElement> FindBoard(string boardName, string companyName);
+    IBoardsAssertion AssertBoard(IWebElement board);
 }
