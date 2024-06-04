@@ -11,13 +11,13 @@ using Xunit.Abstractions;
 
 namespace WebDriverXUnit.WindowDrivers;
 
-public class BoardsWindow(RemoteWebDriver driver, Uri baseUri) : IBoardsWindow
+public class BoardsWindow(RemoteWebDriver driver, Uri baseUri, ITestOutputHelper testOutput) : IBoardsWindow
 {
     /// <summary>
     /// This method depends on the fact that the boards page renders a board & dataroom wrapped in a <div></div>.
     /// Thus the header and redirect button for each board & dataroom should have the same corresponding index, since they're children in the same div.
     /// </summary>
-    public void GoToBoard(string boardName, ref ITestOutputHelper testOutput)
+    public void GoToBoard(string boardName)
     {
         // Find board name's index
         var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(20));
@@ -45,6 +45,7 @@ public class BoardsWindow(RemoteWebDriver driver, Uri baseUri) : IBoardsWindow
         var btn = btns[headerIndex.Value];
         Assert.NotNull(btn);
         btn.Click();
+        testOutput.WriteLine($"[Info] {nameof(this.GoToBoard)} executed...");
     }
 
     public void AssertGotoBoard(string boardName)
@@ -65,6 +66,7 @@ public class BoardsWindow(RemoteWebDriver driver, Uri baseUri) : IBoardsWindow
             return;
         }
         driver.Navigate().GoToUrl(baseUri + "#/boards");
+        testOutput.WriteLine($"[Info] {nameof(this.Navigate)} executed...");
     }
 
     public void AssertNavigation()
@@ -82,11 +84,12 @@ public class BoardsWindow(RemoteWebDriver driver, Uri baseUri) : IBoardsWindow
             "Welcome to your BetterBoard home screen",
             "Velkommen til BetterBoard"
         );
+        testOutput.WriteLine($"[Info] {nameof(this.AssertNavigation)} executed...");
     }
 
     public IBoardsAssertion AssertBoard(IWebElement board)
     {
-        return new BoardsAssertion(board, driver);
+        return new BoardsAssertion(board, testOutput);
     }
 
     public Result<IWebElement> FindBoard(string boardName)
@@ -97,6 +100,7 @@ public class BoardsWindow(RemoteWebDriver driver, Uri baseUri) : IBoardsWindow
         Assert.True(boards.Any());
         var board = boards.First(x => x.GetDomProperty("innerText").Contains(boardName));
         Assert.NotNull(board);
+        testOutput.WriteLine($"[Info] {nameof(this.FindBoard)} executed...");
         return Result<IWebElement>.Success(board);
     }
 
@@ -108,6 +112,7 @@ public class BoardsWindow(RemoteWebDriver driver, Uri baseUri) : IBoardsWindow
         Assert.True(boards.Any());
         var board = boards.First(x => x.GetDomProperty("innerText").Contains(boardName) && x.GetDomProperty("innerText").Contains(companyName));
         Assert.NotNull(board);
+        testOutput.WriteLine($"[Info] {nameof(this.FindBoard)} executed...");
         return Result<IWebElement>.Success(board);
     }
 }

@@ -182,7 +182,7 @@ public class WebDriverTests : IClassFixture<TestVariables>
 
                     _ = LoginSession.Login(driver, _targetUri, _testUserCredentials);
 
-                    IBoardsWindow boardsWindow = new BoardsWindow(driver, _targetUri);
+                    IBoardsWindow boardsWindow = new BoardsWindow(driver, _targetUri, _testOutputHelper);
 
                     boardsWindow.Navigate();
                     boardsWindow.AssertNavigation();
@@ -193,7 +193,7 @@ public class WebDriverTests : IClassFixture<TestVariables>
                     boardsWindow.AssertBoard(board).HasUnreadDocuments();
                     boardsWindow.AssertBoard(board).HasUnsignedDocuments();
 
-                    result = boardsWindow.FindBoard("Bestyrelsen", "BetterBoard ApS");
+                    result = boardsWindow.FindBoard("Bestyrelsen", "Anders Test ApS");
                     Assert.True(result.IsSuccess);
                     board = result.GetValueOrThrow();
                     boardsWindow.AssertBoard(board).HasUpcomingMeeting();
@@ -233,12 +233,12 @@ public class WebDriverTests : IClassFixture<TestVariables>
 
                     _ = LoginSession.Login(driver, _targetUri, _testUserCredentials);
 
-                    IBoardsWindow boardsWindow = new BoardsWindow(driver, _targetUri);
+                    IBoardsWindow boardsWindow = new BoardsWindow(driver, _targetUri, _testOutputHelper);
 
                     boardsWindow.Navigate();
                     boardsWindow.AssertNavigation();
 
-                    boardsWindow.GoToBoard("Test Board", ref _testOutputHelper);
+                    boardsWindow.GoToBoard("Test Board");
                     boardsWindow.AssertGotoBoard("Test Board");
 
                     INavigationMenuWindow navMenuWindow = new NavigationMenuWindow(driver, _targetUri);
