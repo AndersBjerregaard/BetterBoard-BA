@@ -51,6 +51,13 @@ public class BoardsWindow(RemoteWebDriver driver, Uri baseUri, ITestOutputHelper
         testOutput.WriteLine($"[Info] {nameof(this.GoToBoard)} executed...");
     }
 
+    public void GoToBoard(IWebElement board)
+    {
+        var btn = board.FindElement(By.XPath(".//button[@class='btn btn-transparent']"));
+        Assert.NotNull(btn);
+        btn.Click();
+    }
+
     public void AssertGotoBoard(string boardName)
     {
         var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(20));
@@ -61,6 +68,14 @@ public class BoardsWindow(RemoteWebDriver driver, Uri baseUri, ITestOutputHelper
         });
         Assert.NotNull(small);
         Assert.Contains(boardName, small.Text);
+    }
+
+    public void AssertGotoBoard(string boardName, string companyName) {
+        var header = new IWebElementFinder(driver).Find(By.TagName("header"));
+        Assert.NotNull(header);
+        var text = header.GetDomProperty("outerText");
+        var filter = new string[] { boardName, companyName};
+        Assert.True(filter.All(f => text.Contains(f)));
     }
 
     public void Navigate()
@@ -136,4 +151,5 @@ public class BoardsWindow(RemoteWebDriver driver, Uri baseUri, ITestOutputHelper
         Assert.NotNull(hyperlink);
         hyperlink.Click();
     }
+
 }

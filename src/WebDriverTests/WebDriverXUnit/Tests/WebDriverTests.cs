@@ -282,7 +282,7 @@ public class WebDriverTests : IClassFixture<TestVariables>
                     navMenuWindow.CreateMeeting(ref _testOutputHelper, options.BrowserName.AsSpan());
                     navMenuWindow.AssertMeetingPopup(ref _testOutputHelper, options.BrowserName.AsSpan());
 
-                    IMeetingWindow meetingWindow = new MeetingWindow(driver, _targetUri);
+                    ICreateMeetingWindow meetingWindow = new CreateMeetingWindow(driver, _targetUri);
 
                     var result = meetingWindow.FillAndConfirmMeeting(ref _testOutputHelper, options.BrowserName.AsSpan());
                     Assert.True(result.IsSuccess);
@@ -322,7 +322,23 @@ public class WebDriverTests : IClassFixture<TestVariables>
                 RemoteWebDriver? driver = null;
                 try
                 {
-                    
+                    driver = new RemoteWebDriver(_gridUri, options);
+
+                    _ = LoginSession.Login(driver, _targetUri, _testUserCredentials);
+
+                    IBoardsWindow boardsWindow = new BoardsWindow(driver, _targetUri, _testOutputHelper);
+
+                    boardsWindow.Navigate();
+                    boardsWindow.AssertNavigation();
+
+                    var result = boardsWindow.FindBoard("Bestyrelsen", "Anders Test ApS");
+                    Assert.True(result.IsSuccess);
+                    var board = result.GetValueOrThrow();
+                    boardsWindow.AssertBoard(board)
+                        .IsABoard()
+                        .HasUpcomingMeeting();
+                    boardsWindow.GoToBoard(board);
+                    boardsWindow.AssertGotoBoard("Bestyrelsen", "Anders Test ApS");
                 }
                 catch (Exception e) {
                     ExceptionLogger.LogException(e, ref _testOutputHelper);
