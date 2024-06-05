@@ -362,9 +362,36 @@ public class WebDriverTests : IClassFixture<TestVariables>
         Assert.False(failed);
     }
 
-    [Fact(Skip = "Not Implemented")]
-    public void MeetingSummaryTest() {
-        throw new NotImplementedException();
+    [Fact]
+    public async Task MeetingSummaryTest() {
+        DriverOptions[] driverOptions = AvailableDriverOptions.EDGE_OPTIONS;
+        Task[] parallelTets = new Task[driverOptions.Length];
+        bool failed = false;
+        for (int i = 0; i < driverOptions.Length; i++)
+        {
+            DriverOptions options = driverOptions[i];
+            ApplyOptionArguments(options);
+            Task task = Task.Run(() => {
+                RemoteWebDriver? driver = null;
+                try
+                {
+                    driver = new RemoteWebDriver(_gridUri, options);
+
+                    _ = LoginSession.Login(driver, _targetUri, _testUserCredentials);
+                }
+                catch (Exception e) {
+                    ExceptionLogger.LogException(e, ref _testOutputHelper);
+                    failed = true;
+                }
+                finally
+                {
+                    driver?.Quit();
+                }
+            });
+            parallelTets[i] = task;
+        }
+        await Task.WhenAll(parallelTets);
+        Assert.False(failed);
     }
 
     [Fact(Skip = "Not Implemented")]
