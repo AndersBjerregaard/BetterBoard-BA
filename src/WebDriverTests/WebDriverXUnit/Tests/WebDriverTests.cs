@@ -187,16 +187,52 @@ public class WebDriverTests : IClassFixture<TestVariables>
                     boardsWindow.Navigate();
                     boardsWindow.AssertNavigation();
 
+                    // Boards
+                    // Unread & Unsigned Documents
                     var result = boardsWindow.FindBoard("Bestyrelsen", "Anders Test ApS");
                     Assert.True(result.IsSuccess);
                     var board = result.GetValueOrThrow();
-                    boardsWindow.AssertBoard(board).HasUnreadDocuments();
-                    boardsWindow.AssertBoard(board).HasUnsignedDocuments();
-
+                    boardsWindow.AssertBoard(board)
+                        .IsABoard()
+                        .HasUnreadDocuments()
+                        .HasUnsignedDocuments();
+                    
+                    // Upcoming Meeting
                     result = boardsWindow.FindBoard("Bestyrelsen", "BetterBoard ApS");
                     Assert.True(result.IsSuccess);
                     board = result.GetValueOrThrow();
-                    boardsWindow.AssertBoard(board).HasUpcomingMeeting();
+                    boardsWindow.AssertBoard(board)
+                        .IsABoard()
+                        .HasUpcomingMeeting();
+
+                    // Dataroom
+                    // Unread & Unsigned Documents
+                    result = boardsWindow.FindBoard("Kun Datarum", "Anders Datarum");
+                    Assert.True(result.IsSuccess);
+                    board = result.GetValueOrThrow();
+                    boardsWindow.AssertBoard(board)
+                        .IsADataroom()
+                        .HasUnreadDocuments()
+                        .HasUnsignedDocuments();
+
+                    // Search
+                    boardsWindow.SearchFor("Anders Datarum");
+                    result = boardsWindow.FindBoard("Kun Datarum", "Anders Datarum");
+                    Assert.True(result.IsSuccess);
+                    result = boardsWindow.FindBoard("Bestyrelsen", "Anders Test ApS"); // Exists
+                    Assert.True(result.IsFailure); // Assert search hides other boards
+
+                    // Unsigned Documents
+                    boardsWindow.GoToUnsignedDocuments();
+
+                    IUnsignedDocumentsWindow docsWindow = new UnsignedDocumentsWindow(driver, _targetUri, _testOutputHelper);
+
+                    docsWindow.AssertNavigation();
+
+                    result = docsWindow.GetUnsignedDocumentsTable();
+                    Assert.True(result.IsSuccess);
+                    docsWindow.AssertUnsignedDocuments(result.GetValueOrThrow())
+                        .HasDocumentFromOrigin("Kun Datarum", "Anders Test ApS");
                 }
                 catch (Exception e)
                 {

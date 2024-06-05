@@ -2,9 +2,12 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using FluentAssertions;
 using OpenQA.Selenium;
+using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.UI;
 using WebDriverXUnit.Abstractions;
+using WebDriverXUnit.Assertions;
+using WebDriverXUnit.Assertions.Interfaces;
 using WebDriverXUnit.Helpers;
 using WebDriverXUnit.WindowDrivers.Interfaces;
 using Xunit.Abstractions;
@@ -98,10 +101,9 @@ public class BoardsWindow(RemoteWebDriver driver, Uri baseUri, ITestOutputHelper
             .FindMultiple(By.XPath("//div[@class='widget-body clearfix']"));
         Assert.NotNull(boards);
         Assert.True(boards.Any());
-        var board = boards.First(x => x.GetDomProperty("innerText").Contains(boardName));
-        Assert.NotNull(board);
+        var board = boards.FirstOrDefault(x => x.GetDomProperty("innerText").Contains(boardName));
         testOutput.WriteLine($"[Info] {nameof(this.FindBoard)} executed...");
-        return Result<IWebElement>.Success(board);
+        return board is not null ? Result<IWebElement>.Success(board) : Result<IWebElement>.Failure(new Exception($"No board found with the name: {boardName}"));
     }
 
     public Result<IWebElement> FindBoard(string boardName, string companyName)
@@ -110,9 +112,28 @@ public class BoardsWindow(RemoteWebDriver driver, Uri baseUri, ITestOutputHelper
             .FindMultiple(By.XPath("//div[@class='widget-body clearfix']"));
         Assert.NotNull(boards);
         Assert.True(boards.Any());
-        var board = boards.First(x => x.GetDomProperty("innerText").Contains(boardName) && x.GetDomProperty("innerText").Contains(companyName));
-        Assert.NotNull(board);
+        var board = boards.FirstOrDefault(x => x.GetDomProperty("innerText").Contains(boardName) && x.GetDomProperty("innerText").Contains(companyName));
         testOutput.WriteLine($"[Info] {nameof(this.FindBoard)} executed...");
-        return Result<IWebElement>.Success(board);
+        return board is not null ? Result<IWebElement>.Success(board) : Result<IWebElement>.Failure(new Exception($"No board found with the name: {boardName}. Under the company: {companyName}"));
+    }
+
+    public void SearchFor(string search)
+    {
+        var input = new IWebElementFinder(driver)
+            .Find(By.XPath("//input[@class='filterInput']"));
+        Assert.NotNull(input);
+        var actions = new Actions(driver);
+        actions.Click(input)
+            .SendKeys(search)
+            .Build()
+            .Perform();
+    }
+
+    public void GoToUnsignedDocuments()
+    {
+        var hyperlink = new IWebElementFinder(driver)
+            .Find(By.XPath("//a[@href='#/unsigneddocuments']"));
+        Assert.NotNull(hyperlink);
+        hyperlink.Click();
     }
 }
