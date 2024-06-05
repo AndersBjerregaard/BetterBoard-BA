@@ -1,3 +1,9 @@
+using OpenQA.Selenium;
+
 namespace WebDriverXUnit.WindowDrivers.Interfaces;
 
-public interface IMeetingWindow : IWindowDriver;
+public interface IMeetingWindow {
+    void AssertCurrentViewedMeeting(string meetingTitle);
+    IWebElement GetMeetingAgendaSection();
+    void UploadDocumentToFirstAgendaItem(IWebElement agendaSection);
+}

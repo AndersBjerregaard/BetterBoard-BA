@@ -339,6 +339,13 @@ public class WebDriverTests : IClassFixture<TestVariables>
                         .HasUpcomingMeeting();
                     boardsWindow.GoToBoard(board);
                     boardsWindow.AssertGotoBoard("Bestyrelsen", "Anders Test ApS");
+
+                    IMeetingWindow meetingWindow = new MeetingWIndow(driver, _targetUri, _testOutputHelper);
+
+                    meetingWindow.AssertCurrentViewedMeeting("General boardmeeting");
+
+                    var section = meetingWindow.GetMeetingAgendaSection();
+                    meetingWindow.UploadDocumentToFirstAgendaItem(section);
                 }
                 catch (Exception e) {
                     ExceptionLogger.LogException(e, ref _testOutputHelper);
@@ -392,7 +399,7 @@ public class WebDriverTests : IClassFixture<TestVariables>
         else if (typeName == nameof(EdgeOptions))
         {
             var edgeOptions = options as EdgeOptions;
-            edgeOptions?.AddArguments("--no-sandbox", "--disable-dev-shm-usage", "--guest"); // Guest argument to disable personalized edge pop-ups
+            edgeOptions?.AddArguments("--no-sandbox", "--disable-dev-shm-usage", "--guest", "--headless"); // Guest argument to disable personalized edge pop-ups
         }
     }
 }
