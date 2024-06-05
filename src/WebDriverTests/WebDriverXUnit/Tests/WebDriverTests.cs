@@ -309,9 +309,34 @@ public class WebDriverTests : IClassFixture<TestVariables>
         Assert.False(failed);
     }
 
-    [Fact(Skip = "Not Implemented")]
-    public void MeetingAgendaTest() {
-        throw new NotImplementedException();
+    [Fact]
+    public async Task MeetingAgendaTest() {
+        DriverOptions[] driverOptions = AvailableDriverOptions.EDGE_OPTIONS;
+        Task[] parallelTests = new Task[driverOptions.Length];
+        bool failed = false;
+        for (int i = 0; i < driverOptions.Length; i++)
+        {
+            DriverOptions options = driverOptions[i];
+            ApplyOptionArguments(options);
+            Task task = Task.Run(() => {
+                RemoteWebDriver? driver = null;
+                try
+                {
+                    
+                }
+                catch (Exception e) {
+                    ExceptionLogger.LogException(e, ref _testOutputHelper);
+                    failed = true;
+                }
+                finally
+                {
+                    driver?.Quit();
+                }
+            });
+            parallelTests[i] = task;
+        }
+        await Task.WhenAll(parallelTests);
+        Assert.False(failed);
     }
 
     [Fact(Skip = "Not Implemented")]

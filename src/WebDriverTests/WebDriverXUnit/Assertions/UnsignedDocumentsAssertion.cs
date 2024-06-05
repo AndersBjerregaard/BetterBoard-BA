@@ -21,8 +21,7 @@ public class UnsginedDocumentsAssertion(IWebElement table, ITestOutputHelper tes
         Assert.NotNull(columns);
         Assert.True(columns.Any());
         var innerText = columns.Select(x => x.Text);
-        bool multipleContains = origins.All(o => innerText.Any(s => s.Contains(o)));
-        Assert.True(multipleContains);
+        Assert.True(origins.All(o => innerText.Any(s => s.Contains(o))));
         return this;
     }
 
