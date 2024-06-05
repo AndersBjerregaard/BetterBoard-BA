@@ -193,7 +193,7 @@ public class WebDriverTests : IClassFixture<TestVariables>
                     boardsWindow.AssertBoard(board).HasUnreadDocuments();
                     boardsWindow.AssertBoard(board).HasUnsignedDocuments();
 
-                    result = boardsWindow.FindBoard("Bestyrelsen", "Anders Test ApS");
+                    result = boardsWindow.FindBoard("Bestyrelsen", "BetterBoard ApS");
                     Assert.True(result.IsSuccess);
                     board = result.GetValueOrThrow();
                     boardsWindow.AssertBoard(board).HasUpcomingMeeting();

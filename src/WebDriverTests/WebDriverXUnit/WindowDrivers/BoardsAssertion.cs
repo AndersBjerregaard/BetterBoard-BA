@@ -19,6 +19,7 @@ public class BoardsAssertion(IWebElement board, ITestOutputHelper testOutput) : 
     {
         var element = board.FindElement(By.XPath(".//span[@title='Documents awaiting your signature']"));
         Assert.NotNull(element);
+        Assert.True(element.Displayed);
         testOutput.WriteLine($"[Info] {nameof(this.HasUnsignedDocuments)} executed...");
     }
 
@@ -26,6 +27,7 @@ public class BoardsAssertion(IWebElement board, ITestOutputHelper testOutput) : 
     {
         var element = board.FindElement(By.XPath(".//i[@class='fa fa-calendar']"));
         Assert.NotNull(element);
+        Assert.True(element.Displayed);
         testOutput.WriteLine($"[Info] {nameof(this.HasUpcomingMeeting)} executed...");
     }
 }
