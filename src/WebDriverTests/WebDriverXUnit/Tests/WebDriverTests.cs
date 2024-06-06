@@ -5,11 +5,9 @@ using OpenQA.Selenium.Edge;
 using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.UI;
-using WebDriverXUnit.ClassData;
 using WebDriverXUnit.Domain;
 using WebDriverXUnit.Fixtures;
 using WebDriverXUnit.Helpers;
-using WebDriverXUnit.Helpers.Interfaces;
 using WebDriverXUnit.WindowDrivers;
 using WebDriverXUnit.WindowDrivers.Interfaces;
 using Xunit.Abstractions;
@@ -23,7 +21,7 @@ public class WebDriverTests : IClassFixture<TestVariables>
     private readonly UserCredentials _testUserCredentials;
     private readonly Uri _targetUri;
     private readonly Uri _gridUri;
-    private static readonly string[] DEFAULT_WEBDRIVER_ARGUMENTS = ["--no-sandbox", "--disable-dev-shm-usage", "--incognito"];
+    private static readonly string[] DEFAULT_WEBDRIVER_ARGUMENTS = ["--no-sandbox", "--disable-dev-shm-usage", "--incognito", "--headless"];
 
     public WebDriverTests(TestVariables fixture, ITestOutputHelper testOutputHelper)
     {
@@ -64,9 +62,9 @@ public class WebDriverTests : IClassFixture<TestVariables>
 
             _testOutputHelper.WriteLine("Smoketest complete");
         }
-        catch (Exception ex)
+        catch (Exception e)
         {
-            ExceptionLogger.LogException(ex, ref _testOutputHelper);
+            ExceptionLogger.LogException(e, ref _testOutputHelper, options.BrowserName);
         }
         finally
         {
@@ -140,14 +138,14 @@ public class WebDriverTests : IClassFixture<TestVariables>
                 {
                     driver = new RemoteWebDriver(_gridUri, options);
 
-                    _ = LoginSession.Login(driver, _targetUri, _testUserCredentials);
-
+                    Login(driver);
+                    
                     _testOutputHelper.WriteLine($"[SUCCESS] {options.BrowserName} WebDriver successfully logged in");
 
                 }
                 catch (Exception e)
                 {
-                    ExceptionLogger.LogException(e, ref _testOutputHelper);
+                    ExceptionLogger.LogException(e, ref _testOutputHelper, options.BrowserName);
                     failed = true;
                 }
                 finally
@@ -165,7 +163,7 @@ public class WebDriverTests : IClassFixture<TestVariables>
 
     [Fact]
     public async Task FrontPageTest() {
-        DriverOptions[] driverOptions = AvailableDriverOptions.EDGE_OPTIONS;
+        DriverOptions[] driverOptions = AvailableDriverOptions.Get();
         Task[] parallelTests = new Task[driverOptions.Length];
         bool failed = false;
 
@@ -180,7 +178,7 @@ public class WebDriverTests : IClassFixture<TestVariables>
                 {
                     driver = new RemoteWebDriver(_gridUri, options);
 
-                    _ = LoginSession.Login(driver, _targetUri, _testUserCredentials);
+                    Login(driver);
 
                     IBoardsWindow boardsWindow = new BoardsWindow(driver, _targetUri, _testOutputHelper);
 
@@ -236,7 +234,7 @@ public class WebDriverTests : IClassFixture<TestVariables>
                 }
                 catch (Exception e)
                 {
-                    ExceptionLogger.LogException(e, ref _testOutputHelper);
+                    ExceptionLogger.LogException(e, ref _testOutputHelper, options.BrowserName);
                     failed = true;
                 }
                 finally
@@ -267,7 +265,7 @@ public class WebDriverTests : IClassFixture<TestVariables>
                 {
                     driver = new RemoteWebDriver(_gridUri, options);
 
-                    _ = LoginSession.Login(driver, _targetUri, _testUserCredentials);
+                    Login(driver);
 
                     IBoardsWindow boardsWindow = new BoardsWindow(driver, _targetUri, _testOutputHelper);
 
@@ -288,12 +286,12 @@ public class WebDriverTests : IClassFixture<TestVariables>
                     Assert.True(result.IsSuccess);
                     meetingWindow.AssertMeetingConfirmed(result.GetValueOrThrow(), ref _testOutputHelper, options.BrowserName.AsSpan());
 
-                    _testOutputHelper.WriteLine($"[SUCCESS] {options.BrowserName} WebDriver successfully created a meeting.");
+                    _testOutputHelper.WriteLine($"[SUCCESS] {options.BrowserName} WebDriver successfully created meeting {result.GetValueOrThrow()}.");
 
                 }
                 catch (Exception e)
                 {
-                    ExceptionLogger.LogException(e, ref _testOutputHelper);
+                    ExceptionLogger.LogException(e, ref _testOutputHelper, options.BrowserName);
                     failed = true;
                 }
                 finally
@@ -311,7 +309,7 @@ public class WebDriverTests : IClassFixture<TestVariables>
 
     [Fact]
     public async Task MeetingAgendaTest() {
-        DriverOptions[] driverOptions = AvailableDriverOptions.EDGE_OPTIONS;
+        DriverOptions[] driverOptions = AvailableDriverOptions.Get();
         Task[] parallelTests = new Task[driverOptions.Length];
         bool failed = false;
         for (int i = 0; i < driverOptions.Length; i++)
@@ -324,7 +322,7 @@ public class WebDriverTests : IClassFixture<TestVariables>
                 {
                     driver = new RemoteWebDriver(_gridUri, options);
 
-                    _ = LoginSession.Login(driver, _targetUri, _testUserCredentials);
+                    Login(driver);
 
                     IBoardsWindow boardsWindow = new BoardsWindow(driver, _targetUri, _testOutputHelper);
 
@@ -346,9 +344,11 @@ public class WebDriverTests : IClassFixture<TestVariables>
 
                     var section = meetingWindow.GetMeetingAgendaSection();
                     meetingWindow.UploadDocumentToFirstAgendaItem(section);
+
+                    _testOutputHelper.WriteLine($"[SUCCESS] {options.BrowserName} successfully executed {nameof(MeetingAgendaTest)}");
                 }
                 catch (Exception e) {
-                    ExceptionLogger.LogException(e, ref _testOutputHelper);
+                    ExceptionLogger.LogException(e, ref _testOutputHelper, options.BrowserName);
                     failed = true;
                 }
                 finally
@@ -364,7 +364,7 @@ public class WebDriverTests : IClassFixture<TestVariables>
 
     [Fact]
     public async Task MeetingSummaryTest() {
-        DriverOptions[] driverOptions = AvailableDriverOptions.EDGE_OPTIONS;
+        DriverOptions[] driverOptions = AvailableDriverOptions.Get();
         Task[] parallelTets = new Task[driverOptions.Length];
         bool failed = false;
         for (int i = 0; i < driverOptions.Length; i++)
@@ -377,7 +377,7 @@ public class WebDriverTests : IClassFixture<TestVariables>
                 {
                     driver = new RemoteWebDriver(_gridUri, options);
 
-                    _ = LoginSession.Login(driver, _targetUri, _testUserCredentials);
+                    Login(driver);
 
                     IBoardsWindow boardsWindow = new BoardsWindow(driver, _targetUri, _testOutputHelper);
 
@@ -410,7 +410,7 @@ public class WebDriverTests : IClassFixture<TestVariables>
                     meetingWindow.SaveSummary(agendaSection);
                 }
                 catch (Exception e) {
-                    ExceptionLogger.LogException(e, ref _testOutputHelper);
+                    ExceptionLogger.LogException(e, ref _testOutputHelper, options.BrowserName);
                     failed = true;
                 }
                 finally
@@ -458,5 +458,14 @@ public class WebDriverTests : IClassFixture<TestVariables>
             var edgeOptions = options as EdgeOptions;
             edgeOptions?.AddArguments("--no-sandbox", "--disable-dev-shm-usage", "--guest", "--headless"); // Guest argument to disable personalized edge pop-ups
         }
+    }
+
+    private void Login(RemoteWebDriver driver) {
+        ILoginWindow loginWindow = new LoginWindow(driver, _targetUri);
+        loginWindow.Navigate();
+        loginWindow.AssertNavigation();
+        loginWindow.Login(_testUserCredentials);
+        loginWindow.AssertLogin(_testUserCredentials);
+        driver.ExecuteScript("localStorage.setItem(arguments[0],arguments[1])", "purechat_expanded", "false"); // Disable help pop-up
     }
 }

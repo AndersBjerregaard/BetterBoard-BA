@@ -1,5 +1,6 @@
 using OpenQA.Selenium;
 using OpenQA.Selenium.Remote;
+using OpenQA.Selenium.Support.UI;
 using WebDriverXUnit.Helpers;
 using WebDriverXUnit.WindowDrivers.Interfaces;
 using Xunit.Abstractions;
@@ -84,10 +85,11 @@ public class MeetingWIndow(RemoteWebDriver driver, ITestOutputHelper testOutput)
 
         testOutput.WriteLine("[LOG] Clicked 'Upload documents'");
 
+        Thread.Sleep(TimeSpan.FromMilliseconds(5000));
+
         var uploadForm = agendaSection.FindElement(By.XPath(".//span[contains(text(),'upload')]/../../."));
         Assert.NotNull(uploadForm);
         Assert.True(uploadForm.Displayed);
-        uploadForm.Click();
 
         testOutput.WriteLine("[WARNING] No implementation for file upload");
 

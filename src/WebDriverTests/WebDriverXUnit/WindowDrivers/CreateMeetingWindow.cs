@@ -6,6 +6,7 @@ using OpenQA.Selenium.Support.UI;
 using WebDriverXUnit.Abstractions;
 using WebDriverXUnit.Helpers;
 using WebDriverXUnit.WindowDrivers.Interfaces;
+using Xunit.Sdk;
 
 namespace WebDriverXUnit.WindowDrivers;
 
@@ -13,10 +14,13 @@ public class CreateMeetingWindow(RemoteWebDriver driver) : ICreateMeetingWindow
 {
     public void AssertMeetingConfirmed(string meetingTitle, ref Xunit.Abstractions.ITestOutputHelper _testOutputHelper, ReadOnlySpan<char> browserName)
     {
-        var element = new WebElementFinder(driver)
-            .Find(By.XPath("//span[@id='meetingTitle']"));
-        Assert.NotNull(element);
-        element.Text.Should().Be(meetingTitle);
+        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+        wait.IgnoreExceptionTypes(typeof(StaleElementReferenceException), typeof(NoSuchElementException), typeof(EqualException));
+        wait.Until(d => {
+            var e = d.FindElement(By.XPath("//span[@id='meetingTitle']"));
+            Assert.Equal(meetingTitle, e.Text);
+            return true;
+        });
         _testOutputHelper.WriteLine($"[INFO] {browserName} Assert Meeting Confirmed");
     }
 

@@ -46,7 +46,7 @@ public class LoginWindow(RemoteWebDriver driver, Uri baseUri) : ILoginWindow
         wait.IgnoreExceptionTypes(typeof(NoSuchElementException), typeof(StaleElementReferenceException));
         var boardHeader = wait.Until(driver => {
             var element = driver.FindElement(By.TagName("h2"));
-            return element.Displayed ? element : null;
+            return !string.IsNullOrEmpty(element.Text) ? element : null;
         });
         Assert.NotNull(boardHeader);
         Assert.Contains(userCredentials.UserName.ToLower(), boardHeader.Text.ToLower());

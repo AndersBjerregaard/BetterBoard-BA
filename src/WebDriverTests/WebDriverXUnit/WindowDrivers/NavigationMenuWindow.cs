@@ -24,17 +24,31 @@ public class NavigationMenuWindow(RemoteWebDriver driver) : INavigationMenuWindo
     public void CreateMeeting(ref Xunit.Abstractions.ITestOutputHelper _testOutputHelper, ReadOnlySpan<char> browserName)
     {
         // Expand sidebar
-        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
-        wait.IgnoreExceptionTypes(typeof(NoSuchElementException), typeof(StaleElementReferenceException));
-        var burgermenu = wait.Until(d => {
-            var e = driver.FindElement(By.XPath("//a[@id='nav-state-toggle']"));
-            return e.Enabled ? e : null;
-        });
-        Assert.NotNull(burgermenu);
-        burgermenu.Click();
+        if (browserName == "firefox")
+        {
+            var driverWait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+            driverWait.IgnoreExceptionTypes(typeof(NoSuchElementException), typeof(StaleElementReferenceException), typeof(ElementNotInteractableException));
+            driverWait.Until(d =>
+            {
+                var e = driver.FindElement(By.XPath("//a[@id='nav-state-toggle']"));
+                e.Click();
+                return true;
+            });
+        }
+        else // Chromium browsers
+        {
+            var driverWait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+            driverWait.IgnoreExceptionTypes(typeof(NoSuchElementException), typeof(StaleElementReferenceException), typeof(ElementNotInteractableException));
+            driverWait.Until(d =>
+            {
+                var e = driver.FindElement(By.XPath("//a[@id='nav-collapse-toggle']"));
+                e.Click();
+                return true;
+            });
+        }
 
         // Open 'create meeting' modal
-        wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
+        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
         wait.IgnoreExceptionTypes(typeof(NoSuchElementException), typeof(StaleElementReferenceException));
         var hyperlink = wait.Until(d => {
             var e = driver.FindElement(By.XPath("//a[@title='Create new meeting']"));
