@@ -10,7 +10,7 @@ using Xunit.Abstractions;
 
 namespace WebDriverXUnit.WindowDrivers;
 
-public class UnsignedDocumentsWindow(RemoteWebDriver driver, Uri baseUri, ITestOutputHelper testOutput) : IUnsignedDocumentsWindow
+public class UnsignedDocumentsWindow(RemoteWebDriver driver, Uri baseUri) : IUnsignedDocumentsWindow
 {
     private static readonly string URI_PATH = "#/unsigneddocuments";
 
@@ -21,12 +21,12 @@ public class UnsignedDocumentsWindow(RemoteWebDriver driver, Uri baseUri, ITestO
 
     public IUnsignedDocumentsAssertion AssertUnsignedDocuments(IWebElement table)
     {
-        return new UnsginedDocumentsAssertion(table, testOutput);
+        return new UnsginedDocumentsAssertion(table);
     }
 
     public Result<IWebElement> GetUnsignedDocumentsTable()
     {
-        var table = new IWebElementFinder(driver)
+        var table = new WebElementFinder(driver)
             .Find(By.TagName("table"));
         return table is not null ? Result<IWebElement>.Success(table) : Result<IWebElement>.Failure(new Exception("No table element found. It is possible that the current user has no unsigned documents."));
     }

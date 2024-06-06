@@ -5,7 +5,7 @@ using Xunit.Abstractions;
 
 namespace WebDriverXUnit.Assertions;
 
-public class UnsginedDocumentsAssertion(IWebElement table, ITestOutputHelper testOutput) : IUnsignedDocumentsAssertion
+public class UnsginedDocumentsAssertion(IWebElement table) : IUnsignedDocumentsAssertion
 {
     public IUnsignedDocumentsAssertion HasDocumentFromOrigin(string origin)
     {

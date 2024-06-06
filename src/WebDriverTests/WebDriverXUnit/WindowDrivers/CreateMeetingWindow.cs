@@ -9,11 +9,11 @@ using WebDriverXUnit.WindowDrivers.Interfaces;
 
 namespace WebDriverXUnit.WindowDrivers;
 
-public class CreateMeetingWindow(RemoteWebDriver driver, Uri baseUri) : ICreateMeetingWindow
+public class CreateMeetingWindow(RemoteWebDriver driver) : ICreateMeetingWindow
 {
     public void AssertMeetingConfirmed(string meetingTitle, ref Xunit.Abstractions.ITestOutputHelper _testOutputHelper, ReadOnlySpan<char> browserName)
     {
-        var element = new IWebElementFinder(driver)
+        var element = new WebElementFinder(driver)
             .Find(By.XPath("//span[@id='meetingTitle']"));
         Assert.NotNull(element);
         element.Text.Should().Be(meetingTitle);
@@ -28,6 +28,9 @@ public class CreateMeetingWindow(RemoteWebDriver driver, Uri baseUri) : ICreateM
             var e = driver.FindElements(By.XPath("//input[@class='form-control']"));
             return e.Any() ? e : null;
         });
+
+        Assert.NotNull(inputFields);
+        Assert.True(inputFields.Count >= 2);
 
         string meetingTitle = "General boardmeeting " + Guid.NewGuid().ToString()[^8..];
 

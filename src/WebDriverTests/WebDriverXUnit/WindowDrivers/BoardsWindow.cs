@@ -24,7 +24,7 @@ public class BoardsWindow(RemoteWebDriver driver, Uri baseUri, ITestOutputHelper
     {
         // Find board name's index
         var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(20));
-        wait.IgnoreExceptionTypes([typeof(NoSuchElementException), typeof(StaleElementReferenceException)]);
+        wait.IgnoreExceptionTypes(typeof(NoSuchElementException), typeof(StaleElementReferenceException));
         var headers = wait.Until(d =>
         {
             var e = d.FindElements(By.TagName("h4"));
@@ -71,7 +71,7 @@ public class BoardsWindow(RemoteWebDriver driver, Uri baseUri, ITestOutputHelper
     }
 
     public void AssertGotoBoard(string boardName, string companyName) {
-        var header = new IWebElementFinder(driver).Find(By.TagName("header"));
+        var header = new WebElementFinder(driver).Find(By.TagName("header"));
         Assert.NotNull(header);
         var text = header.GetDomProperty("outerText");
         var filter = new string[] { boardName, companyName};
@@ -112,7 +112,7 @@ public class BoardsWindow(RemoteWebDriver driver, Uri baseUri, ITestOutputHelper
 
     public Result<IWebElement> FindBoard(string boardName)
     {
-        var boards = new IWebElementFinder(driver)
+        var boards = new WebElementFinder(driver)
             .FindMultiple(By.XPath("//div[@class='widget-body clearfix']"));
         Assert.NotNull(boards);
         Assert.True(boards.Any());
@@ -123,7 +123,7 @@ public class BoardsWindow(RemoteWebDriver driver, Uri baseUri, ITestOutputHelper
 
     public Result<IWebElement> FindBoard(string boardName, string companyName)
     {
-        var boards = new IWebElementFinder(driver)
+        var boards = new WebElementFinder(driver)
             .FindMultiple(By.XPath("//div[@class='widget-body clearfix']"));
         Assert.NotNull(boards);
         Assert.True(boards.Any());
@@ -134,7 +134,7 @@ public class BoardsWindow(RemoteWebDriver driver, Uri baseUri, ITestOutputHelper
 
     public void SearchFor(string search)
     {
-        var input = new IWebElementFinder(driver)
+        var input = new WebElementFinder(driver)
             .Find(By.XPath("//input[@class='filterInput']"));
         Assert.NotNull(input);
         var actions = new Actions(driver);
@@ -146,7 +146,7 @@ public class BoardsWindow(RemoteWebDriver driver, Uri baseUri, ITestOutputHelper
 
     public void GoToUnsignedDocuments()
     {
-        var hyperlink = new IWebElementFinder(driver)
+        var hyperlink = new WebElementFinder(driver)
             .Find(By.XPath("//a[@href='#/unsigneddocuments']"));
         Assert.NotNull(hyperlink);
         hyperlink.Click();

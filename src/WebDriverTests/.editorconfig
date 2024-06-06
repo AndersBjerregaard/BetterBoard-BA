@@ -1,0 +1,6 @@
+[*.cs]
+
+# This warning inadvertently applies to IEnumerable collections instead of the 4 strongly-typed
+# collections that it should only apply to. 
+# S6603: The collection-specific "TrueForAll" method should be used instead of the "All" extension
+dotnet_diagnostic.S6603.severity = none

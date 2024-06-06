@@ -5,24 +5,24 @@ using OpenQA.Selenium.Support.UI;
 
 namespace WebDriverXUnit.Helpers;
 
-public class IWebElementFinderOptions {
+public class WebElementFinderOptions {
     public TimeSpan Wait { get; set; } = TimeSpan.FromSeconds(10);
     public Type[] IgnoreExceptionTypes { get; set; } = [typeof(NoSuchElementException), typeof(StaleElementReferenceException)];
 }
 
-public class IWebElementFinder {
+public class WebElementFinder {
     private readonly RemoteWebDriver _driver;
 
     public TimeSpan Wait { get; set; } = TimeSpan.FromSeconds(10);
     public Type[] IgnoreExceptionTypes { get; set; } = [typeof(NoSuchElementException), typeof(StaleElementReferenceException)];
 
-    public IWebElementFinder(RemoteWebDriver driver) {
+    public WebElementFinder(RemoteWebDriver driver) {
         _driver = driver;
     }
-    public IWebElementFinder(RemoteWebDriver driver, Action<IWebElementFinderOptions> configureOptions) {
+    public WebElementFinder(RemoteWebDriver driver, Action<WebElementFinderOptions> configureOptions) {
         _driver = driver;
 
-        var options = new IWebElementFinderOptions();
+        var options = new WebElementFinderOptions();
         configureOptions(options);
         Wait = options.Wait;
         IgnoreExceptionTypes = options.IgnoreExceptionTypes;

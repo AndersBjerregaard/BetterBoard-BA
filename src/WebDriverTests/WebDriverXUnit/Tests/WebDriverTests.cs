@@ -225,7 +225,7 @@ public class WebDriverTests : IClassFixture<TestVariables>
                     // Unsigned Documents
                     boardsWindow.GoToUnsignedDocuments();
 
-                    IUnsignedDocumentsWindow docsWindow = new UnsignedDocumentsWindow(driver, _targetUri, _testOutputHelper);
+                    IUnsignedDocumentsWindow docsWindow = new UnsignedDocumentsWindow(driver, _targetUri);
 
                     docsWindow.AssertNavigation();
 
@@ -277,12 +277,12 @@ public class WebDriverTests : IClassFixture<TestVariables>
                     boardsWindow.GoToBoard("Test Board");
                     boardsWindow.AssertGotoBoard("Test Board");
 
-                    INavigationMenuWindow navMenuWindow = new NavigationMenuWindow(driver, _targetUri);
+                    INavigationMenuWindow navMenuWindow = new NavigationMenuWindow(driver);
 
                     navMenuWindow.CreateMeeting(ref _testOutputHelper, options.BrowserName.AsSpan());
                     navMenuWindow.AssertMeetingPopup(ref _testOutputHelper, options.BrowserName.AsSpan());
 
-                    ICreateMeetingWindow meetingWindow = new CreateMeetingWindow(driver, _targetUri);
+                    ICreateMeetingWindow meetingWindow = new CreateMeetingWindow(driver);
 
                     var result = meetingWindow.FillAndConfirmMeeting(ref _testOutputHelper, options.BrowserName.AsSpan());
                     Assert.True(result.IsSuccess);
@@ -340,7 +340,7 @@ public class WebDriverTests : IClassFixture<TestVariables>
                     boardsWindow.GoToBoard(board);
                     boardsWindow.AssertGotoBoard("Bestyrelsen", "Anders Test ApS");
 
-                    IMeetingWindow meetingWindow = new MeetingWIndow(driver, _targetUri, _testOutputHelper);
+                    IMeetingWindow meetingWindow = new MeetingWIndow(driver, _testOutputHelper);
 
                     meetingWindow.AssertCurrentViewedMeeting("General boardmeeting");
 
@@ -378,6 +378,36 @@ public class WebDriverTests : IClassFixture<TestVariables>
                     driver = new RemoteWebDriver(_gridUri, options);
 
                     _ = LoginSession.Login(driver, _targetUri, _testUserCredentials);
+
+                    IBoardsWindow boardsWindow = new BoardsWindow(driver, _targetUri, _testOutputHelper);
+
+                    boardsWindow.Navigate();
+                    boardsWindow.AssertNavigation();
+
+                    var result = boardsWindow.FindBoard("Bestyrelsen", "Anders Test ApS");
+                    Assert.True(result.IsSuccess);
+                    var board = result.GetValueOrThrow();
+                    boardsWindow.AssertBoard(board)
+                        .IsABoard()
+                        .HasUpcomingMeeting();
+                    boardsWindow.GoToBoard(board);
+                    boardsWindow.AssertGotoBoard("Bestyrelsen", "Anders Test ApS");
+
+                    IMeetingWindow meetingWindow = new MeetingWIndow(driver, _testOutputHelper);
+
+                    meetingWindow.AssertCurrentViewedMeeting("General boardmeeting");
+
+                    var agendaSection = meetingWindow.GetMeetingAgendaSection();
+                    var tinymceFrame = meetingWindow.GetSummaryOfFirstAgendaItem(agendaSection);
+
+                    driver.SwitchTo().Frame(tinymceFrame);
+                    
+                    ITinyMceWindow tinymceWindow = new TinyMceWindow(driver, _testOutputHelper);
+                    tinymceWindow.WriteParagraph("lorem ipsum");
+
+                    driver.SwitchTo().ParentFrame();
+                    
+                    meetingWindow.SaveSummary(agendaSection);
                 }
                 catch (Exception e) {
                     ExceptionLogger.LogException(e, ref _testOutputHelper);

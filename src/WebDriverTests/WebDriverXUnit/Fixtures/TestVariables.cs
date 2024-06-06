@@ -6,7 +6,7 @@ using WebDriverXUnit.Helpers;
 
 namespace WebDriverXUnit.Fixtures;
 
-public class TestVariables : IDisposable
+public class TestVariables
 {
     public Uri? WebDriverUri { get; private set; }
     public UserCredentials? TestUuid { get; private set; }
@@ -19,7 +19,9 @@ public class TestVariables : IDisposable
         if (string.IsNullOrWhiteSpace(gridUri)) {
             Debug.WriteLine("Environment variable 'GRID_URI' was unset." + 
                 " Defaulting to environment file...");
-            WebDriverUri = new Uri(EnvironmentFileReader.Settings.GridUri);
+            var settings = EnvironmentFileReader.Settings ??
+                throw new NullReferenceException(nameof(EnvironmentFileReader.Settings));
+            WebDriverUri = new Uri(settings.GridUri ?? throw new NullReferenceException(nameof(settings.GridUri)));
             Debug.WriteLine($"'GRID_URI' loaded as {WebDriverUri}");
         } else {
             Debug.WriteLine($"Environment variable 'GRID_URI' loaded as {gridUri}");
@@ -42,7 +44,11 @@ public class TestVariables : IDisposable
             {
                 Debug.WriteLine("Environment variable 'TEST_UUID' was unset." +
                     " Defaulting to environment file...");
-                TestUuid = new UserCredentials(EnvironmentFileReader.Settings.TestUuid + "@mail.dk", EnvironmentFileReader.Settings.TestUuid);
+                var settings = EnvironmentFileReader.Settings ??
+                    throw new NullReferenceException(nameof(EnvironmentFileReader.Settings));
+                var uuid = settings.TestUuid ??
+                    throw new NullReferenceException(nameof(settings.TestUuid));
+                TestUuid = new UserCredentials(uuid + "@mail.dk", uuid);
                 Debug.WriteLine($"'TEST_UUID' loaded as {TestUuid}");
             }
             else
@@ -59,17 +65,15 @@ public class TestVariables : IDisposable
         if (string.IsNullOrWhiteSpace(targetUri)) {
             Debug.WriteLine("Environment variable 'TARGET_URI' was unset." + 
                 " Defaulting to environment file...");
-            TargetUri = new Uri(EnvironmentFileReader.Settings.TargetUri);
+            var settings = EnvironmentFileReader.Settings ??
+                throw new NullReferenceException(nameof(EnvironmentFileReader.Settings));
+            var uri = settings.TargetUri ??
+                throw new NullReferenceException(nameof(settings.TargetUri));
+            TargetUri = new Uri(uri);
             Debug.WriteLine($"'TARGET_URI' loaded as {TargetUri}");
         } else {
             Debug.WriteLine($"Environment variable 'TARGET_URI' loaded as {targetUri}");
             TargetUri = new Uri(targetUri);
         }
-    }
-
-    void IDisposable.Dispose() {
-        WebDriverUri = null;
-        TestUuid = null;
-        TargetUri = null;
     }
 }

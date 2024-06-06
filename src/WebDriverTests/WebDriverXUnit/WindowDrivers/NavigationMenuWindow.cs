@@ -7,10 +7,8 @@ using WebDriverXUnit.WindowDrivers.Interfaces;
 
 namespace WebDriverXUnit.WindowDrivers;
 
-public class NavigationMenuWindow(RemoteWebDriver driver, Uri baseUri) : INavigationMenuWindow
+public class NavigationMenuWindow(RemoteWebDriver driver) : INavigationMenuWindow
 {
-    private const string CREATE_MEETING_HEADER = "Add new meeting";
-
     public void AssertMeetingPopup(ref Xunit.Abstractions.ITestOutputHelper _testOutputHelper, ReadOnlySpan<char> browserName)
     {
         var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));

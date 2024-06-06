@@ -26,13 +26,14 @@
     <Using Include="Xunit" />
   </ItemGroup>
 
-  <!-- Copy configuration files to output directory -->
-  <!-- <Target Name="CopyConfigFiles" BeforeTargets="PreBuildEvent">
-    <ItemGroup>
-      <ConfigFiles Include="*.txt" />
-      <ConfigFiles Include="TEST_USERS.json" />
-    </ItemGroup>
-    <Copy SourceFiles="@(ConfigFiles)" DestinationFolder="$(OutputPath)" />
-  </Target> -->
+  <!-- Xunit config -->
+  <ItemGroup>
+    <Content Include="xunit.runner.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <!-- Code analysis -->
+  <PropertyGroup>
+    <CodeAnalysisRuleSet>ManagedMinimumRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
 
 </Project>
