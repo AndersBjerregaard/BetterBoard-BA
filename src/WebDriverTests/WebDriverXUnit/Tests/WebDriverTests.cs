@@ -1,4 +1,3 @@
-using System.Collections.ObjectModel;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Edge;
@@ -424,7 +423,7 @@ public class WebDriverTests : IClassFixture<TestVariables>
         Assert.False(failed);
     }
 
-    [Fact(Skip = "Not Implemented")]
+    [Fact(Skip = "Feature not yet implemented: Azure Search should be replaced with Elasticsearch")]
     public void FileSearchTest() {
         throw new NotImplementedException();
     }
