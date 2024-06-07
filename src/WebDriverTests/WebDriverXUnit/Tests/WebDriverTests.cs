@@ -364,7 +364,7 @@ public class WebDriverTests : IClassFixture<TestVariables>
     [Fact]
     public async Task MeetingSummaryTest() {
         DriverOptions[] driverOptions = AvailableDriverOptions.Get();
-        Task[] parallelTets = new Task[driverOptions.Length];
+        Task[] parallelTests = new Task[driverOptions.Length];
         bool failed = false;
         for (int i = 0; i < driverOptions.Length; i++)
         {
@@ -417,15 +417,59 @@ public class WebDriverTests : IClassFixture<TestVariables>
                     driver?.Quit();
                 }
             });
-            parallelTets[i] = task;
+            parallelTests[i] = task;
         }
-        await Task.WhenAll(parallelTets);
+        await Task.WhenAll(parallelTests);
         Assert.False(failed);
     }
 
-    [Fact(Skip = "Feature not yet implemented: Azure Search should be replaced with Elasticsearch")]
-    public void FileSearchTest() {
-        throw new NotImplementedException();
+    [Fact]
+    public async Task FileSearchTest() {
+        DriverOptions[] driverOptions = AvailableDriverOptions.Get();
+        Task[] parallelTests = new Task[driverOptions.Length];
+        bool failed = false;
+        for (int i = 0; i < driverOptions.Length; i++)
+        {
+            DriverOptions options = driverOptions[i];
+            ApplyOptionArguments(options);
+            Task task = Task.Run(() => {
+                RemoteWebDriver? driver = null;
+                try
+                {
+                    driver = new RemoteWebDriver(_gridUri, options);
+
+                    Login(driver);
+
+                    IBoardsWindow boardsWindow = new BoardsWindow(driver, _targetUri, _testOutputHelper);
+
+                    boardsWindow.Navigate();
+                    boardsWindow.AssertNavigation();
+
+                    var result = boardsWindow.FindBoard("Bestyrelsen", "BetterBoard ApS");
+                    Assert.True(result.IsSuccess);
+                    var board = result.GetValueOrThrow();
+                    boardsWindow.GoToBoard(board);
+                    boardsWindow.AssertGotoBoard("Bestyrelsen", "BetterBoard ApS");
+
+                    INavBarWindow navbarWindow = new NavBarWindow(driver);
+                    navbarWindow.DocumentSearch("referat");
+                    
+                    IBoardSearchWindow boardSearch = new BoardSearchWindow(driver);
+                    boardSearch.AssearchSearch("referat");
+                }
+                catch (Exception e) {
+                    ExceptionLogger.LogException(e, ref _testOutputHelper, options.BrowserName);
+                    failed = true;
+                }
+                finally
+                {
+                    driver?.Quit();
+                }
+            });
+            parallelTests[i] = task;
+        }
+        await Task.WhenAll(parallelTests);
+        Assert.False(failed);
     }
 
     /// <summary>
@@ -434,8 +478,51 @@ public class WebDriverTests : IClassFixture<TestVariables>
     /// It's worth looking into SCRIVE's developer tools, to get a work-around.
     /// </summary>
     [Fact(Skip = "Economically non-viable")]
-    public void SignatureProcessTest() {
-        throw new NotImplementedException();
+    public async Task SignatureProcessTest() {
+        
+        DriverOptions[] driverOptions = AvailableDriverOptions.Get();
+        Task[] parallelTests = new Task[driverOptions.Length];
+        bool failed = false;
+        for (int i = 0; i < driverOptions.Length; i++)
+        {
+            DriverOptions options = driverOptions[i];
+            ApplyOptionArguments(options);
+            Task task = Task.Run(() => {
+                RemoteWebDriver? driver = null;
+                try
+                {
+                    driver = new RemoteWebDriver(_gridUri, options);
+
+                    Login(driver);
+
+                    IBoardsWindow boardsWindow = new BoardsWindow(driver, _targetUri, _testOutputHelper);
+
+                    boardsWindow.Navigate();
+                    boardsWindow.AssertNavigation();
+
+                    var result = boardsWindow.FindBoard("Bestyrelsen", "Anders Test ApS");
+                    Assert.True(result.IsSuccess);
+                    var board = result.GetValueOrThrow();
+                    boardsWindow.GoToBoard(board);
+                    boardsWindow.AssertGotoBoard("Bestyrelsen", "Anders Test ApS");
+
+                    // Open company documents
+
+                    // Start signature process
+                }
+                catch (Exception e) {
+                    ExceptionLogger.LogException(e, ref _testOutputHelper, options.BrowserName);
+                    failed = true;
+                }
+                finally
+                {
+                    driver?.Quit();
+                }
+            });
+            parallelTests[i] = task;
+        }
+        await Task.WhenAll(parallelTests);
+        Assert.False(failed);
     }
 
     private static void ApplyOptionArguments(DriverOptions options)
