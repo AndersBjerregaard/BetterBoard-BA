@@ -13,7 +13,7 @@ using Xunit.Abstractions;
 
 namespace WebDriverXUnit.Tests;
 
-public class WebDriverTests : IClassFixture<TestVariables>
+public class LoginTests : IClassFixture<TestVariables>
 {
     private readonly TestVariables _fixture;
     private ITestOutputHelper _testOutputHelper;
@@ -22,7 +22,7 @@ public class WebDriverTests : IClassFixture<TestVariables>
     private readonly Uri _gridUri;
     private static readonly string[] DEFAULT_WEBDRIVER_ARGUMENTS = ["--no-sandbox", "--disable-dev-shm-usage", "--incognito", "--headless"];
 
-    public WebDriverTests(TestVariables fixture, ITestOutputHelper testOutputHelper)
+    public LoginTests(TestVariables fixture, ITestOutputHelper testOutputHelper)
     {
         _fixture = fixture;
         _testOutputHelper = testOutputHelper;
@@ -455,7 +455,7 @@ public class WebDriverTests : IClassFixture<TestVariables>
                     navbarWindow.DocumentSearch("referat");
                     
                     IBoardSearchWindow boardSearch = new BoardSearchWindow(driver);
-                    boardSearch.AssearchSearch("referat");
+                    boardSearch.AssertSearch("referat");
                 }
                 catch (Exception e) {
                     ExceptionLogger.LogException(e, ref _testOutputHelper, options.BrowserName);
@@ -472,12 +472,7 @@ public class WebDriverTests : IClassFixture<TestVariables>
         Assert.False(failed);
     }
 
-    /// <summary>
-    /// Projected to be a test of testing the scrive signature process feature.
-    /// However there's a economic liability of executing this in a production-like environment.
-    /// It's worth looking into SCRIVE's developer tools, to get a work-around.
-    /// </summary>
-    [Fact(Skip = "Economically non-viable")]
+    [Fact]
     public async Task SignatureProcessTest() {
         
         DriverOptions[] driverOptions = AvailableDriverOptions.Get();
@@ -506,9 +501,16 @@ public class WebDriverTests : IClassFixture<TestVariables>
                     boardsWindow.GoToBoard(board);
                     boardsWindow.AssertGotoBoard("Bestyrelsen", "Anders Test ApS");
 
-                    // Open company documents
+                    INavigationMenuWindow navMenu = new NavigationMenuWindow(driver);
+                    navMenu.OpenCompanyDocuments(options.BrowserName.AsSpan());
 
-                    // Start signature process
+                    ICompanyDocsWindow companyDocs = new CompanyDocsWindow(driver);
+                    companyDocs.AssertPage();
+                    companyDocs.OpenFolder("dokumenter");
+                    companyDocs.OpenSignProcessModal(documentName: "logo");
+
+                    ISignatureProcessModalWindow modal = new SignatureProcessModalWindow(driver);
+                    modal.AssertModal();
                 }
                 catch (Exception e) {
                     ExceptionLogger.LogException(e, ref _testOutputHelper, options.BrowserName);

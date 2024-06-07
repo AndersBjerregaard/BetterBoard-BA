@@ -6,4 +6,5 @@ public interface INavigationMenuWindow {
     /// </summary>
     void CreateMeeting(ref Xunit.Abstractions.ITestOutputHelper _testOutputHelper, ReadOnlySpan<char> browserName);
     void AssertMeetingPopup(ref Xunit.Abstractions.ITestOutputHelper _testOutputHelper, ReadOnlySpan<char> browserName);
+    void OpenCompanyDocuments(ReadOnlySpan<char> browserName);
 }

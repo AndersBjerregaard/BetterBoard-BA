@@ -7,7 +7,7 @@ namespace WebDriverXUnit.WindowDrivers;
 
 public class BoardSearchWindow(RemoteWebDriver driver) : IBoardSearchWindow
 {
-    public void AssearchSearch(string searchTerm)
+    public void AssertSearch(string searchTerm)
     {
         var searchResultTable = new WebElementFinder(driver).Find(By.XPath("//table[@class='table table-striped table-emails table-hover']"));
         var resultBody = searchResultTable?.FindElement(By.TagName("tbody"));
