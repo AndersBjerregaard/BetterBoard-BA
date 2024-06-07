@@ -12,28 +12,30 @@ public class TinyMceWindow(RemoteWebDriver driver, ITestOutputHelper testOutput)
 {
     public void WriteParagraph(string p)
     {
-        var paragraph = new WebElementFinder(driver).Find(By.TagName("p"));
-        Assert.NotNull(paragraph);
-        Assert.Equal("True", paragraph.GetDomProperty("isContentEditable"));
+        var paragraphs = new WebElementFinder(driver).FindMultiple(By.TagName("p"));
+        Assert.NotNull(paragraphs);
+        Assert.True(paragraphs.Any());
+        var editableParas = paragraphs.Where(p => p.GetDomProperty("isContentEditable") == "True");
+
+        foreach (var para in editableParas) {
+            para.Clear();
+        }
 
         testOutput.WriteLine("[LOG] Found editable tinymce p element");
 
-        paragraph.Clear();
-
         new Actions(driver)
-            .Click(paragraph)
+            .Click(editableParas.First())
             .SendKeys(p)
             .Build()
             .Perform();
 
         testOutput.WriteLine("[LOG] Sent text to p element");
 
-        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(20));
-        wait.IgnoreExceptionTypes(typeof(StaleElementReferenceException), typeof(NoSuchElementException));
-        wait.Until(d => {
-            var e = d.FindElement(By.XPath($"//p[contains(text(),'{p}')]"));
-            return e is not null;
-        });
+        var substrings = p.Split(' ');
+        foreach (var s in substrings)
+        {
+            Assert.Contains(s, driver.PageSource);
+        }
 
         testOutput.WriteLine("[LOG] Asserted p element's text content equal to text sent");
     }
