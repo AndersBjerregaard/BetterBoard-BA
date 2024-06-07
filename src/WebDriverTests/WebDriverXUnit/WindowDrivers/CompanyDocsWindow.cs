@@ -1,7 +1,9 @@
 using OpenQA.Selenium;
 using OpenQA.Selenium.Remote;
+using OpenQA.Selenium.Support.UI;
 using WebDriverXUnit.Helpers;
 using WebDriverXUnit.WindowDrivers.Interfaces;
+using Xunit.Sdk;
 
 namespace WebDriverXUnit.WindowDrivers;
 
@@ -9,8 +11,13 @@ public class CompanyDocsWindow(RemoteWebDriver driver) : ICompanyDocsWindow
 {
     public void AssertPage()
     {
-        var header = new WebElementFinder(driver).Find(By.TagName("h1"));
-        Assert.Equal("company documents", header?.Text.Trim().ToLower());
+        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+        wait.IgnoreExceptionTypes(typeof(StaleElementReferenceException), typeof(NoSuchElementException), typeof(EqualException));
+        wait.Until(d => {
+            var header = new WebElementFinder(driver).Find(By.TagName("h1"));
+            Assert.Equal("company documents", header?.Text.Trim().ToLower());
+            return true;
+        });
     }
 
     public void OpenFolder(string folderName)

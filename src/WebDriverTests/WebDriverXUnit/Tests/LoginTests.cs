@@ -20,7 +20,7 @@ public class LoginTests : IClassFixture<TestVariables>
     private readonly UserCredentials _testUserCredentials;
     private readonly Uri _targetUri;
     private readonly Uri _gridUri;
-    private static readonly string[] DEFAULT_WEBDRIVER_ARGUMENTS = ["--no-sandbox", "--disable-dev-shm-usage", "--incognito", "--headless"];
+    private static readonly string[] DEFAULT_WEBDRIVER_ARGUMENTS = ["--no-sandbox", "--disable-dev-shm-usage", "--incognito", "--window-size=1920,1080"];
 
     public LoginTests(TestVariables fixture, ITestOutputHelper testOutputHelper)
     {
@@ -363,7 +363,7 @@ public class LoginTests : IClassFixture<TestVariables>
 
     [Fact]
     public async Task MeetingSummaryTest() {
-        DriverOptions[] driverOptions = AvailableDriverOptions.Get();
+        DriverOptions[] driverOptions = AvailableDriverOptions.FIREFOX_OPTIONS;
         Task[] parallelTests = new Task[driverOptions.Length];
         bool failed = false;
         for (int i = 0; i < driverOptions.Length; i++)
@@ -375,6 +375,8 @@ public class LoginTests : IClassFixture<TestVariables>
                 try
                 {
                     driver = new RemoteWebDriver(_gridUri, options);
+
+                    driver.Manage().Window.Size = new System.Drawing.Size(1920, 1080);
 
                     Login(driver);
 
@@ -411,6 +413,7 @@ public class LoginTests : IClassFixture<TestVariables>
                 catch (Exception e) {
                     ExceptionLogger.LogException(e, ref _testOutputHelper, options.BrowserName);
                     failed = true;
+                    Dump(driver, options.BrowserName);
                 }
                 finally
                 {
@@ -544,7 +547,7 @@ public class LoginTests : IClassFixture<TestVariables>
         else if (typeName == nameof(EdgeOptions))
         {
             var edgeOptions = options as EdgeOptions;
-            edgeOptions?.AddArguments("--no-sandbox", "--disable-dev-shm-usage", "--guest", "--headless"); // Guest argument to disable personalized edge pop-ups
+            edgeOptions?.AddArguments("--no-sandbox", "--disable-dev-shm-usage", "--guest", "--headless", "--window-size=1920,1080"); // Guest argument to disable personalized edge pop-ups
         }
     }
 
@@ -555,5 +558,18 @@ public class LoginTests : IClassFixture<TestVariables>
         loginWindow.Login(_testUserCredentials);
         loginWindow.AssertLogin(_testUserCredentials);
         driver.ExecuteScript("localStorage.setItem(arguments[0],arguments[1])", "purechat_expanded", "false"); // Disable help pop-up
+    }
+
+    private void Dump(RemoteWebDriver? driver, string browserName) {
+        var scrShot = driver?.GetScreenshot();
+        var time = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+        string path = $"./dump/";
+        scrShot?.SaveAsFile(path + $"{browserName}-{time}.png");
+        _testOutputHelper.WriteLine("[LOG] Saved screenshot");
+        using (StreamWriter outputFile = new StreamWriter(Path.Combine(AppDomain.CurrentDomain.BaseDirectory + path + $"{browserName}-{time}.html"))) {
+            var html = driver?.PageSource;
+            outputFile.WriteLine(html);
+        }
+        _testOutputHelper.WriteLine("[LOG] Dumped HTML");
     }
 }

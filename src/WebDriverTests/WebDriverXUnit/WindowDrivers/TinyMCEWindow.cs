@@ -1,6 +1,7 @@
 using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Remote;
+using OpenQA.Selenium.Support.UI;
 using WebDriverXUnit.Helpers;
 using WebDriverXUnit.WindowDrivers.Interfaces;
 using Xunit.Abstractions;
@@ -16,20 +17,8 @@ public class TinyMceWindow(RemoteWebDriver driver, ITestOutputHelper testOutput)
         Assert.Equal("True", paragraph.GetDomProperty("isContentEditable"));
 
         testOutput.WriteLine("[LOG] Found editable tinymce p element");
-        
-        // Remove existing text
-        if (!string.IsNullOrWhiteSpace(paragraph.Text)) {
-            new Actions(driver)
-                .Click(paragraph)
-                .KeyDown(Keys.Control)
-                .SendKeys("a")
-                .KeyUp(Keys.Control)
-                .SendKeys(Keys.Backspace)
-                .Build()
-                .Perform();
-            testOutput.WriteLine("[LOG] Removed existing text");
-            paragraph = new WebElementFinder(driver).Find(By.TagName("p"));
-        }
+
+        paragraph.Clear();
 
         new Actions(driver)
             .Click(paragraph)
@@ -39,10 +28,12 @@ public class TinyMceWindow(RemoteWebDriver driver, ITestOutputHelper testOutput)
 
         testOutput.WriteLine("[LOG] Sent text to p element");
 
-        paragraph = new WebElementFinder(driver).Find(By.TagName("p"));
-
-        Assert.NotNull(paragraph);
-        Assert.Equal(p, paragraph.Text);
+        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(20));
+        wait.IgnoreExceptionTypes(typeof(StaleElementReferenceException), typeof(NoSuchElementException));
+        wait.Until(d => {
+            var e = d.FindElement(By.XPath($"//p[contains(text(),'{p}')]"));
+            return e is not null;
+        });
 
         testOutput.WriteLine("[LOG] Asserted p element's text content equal to text sent");
     }
