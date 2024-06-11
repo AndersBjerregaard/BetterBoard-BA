@@ -1,0 +1,11 @@
+trigger: none
+
+pool:
+  name: Default
+stages:
+  - stage: Test
+    jobs:
+      - job: Secrets
+        displayName: Retrieve Secrets
+        steps:
+          - task: 
