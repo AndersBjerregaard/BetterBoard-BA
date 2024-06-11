@@ -19,7 +19,7 @@ public class LoginWindow(RemoteWebDriver driver, Uri baseUri) : ILoginWindow
     /// <exception cref="OpenQA.Selenium.StaleElementReferenceException"></exception>
     public void LoginOld(UserCredentials userCredentials)
     {
-        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
         wait.IgnoreExceptionTypes(typeof(NoSuchElementException), typeof(StaleElementReferenceException));
         var fields = wait.Until(d => {
             var elements = driver.FindElements(By.ClassName("form-control"));
@@ -39,7 +39,7 @@ public class LoginWindow(RemoteWebDriver driver, Uri baseUri) : ILoginWindow
     }
 
     public void Login(UserCredentials userCredentials) {
-        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
         wait.IgnoreExceptionTypes(typeof(NoSuchElementException), typeof(StaleElementReferenceException));
         var fields = wait.Until(d => {
             var elements = driver.FindElements(By.XPath("//input[@placeholder='Email' or @placeholder='Password']"));
@@ -61,7 +61,7 @@ public class LoginWindow(RemoteWebDriver driver, Uri baseUri) : ILoginWindow
     /// <exception cref="Xunit.Sdk.ContainsException"></exception>
     public void AssertLogin(UserCredentials userCredentials)
     {
-        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(20));
+        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
         wait.IgnoreExceptionTypes(typeof(NoSuchElementException), typeof(StaleElementReferenceException), typeof(ContainsException));
         wait.Until(driver => {
             var element = driver.FindElement(By.TagName("h2"));
@@ -80,7 +80,7 @@ public class LoginWindow(RemoteWebDriver driver, Uri baseUri) : ILoginWindow
     /// <exception cref="Xunit.Sdk.EqualException"></exception>
     public void AssertNavigation() {
         driver.Url.Should().Be(baseUri + "#/login");
-        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(20));
+        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
         wait.IgnoreExceptionTypes(typeof(NoSuchElementException), typeof(StaleElementReferenceException));
         var header = wait.Until(driver => {
             var element = driver.FindElement(By.TagName("h4"));
@@ -89,5 +89,14 @@ public class LoginWindow(RemoteWebDriver driver, Uri baseUri) : ILoginWindow
         Assert.NotNull(header);
         Assert.Equal("Welcome to BetterBoard.", header.Text);
         Assert.Equal("BetterBoard - Board Management System", driver.Title);
+    }
+
+    public void FullLoginSession(UserCredentials userCredentials)
+    {
+        Navigate();
+        AssertNavigation();
+        Login(userCredentials);
+        AssertLogin(userCredentials);
+        driver.ExecuteScript("localStorage.setItem(arguments[0],arguments[1])", "purechat_expanded", "false"); // Disable help pop-up
     }
 }

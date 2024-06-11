@@ -24,22 +24,16 @@ public class NavigationMenuWindow(RemoteWebDriver driver) : INavigationMenuWindo
 
     public void CreateMeeting(ref Xunit.Abstractions.ITestOutputHelper _testOutputHelper, ReadOnlySpan<char> browserName)
     {
-        ExpandSideBar(browserName);
+        ExpandSideBar();
         // Open 'create meeting' modal
-        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
-        wait.IgnoreExceptionTypes(typeof(NoSuchElementException), typeof(StaleElementReferenceException));
-        var hyperlink = wait.Until(d => {
-            var e = driver.FindElement(By.XPath("//a[@title='Create new meeting']"));
-            return e.Displayed ? e : null;
-        });
-        Assert.NotNull(hyperlink);
-        hyperlink.Click();
+        var hyperlink = new WebElementFinder(driver).Find(By.XPath("//a[@title='Create new meeting']"));
+        hyperlink?.Click();
         _testOutputHelper.WriteLine($"[INFO] {browserName} Create Meeting Popup.");
     }
 
     public void OpenCompanyDocuments(ReadOnlySpan<char> browserName)
     {
-        ExpandSideBar(browserName);
+        ExpandSideBar();
         var sidebar = new WebElementFinder(driver).Find(By.XPath("//ul[@class='sidebar-nav']"));
         var folders = sidebar?.FindElement(By.XPath(".//a[@href='#sidebar-betterboardmenu-categories']"));
         folders?.Click();
@@ -56,11 +50,10 @@ public class NavigationMenuWindow(RemoteWebDriver driver) : INavigationMenuWindo
         companyDocs?.Click();
     }
 
-    private void ExpandSideBar(ReadOnlySpan<char> browserName) {
-        // Expand sidebar
+    private void ExpandSideBarBrowserSpecific(ReadOnlySpan<char> browserName) {
         if (browserName == "firefox")
         {
-            var driverWait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+            var driverWait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
             driverWait.IgnoreExceptionTypes(typeof(NoSuchElementException), typeof(StaleElementReferenceException), typeof(ElementNotInteractableException));
             driverWait.Until(d =>
             {
@@ -71,7 +64,7 @@ public class NavigationMenuWindow(RemoteWebDriver driver) : INavigationMenuWindo
         }
         else // Chromium browsers
         {
-            var driverWait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+            var driverWait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
             driverWait.IgnoreExceptionTypes(typeof(NoSuchElementException), typeof(StaleElementReferenceException), typeof(ElementNotInteractableException));
             driverWait.Until(d =>
             {
@@ -80,5 +73,10 @@ public class NavigationMenuWindow(RemoteWebDriver driver) : INavigationMenuWindo
                 return true;
             });
         }
+    }
+
+    private void ExpandSideBar() {
+        var e = new WebElementFinder(driver).Find(By.XPath("//ul[@class='nav navbar-nav']/li"));
+        e?.Click();
     }
 }

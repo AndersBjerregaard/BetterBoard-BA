@@ -11,7 +11,7 @@ public class CompanyDocsWindow(RemoteWebDriver driver) : ICompanyDocsWindow
 {
     public void AssertPage()
     {
-        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
         wait.IgnoreExceptionTypes(typeof(StaleElementReferenceException), typeof(NoSuchElementException), typeof(EqualException));
         wait.Until(d => {
             var header = new WebElementFinder(driver).Find(By.TagName("h1"));

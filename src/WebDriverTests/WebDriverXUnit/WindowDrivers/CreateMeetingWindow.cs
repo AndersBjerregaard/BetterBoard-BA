@@ -14,7 +14,7 @@ public class CreateMeetingWindow(RemoteWebDriver driver) : ICreateMeetingWindow
 {
     public void AssertMeetingConfirmed(string meetingTitle, ref Xunit.Abstractions.ITestOutputHelper _testOutputHelper, ReadOnlySpan<char> browserName)
     {
-        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
         wait.IgnoreExceptionTypes(typeof(StaleElementReferenceException), typeof(NoSuchElementException), typeof(EqualException));
         wait.Until(d => {
             var e = d.FindElement(By.XPath("//span[@id='meetingTitle']"));

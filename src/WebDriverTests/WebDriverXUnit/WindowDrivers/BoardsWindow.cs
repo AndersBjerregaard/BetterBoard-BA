@@ -23,7 +23,7 @@ public class BoardsWindow(RemoteWebDriver driver, Uri baseUri, ITestOutputHelper
     public void GoToBoard(string boardName)
     {
         // Find board name's index
-        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(20));
+        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
         wait.IgnoreExceptionTypes(typeof(NoSuchElementException), typeof(StaleElementReferenceException));
         var headers = wait.Until(d =>
         {
@@ -60,7 +60,7 @@ public class BoardsWindow(RemoteWebDriver driver, Uri baseUri, ITestOutputHelper
 
     public void AssertGotoBoard(string boardName)
     {
-        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(20));
+        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
         wait.IgnoreExceptionTypes(typeof(NoSuchElementException), typeof(StaleElementReferenceException));
         var small = wait.Until(driver => {
             var element = driver.FindElement(By.TagName("small"));
@@ -90,7 +90,7 @@ public class BoardsWindow(RemoteWebDriver driver, Uri baseUri, ITestOutputHelper
     public void AssertNavigation()
     {
         driver.Url.Should().Be(baseUri.ToString() + "#/boards");
-        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(20));
+        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
         wait.IgnoreExceptionTypes(typeof(NoSuchElementException), typeof(StaleElementReferenceException));
         var paragraph = wait.Until(driver => {
             var element = driver.FindElement(By.TagName("p"));

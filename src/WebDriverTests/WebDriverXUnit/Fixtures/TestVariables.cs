@@ -58,8 +58,6 @@ public class TestVariables
             }
         }
 
-
-
         string? targetUri = Environment.GetEnvironmentVariable("TARGET_URI");
 
         if (string.IsNullOrWhiteSpace(targetUri)) {
