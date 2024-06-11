@@ -37,5 +37,5 @@ stages:
               TEST_CREDS: $(testcreds)
             inputs:
               command: test
-              projects: './src/WebDriverTests/WebDriverTests/WebDriverXUnit/WebDriverXUnit.csproj'
+              projects: './src/WebDriverTests/WebDriverXUnit/WebDriverXUnit.csproj'
               arguments: '--no-restore --no-build --logger "console;verbosity=detailed"'
