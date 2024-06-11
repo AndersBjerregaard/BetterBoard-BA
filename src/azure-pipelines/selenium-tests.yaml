@@ -10,8 +10,8 @@ stages:
         steps:
           - task: AzureKeyVault@2
             inputs:
-              azureSubscription: BBDeployUser-Selenium # Azure subscription name
-              KeyVaultName: bbkeyvaultselenium
+              azureSubscription: 'BetterBoard Dev' # Azure subscription name
+              KeyVaultName: 'bbkeyvaultselenium'
               SecretsFilter: 'griduri,apikey'
           - task: UseDotNet@2
             displayName: 'Use .NET SDK version 8.0.6'
