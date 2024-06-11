@@ -27,6 +27,7 @@ param keysPermissions array = [
 @description('Specifies the permissions to secrets in the vault. Valid values are: all, get, list, set, delete, backup, restore, recover, and purge.')
 param secretsPermissions array = [
   'list'
+  'get'
 ]
 
 @description('Specifies whether the key vault is a standard vault or a premium vault.')
