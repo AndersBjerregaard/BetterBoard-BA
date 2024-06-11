@@ -12,7 +12,7 @@ stages:
             inputs:
               azureSubscription: 'BetterBoard Dev' # Azure subscription name
               KeyVaultName: 'bbkeyvaultselenium'
-              SecretsFilter: 'griduri,apikey'
+              SecretsFilter: 'griduri,apikey,testcreds'
           - task: UseDotNet@2
             displayName: 'Use .NET SDK version 8.0.6'
             inputs:
