@@ -10,6 +10,8 @@ public static class TestVariablesFactory
     private static Uri? _seleniumGridUri;
     private static Uri? _sutUri;
     private static UserCredentials? _userCredentials;
+    private static Guid _testUuid = Guid.Empty;
+    private static string? _shortId;
     public static readonly string[] DEFAULT_WEBDRIVER_ARGUMENTS = ["--no-sandbox", "--disable-dev-shm-usage", "--incognito", "--window-size=1920,1080", "--headless"];
 
     public static Uri GetSeleniumGridUri()
@@ -94,5 +96,41 @@ public static class TestVariablesFactory
             }
         }
         return _userCredentials;
+    }
+
+    public static Guid GetTestUuid() {
+        if (_testUuid != Guid.Empty) {
+            return _testUuid;
+        }
+
+        string? testUuid = Environment.GetEnvironmentVariable("TEST_UUID");
+
+        if (string.IsNullOrWhiteSpace(testUuid)) {
+            throw new NullReferenceException(nameof(testUuid));
+        }
+
+        _testUuid = Guid.Parse(testUuid);
+
+        return _testUuid;
+    }
+
+    public static string GetShortId() {
+        if (_shortId is not null) {
+            return _shortId;
+        }
+        if (_testUuid != Guid.Empty) {
+            _shortId = _testUuid.ToString("N")[^4..];
+            return _shortId;
+        }
+        string? testUuid = Environment.GetEnvironmentVariable("TEST_UUID");
+
+        if (string.IsNullOrWhiteSpace(testUuid)) {
+            throw new NullReferenceException(nameof(testUuid));
+        }
+
+        _testUuid = Guid.Parse(testUuid);
+
+        _shortId = _testUuid.ToString("N")[^4..];
+        return _shortId;
     }
 }

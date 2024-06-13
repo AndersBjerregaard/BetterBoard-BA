@@ -17,6 +17,7 @@ public class DocumentTests(ITestOutputHelper testOutputHelper)
     private readonly UserCredentials _testUserCredentials = TestVariablesFactory.GetUserCredentials();
     private readonly Uri _targetUri = TestVariablesFactory.GetSutUri();
     private readonly Uri _gridUri = TestVariablesFactory.GetSeleniumGridUri();
+    private readonly string _shortId = TestVariablesFactory.GetShortId();
     private readonly string[] _defaultWebDriverArguments = TestVariablesFactory.DEFAULT_WEBDRIVER_ARGUMENTS;
 
     [Fact]
@@ -42,17 +43,17 @@ public class DocumentTests(ITestOutputHelper testOutputHelper)
                     boardsWindow.Navigate();
                     boardsWindow.AssertNavigation();
 
-                    var result = boardsWindow.FindBoard("Bestyrelsen", "BetterBoard ApS");
+                    var result = boardsWindow.FindBoard($"Board {_shortId}", $"Company {_shortId}");
                     Assert.True(result.IsSuccess);
                     var board = result.GetValueOrThrow();
                     boardsWindow.GoToBoard(board);
-                    boardsWindow.AssertGotoBoard("Bestyrelsen", "BetterBoard ApS");
+                    boardsWindow.AssertGotoBoard($"Board {_shortId}", $"Company {_shortId}");
 
                     INavBarWindow navbarWindow = new NavBarWindow(driver);
-                    navbarWindow.DocumentSearch("referat");
+                    navbarWindow.DocumentSearch($"Doc {_shortId}");
                     
                     IBoardSearchWindow boardSearch = new BoardSearchWindow(driver);
-                    boardSearch.AssertSearch("referat");
+                    boardSearch.AssertSearch($"Doc {_shortId}");
                 }
                 catch (Exception e) {
                     ExceptionLogger.LogException(e, ref _testOutputHelper, options.BrowserName);

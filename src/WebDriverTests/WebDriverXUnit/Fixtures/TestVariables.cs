@@ -9,7 +9,8 @@ namespace WebDriverXUnit.Fixtures;
 public class TestVariables
 {
     public Uri? WebDriverUri { get; private set; }
-    public UserCredentials? TestUuid { get; private set; }
+    public UserCredentials? TestCredentials { get; private set; }
+    public Guid? TestUuid { get; private set; }
     public Uri? TargetUri { get; private set; }
 
     public TestVariables()
@@ -34,7 +35,7 @@ public class TestVariables
         {
             Debug.WriteLine("Value for environment variable 'TEST_CREDS' detected, omitting 'TEST_UUID'...");
             UserCredentials? deserialized = JsonSerializer.Deserialize<UserCredentials>(decoratedCreds);
-            TestUuid = deserialized;
+            TestCredentials = deserialized;
         }
         else
         {
@@ -48,13 +49,14 @@ public class TestVariables
                     throw new NullReferenceException(nameof(EnvironmentFileReader.Settings));
                 var uuid = settings.TestUuid ??
                     throw new NullReferenceException(nameof(settings.TestUuid));
-                TestUuid = new UserCredentials(uuid + "@mail.dk", uuid);
-                Debug.WriteLine($"'TEST_UUID' loaded as {TestUuid}");
+                TestCredentials = new UserCredentials(uuid + "@mail.dk", uuid);
+                Debug.WriteLine($"'TEST_UUID' loaded as {TestCredentials}");
             }
             else
             {
                 Debug.WriteLine($"Environment variable 'TEST_UUID' loaded as {testUuid}");
-                TestUuid = new UserCredentials(testUuid + "@mail.dk", testUuid);
+                TestCredentials = new UserCredentials(testUuid + "@mail.dk", testUuid);
+                TestUuid = Guid.Parse(testUuid);
             }
         }
 
