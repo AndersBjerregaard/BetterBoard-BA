@@ -94,19 +94,19 @@ public class DocumentTests(ITestOutputHelper testOutputHelper)
                     boardsWindow.Navigate();
                     boardsWindow.AssertNavigation();
 
-                    var result = boardsWindow.FindBoard("Bestyrelsen", "Anders Test ApS");
+                    var result = boardsWindow.FindBoard($"Board {_shortId}", $"Company {_shortId}");
                     Assert.True(result.IsSuccess);
                     var board = result.GetValueOrThrow();
                     boardsWindow.GoToBoard(board);
-                    boardsWindow.AssertGotoBoard("Bestyrelsen", "Anders Test ApS");
+                    boardsWindow.AssertGotoBoard($"Board {_shortId}", $"Company {_shortId}");
 
                     INavigationMenuWindow navMenu = new NavigationMenuWindow(driver);
                     navMenu.OpenCompanyDocuments(options.BrowserName.AsSpan());
 
                     ICompanyDocsWindow companyDocs = new CompanyDocsWindow(driver);
                     companyDocs.AssertPage();
-                    companyDocs.OpenFolder("dokumenter");
-                    companyDocs.OpenSignProcessModal(documentName: "logo");
+                    companyDocs.OpenFolder($"Folder {_shortId}");
+                    companyDocs.OpenSignProcessModal(documentName: $"Signdoc {_shortId}");
 
                     ISignatureProcessModalWindow modal = new SignatureProcessModalWindow(driver);
                     modal.AssertModal();
