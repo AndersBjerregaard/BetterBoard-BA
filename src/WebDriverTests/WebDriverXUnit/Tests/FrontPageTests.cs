@@ -76,10 +76,10 @@ public class FrontPageTests(ITestOutputHelper testOutputHelper)
                         .HasUnsignedDocuments();
 
                     // Search
-                    boardsWindow.SearchFor("Anders Datarum");
-                    result = boardsWindow.FindBoard("Kun Datarum", "Anders Datarum");
+                    boardsWindow.SearchFor("dataroom");
+                    result = boardsWindow.FindBoard($"Dataroom {_shortId}", $"Dataroom Company {_shortId}");
                     Assert.True(result.IsSuccess);
-                    result = boardsWindow.FindBoard("Bestyrelsen", "Anders Test ApS"); // Exists
+                    result = boardsWindow.FindBoard($"Board {_shortId}", $"Company {_shortId}"); // Exists
                     Assert.True(result.IsFailure); // Assert search hides other boards
 
                     // Unsigned Documents
@@ -92,7 +92,7 @@ public class FrontPageTests(ITestOutputHelper testOutputHelper)
                     result = docsWindow.GetUnsignedDocumentsTable();
                     Assert.True(result.IsSuccess);
                     docsWindow.AssertUnsignedDocuments(result.GetValueOrThrow())
-                        .HasDocumentFromOrigin("Kun Datarum", "Anders Test ApS");
+                        .HasDocumentFromOrigin($"Board {_shortId}", $"Company {_shortId}");
                 }
                 catch (Exception e)
                 {
