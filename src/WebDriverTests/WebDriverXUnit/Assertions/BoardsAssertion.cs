@@ -16,6 +16,13 @@ public class BoardsAssertion(IWebElement board, ITestOutputHelper testOutput) : 
         return this;
     }
 
+    public IBoardsAssertion HasNoUnreadDocuments() {
+        string innerText = board.GetDomProperty("innerText");
+        Assert.Contains("OK", innerText);
+        Assert.DoesNotContain("Unread documents", innerText);
+        return this;
+    }
+
     public IBoardsAssertion HasUnsignedDocuments()
     {
         var element = board.FindElement(By.XPath(".//span[@title='Documents awaiting your signature']"));
@@ -25,12 +32,25 @@ public class BoardsAssertion(IWebElement board, ITestOutputHelper testOutput) : 
         return this;
     }
 
+    public IBoardsAssertion HasNoUnsignedDocuments() {
+
+        Assert.Throws<NoSuchElementException>( () => board.FindElement(By.XPath(".//span[@title='Documents awaiting your signature']")));
+        return this;
+    }
+
     public IBoardsAssertion HasUpcomingMeeting()
     {
         var element = board.FindElement(By.XPath(".//i[@class='fa fa-calendar']"));
         Assert.NotNull(element);
         Assert.True(element.Displayed);
         testOutput.WriteLine($"[Info] {nameof(this.HasUpcomingMeeting)} executed...");
+        return this;
+    }
+
+    public IBoardsAssertion HasNoUpcomingMeeting() {
+
+        var element = board.FindElement(By.XPath(".//i[@class='fa fa-calendar']"));
+        Assert.False(element.Displayed);
         return this;
     }
 

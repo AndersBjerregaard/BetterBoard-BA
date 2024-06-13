@@ -16,6 +16,7 @@ public class FrontPageTests(ITestOutputHelper testOutputHelper)
     private readonly UserCredentials _testUserCredentials = TestVariablesFactory.GetUserCredentials();
     private readonly Uri _targetUri = TestVariablesFactory.GetSutUri();
     private readonly Uri _gridUri = TestVariablesFactory.GetSeleniumGridUri();
+    private readonly string _shortId = TestVariablesFactory.GetShortId();
     private readonly string[] _defaultWebDriverArguments = TestVariablesFactory.DEFAULT_WEBDRIVER_ARGUMENTS;
 
     [Fact]
@@ -44,26 +45,29 @@ public class FrontPageTests(ITestOutputHelper testOutputHelper)
                     boardsWindow.AssertNavigation();
 
                     // Boards
-                    // Unread & Unsigned Documents
-                    var result = boardsWindow.FindBoard("Bestyrelsen", "Anders Test ApS");
+                    // Unread & Unsigned Documents & Upcoming Meeting
+                    var result = boardsWindow.FindBoard($"Board {_shortId}", $"Company {_shortId}");
                     Assert.True(result.IsSuccess);
                     var board = result.GetValueOrThrow();
                     boardsWindow.AssertBoard(board)
                         .IsABoard()
                         .HasUnreadDocuments()
-                        .HasUnsignedDocuments();
+                        .HasUnsignedDocuments()
+                        .HasUpcomingMeeting();
                     
                     // Upcoming Meeting
-                    result = boardsWindow.FindBoard("Bestyrelsen", "BetterBoard ApS");
+                    result = boardsWindow.FindBoard($"Board2 {_shortId}", $"Company {_shortId}");
                     Assert.True(result.IsSuccess);
                     board = result.GetValueOrThrow();
                     boardsWindow.AssertBoard(board)
                         .IsABoard()
-                        .HasUpcomingMeeting();
+                        .HasNoUnreadDocuments()
+                        .HasNoUnsignedDocuments()
+                        .HasNoUpcomingMeeting();
 
                     // Dataroom
                     // Unread & Unsigned Documents
-                    result = boardsWindow.FindBoard("Kun Datarum", "Anders Datarum");
+                    result = boardsWindow.FindBoard($"Dataroom {_shortId}", $"Dataroom Company {_shortId}");
                     Assert.True(result.IsSuccess);
                     board = result.GetValueOrThrow();
                     boardsWindow.AssertBoard(board)
