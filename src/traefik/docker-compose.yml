@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  proxy:
+    build:
+      context: .
+      dockerfile: .Dockerfile
+    # Enables the web UI and tells Traefik to listen to docker
+    command: --api.insecure=true
+    ports:
+      # The HTTP port
+      - "9001:80"
+      # The Web UI (enabled by --api.insecure=true)
+      - "9000:8080"

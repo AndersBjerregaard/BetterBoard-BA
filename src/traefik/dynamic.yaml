@@ -1,0 +1,10 @@
+http:
+  routers:
+    my-router:
+      rule: "Host(`devapi.betterboard.dk`)"
+      service: my-service
+  services:
+    my-service:
+      loadBalancer:
+        servers:
+          - url: "http://api.staging.betterboard.dk:443"
