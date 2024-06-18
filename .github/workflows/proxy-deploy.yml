@@ -28,6 +28,10 @@ jobs:
             with:
               creds: '${{ secrets.AZURE_CREDENTIALS }}' 
 
+          - name: Authenticate towards Azure Container Registry
+            run: |
+              az acr login --name crbbdev
+
           - name: Deploy bicep
             run: |
               az deployment group create --resource-group ${{ env.AZURE_RESOURCE_GROUP }} --template-file ./src/IaC/proxy/aca-proxy.bicep
