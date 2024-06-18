@@ -1,5 +1,5 @@
 
-name: Deploy Keyvault
+name: Deploy ACA Proxy
 on: workflow_dispatch
 
 permissions:
