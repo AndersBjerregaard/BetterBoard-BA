@@ -14,6 +14,7 @@ jobs:
           AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
           AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           AZURE_OBJECT_ID: ${{ secrets.AZURE_OBJECT_ID }}
+          REGISTRY_SERVER: crbbdev.azurecr.io
           AZURE_LOCATION: westeurope
           AZURE_RESOURCE_GROUP: seleniumRG
         steps:
@@ -28,10 +29,6 @@ jobs:
             with:
               creds: '${{ secrets.AZURE_CREDENTIALS }}' 
 
-          - name: Authenticate towards Azure Container Registry
-            run: |
-              az acr login --name crbbdev
-
           - name: Deploy bicep
             run: |
-              az deployment group create --resource-group ${{ env.AZURE_RESOURCE_GROUP }} --template-file ./src/IaC/proxy/aca-proxy.bicep
+              az deployment group create --resource-group ${{ env.AZURE_RESOURCE_GROUP }} --template-file ./src/IaC/proxy/aca-proxy.bicep --parameters registryServer=${{ env.REGISTRY_SERVER }} registryUsername=${{ secrets.REGISTRY_USERNAME }} registryPassword=${{ secrets.REGISTRY_PASSWORD }}
