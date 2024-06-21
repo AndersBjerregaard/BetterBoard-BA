@@ -131,12 +131,24 @@ resource seleniumNodeFirefox 'Microsoft.App/containerApps@2023-05-02-preview' = 
              cpu: json('1')
              memory: '2'
            }
+           volumeMounts: [
+             {
+               mountPath: '/home/seluser/screenshots'
+               volumeName: 'screenshots'
+             }
+           ]
          }
        ]
        scale: {
          minReplicas: 1
          maxReplicas: 1
        }
+       volumes: [
+         {
+           storageType: 'AzureFile'
+           name: 'screenshots'
+         }
+       ]
      }
   }
 }
@@ -192,12 +204,24 @@ resource seleniumNodeChrome 'Microsoft.App/containerApps@2023-05-02-preview' = {
              cpu: json('1')
              memory: '2'
            }
+           volumeMounts: [
+             {
+               mountPath: '/home/seluser/screenshots'
+               volumeName: 'screenshots'
+             }
+           ]
          }
        ]
        scale: {
          minReplicas: 1
          maxReplicas: 1
        }
+       volumes: [
+         {
+           storageType: 'AzureFile'
+           name: 'screenshots'
+         }
+       ]
      }
   }
 }
@@ -253,12 +277,24 @@ resource seleniumNodeEdge 'Microsoft.App/containerApps@2023-05-02-preview' = {
              cpu: json('1')
              memory: '2'
            }
+           volumeMounts: [
+             {
+               mountPath: '/home/seluser/screenshots'
+               volumeName: 'screenshots'
+             }
+           ]
          }
        ]
        scale: {
          minReplicas: 1
          maxReplicas: 1
        }
+       volumes: [
+         {
+           storageType: 'AzureFile'
+           name: 'screenshots'
+         }
+       ]
      }
   }
 }

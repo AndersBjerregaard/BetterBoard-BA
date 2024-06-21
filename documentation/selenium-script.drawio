@@ -1,0 +1,35 @@
+<mxfile host="Electron" modified="2024-06-21T11:17:01.404Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/22.1.2 Chrome/114.0.5735.289 Electron/25.9.4 Safari/537.36" etag="c4fPPkZgpXUKrhzKS_Eb" version="22.1.2" type="device">
+  <diagram name="Page-1" id="9fzPF4vbxOuPfZTFar1X">
+    <mxGraphModel dx="602" dy="555" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="BKeGyrptHYYVWDvP70OZ-7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.003;entryY=0.476;entryDx=0;entryDy=0;entryPerimeter=0;strokeWidth=2;fontSize=14;" edge="1" parent="1" source="BKeGyrptHYYVWDvP70OZ-1" target="BKeGyrptHYYVWDvP70OZ-5">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="490" y="175" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="BKeGyrptHYYVWDvP70OZ-8" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;Query&lt;/font&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="BKeGyrptHYYVWDvP70OZ-7">
+          <mxGeometry x="-0.1603" y="2" relative="1" as="geometry">
+            <mxPoint x="22" y="2" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="BKeGyrptHYYVWDvP70OZ-1" value="" style="swimlane;startSize=0;" vertex="1" parent="1">
+          <mxGeometry x="140" y="90" width="170" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="BKeGyrptHYYVWDvP70OZ-2" value="&lt;b style=&quot;font-size: 14px;&quot;&gt;Success Criteria&lt;/b&gt;&lt;br style=&quot;font-size: 14px;&quot;&gt;&lt;br style=&quot;font-size: 14px;&quot;&gt;List element with text content: &quot;foobar&quot;" style="text;strokeColor=none;align=center;fillColor=none;html=1;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;" vertex="1" parent="BKeGyrptHYYVWDvP70OZ-1">
+          <mxGeometry x="30" y="20" width="120" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="BKeGyrptHYYVWDvP70OZ-5" value="" style="whiteSpace=wrap;html=1;shape=mxgraph.basic.document" vertex="1" parent="1">
+          <mxGeometry x="495" y="80" width="140" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="BKeGyrptHYYVWDvP70OZ-6" value="&lt;b&gt;HTML DOM&lt;/b&gt;&lt;br&gt;&lt;br&gt;&amp;lt;div&amp;gt;&lt;br&gt;...&lt;br&gt;&amp;lt;/div&amp;gt;" style="text;strokeColor=none;align=center;fillColor=none;html=1;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="500" y="100" width="130" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="BKeGyrptHYYVWDvP70OZ-9" value="&lt;i style=&quot;font-size: 12px;&quot;&gt;Until unexpected exception or timeout&lt;/i&gt;" style="text;strokeColor=none;align=center;fillColor=none;html=1;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="356" y="186" width="110" height="60" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
